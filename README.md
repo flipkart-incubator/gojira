@@ -22,9 +22,6 @@ TODO: Add a simple javax.servlet example.
 ## Users
 [Flipkart](http://www.flipkart.com)
 
-## Getting Help
-TODO: Create a google group.
-
 ## Contribution, Bugs and Feedback
 For bugs, questions and discussions, please use [Github Issues](https://github.com/flipkart-incubator/gojira/issues).
 
