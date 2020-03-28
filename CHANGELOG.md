@@ -1,2 +1,2 @@
-## 1.3.1
-- Internal release
+## 1.7.2-RELEASE
+- Initial Flipkart-Incubator release

@@ -14,7 +14,7 @@ Gojira is a record and replay based regression testing tool.
 9. Very low overhead during NONE and PROFILE mode. TODO: Add metrics.
 
 ## Changelog
-TODO: Refer Changelog file
+[Changelog](https://github.com/flipkart-incubator/gojira/blob/initial-commit/CHANGELOG.md)
 
 ## Getting Started
 TODO: Add a simple javax.servlet example. 
@@ -26,7 +26,9 @@ TODO: Add a simple javax.servlet example.
 TODO: Create a google group.
 
 ## Contribution, Bugs and Feedback
-TODO: Add link to github issues.
+For bugs, questions and discussions, please use [Github Issues](https://github.com/flipkart-incubator/gojira/issues).
+
+For contributions, please check [Contributions](https://github.com/flipkart-incubator/gojira/blob/initial-commit/CONTRIBUTING.md)
 
 ## License
 Copyright 2020 Flipkart Internet, pvt ltd.
