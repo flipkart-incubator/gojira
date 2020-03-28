@@ -1,16 +1,3 @@
-# Contributing to Gojira
-If you would like to contribute code, you can do so through Github, by forking the repository and sending a pull request.
-
-When submitting code, please follow [Google Code Style](https://google.github.io/styleguide/javaguide.html).
-
-## License
-By contributing your code, you agree to license your contribution under the terms of the APLv2: http://www.apache.org/licenses/LICENSE-2.0
-
-All files are released with the Apache 2.0 license.
-
-If you are adding a new file it should have a header like this:
-
-```
 /*
  * Copyright 2020 Flipkart Internet, pvt ltd.
  *
@@ -26,4 +13,19 @@ If you are adding a new file it should have a header like this:
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-```
+
+package com.flipkart.gojira.serde;
+
+/**
+ * Exception thrown if serialization or de-serialization fails.
+ */
+public class TestSerdeException extends Exception {
+
+  public TestSerdeException(String message) {
+    super(message);
+  }
+
+  public TestSerdeException(String message, Throwable cause) {
+    super(message, cause);
+  }
+}

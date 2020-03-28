@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.flipkart</groupId>
+    <artifactId>gojira-parent</artifactId>
+    <version>1.7.2-RELEASE</version>
+    <packaging>pom</packaging>
+
+    <name>Gojira by Transact</name>
+
+    <modules>
+        <module>gojira-compare</module>
+        <module>gojira-core</module>
+        <module>shaded-gojira</module>
+    </modules>
+
+    <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>aopalliance</groupId>
+            <artifactId>aopalliance</artifactId>
+            <version>1.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+            <version>3.0</version>
+        </dependency>
+    </dependencies>
+
+    <repositories>
+        <repository>
+            <id>github.release.repo</id>
+            <url>https://raw.github.com/bulldog2011/bulldog-repo/master/repo/releases/</url>
+        </repository>
+
+        <repository>
+            <id>clojars</id>
+            <name>Clojars Maven Repository</name>
+            <url>http://clojars.org/repo/</url>
+        </repository>
+    </repositories>
+
+    <distributionManagement>
+        <repository>
+            <id>clojars</id>
+            <name>Clojars repository</name>
+            <url>https://clojars.org/repo</url>
+        </repository>
+    </distributionManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.3</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.9.1</version>
+                <configuration>
+                    <show>public</show>
+                    <nohelp>true</nohelp>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
