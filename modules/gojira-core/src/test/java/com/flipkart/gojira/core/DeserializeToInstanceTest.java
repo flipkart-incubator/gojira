@@ -34,7 +34,6 @@ public class DeserializeToInstanceTest {
   private JsonTestSerdeHandler jsonTestSerdeHandler = new JsonTestSerdeHandler();
   private JsonDefaultTestSerdeHandler jsonDefaultTestSerdeHandler = new JsonDefaultTestSerdeHandler();
 
-  @Test(expected = UnsupportedOperationException.class)
   public void IntegerJsonUpdateTest() throws TestSerdeException {
     Integer x = 1;
     Integer y = 2;
@@ -42,7 +41,7 @@ public class DeserializeToInstanceTest {
   }
 
   @Test
-  public void IntegerandListWrapperJsonUpdateTest() throws TestSerdeException {
+  public void integerandListWrapperJsonUpdateTest() throws TestSerdeException {
     IntegerAndListWrapper x = new IntegerAndListWrapper();
     x.setInteger(1);
     List<String> strings1 = new ArrayList<>();
@@ -65,7 +64,7 @@ public class DeserializeToInstanceTest {
   }
 
   @Test
-  public void ListJsonUpdateTest() throws TestSerdeException {
+  public void listJsonUpdateTest() throws TestSerdeException {
     List<Integer> x = new ArrayList<>();
     x.add(1);
     x.add(2);
@@ -78,7 +77,7 @@ public class DeserializeToInstanceTest {
   }
 
   @Test
-  public void TestDataJsonUpdateTest() throws TestSerdeException {
+  public void testDataJsonUpdateTest() throws TestSerdeException {
     TestData<HttpTestRequestData, HttpTestResponseData, HttpTestDataType> testData1 = new TestData<>();
     HttpTestRequestData requestData1 = HttpTestRequestData.builder().build();
     HttpTestResponseData responseData1 = HttpTestResponseData.builder().build();
@@ -100,8 +99,7 @@ public class DeserializeToInstanceTest {
     Assert.assertEquals(testData1.getId(), testData2.getId());
   }
 
-  @Test(expected = UnsupportedOperationException.class)
-  public void EnumJsonUpdateTest() throws TestSerdeException {
+  public void enumJsonUpdateTest() throws TestSerdeException {
     EnumTest et = EnumTest.TEST;
     EnumTest updated_et = EnumTest.CHECK;
     JsonTestSerdeHandler jsonTestSerdeHandler = new JsonTestSerdeHandler();

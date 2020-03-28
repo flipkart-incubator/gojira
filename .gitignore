@@ -40,4 +40,4 @@ modules/src/
 .settings/
 
 #shade
-modules/shaded-gojira/dependency-reduced-pom.xml
+modules/shaded-gojira-core/dependency-reduced-pom.xml

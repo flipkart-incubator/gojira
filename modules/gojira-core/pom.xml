@@ -13,7 +13,7 @@
     <artifactId>gojira-core</artifactId>
     <version>1.7.2-RELEASE</version>
 
-    <name>Gojira Core Libraries</name>
+    <name>Gojira core libraries</name>
 
     <dependencies>
         <dependency>

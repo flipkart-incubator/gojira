@@ -9,12 +9,12 @@
     <version>1.7.2-RELEASE</version>
     <packaging>pom</packaging>
 
-    <name>Gojira by Transact</name>
+    <name>Gojira for Regression Testing</name>
 
     <modules>
         <module>gojira-compare</module>
         <module>gojira-core</module>
-        <module>shaded-gojira</module>
+        <module>shaded-gojira-core</module>
     </modules>
 
     <properties>

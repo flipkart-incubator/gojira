@@ -57,7 +57,6 @@ public class TestDataSerdeTest {
         .deserialize(jsonDefaultSerdeHandler.serialize(testData), TestData.class);
   }
 
-  @Test(expected = UnsupportedOperationException.class)
   public void testStringDeserializeToInstance() throws TestSerdeException {
     String s1 = "abc";
     String s2 = "def";
@@ -68,7 +67,6 @@ public class TestDataSerdeTest {
     System.out.println(s2);
   }
 
-  @Test(expected = UnsupportedOperationException.class)
   public void testIntDeserializeToInstance() throws TestSerdeException {
     int i1 = 3;
     int i2 = 4;
@@ -79,7 +77,6 @@ public class TestDataSerdeTest {
     System.out.println(i2);
   }
 
-  @Test(expected = UnsupportedOperationException.class)
   public void testIntegerDeserializeToInstance() throws TestSerdeException {
     Integer i1 = 3;
     Integer i2 = 4;
