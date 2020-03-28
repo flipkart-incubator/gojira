@@ -1,0 +1,43 @@
+.idea
+
+target
+*.iml
+*.ipr
+*.iws
+*.jsr
+*.class
+.DS_Store
+*.sw*
+# Intellij
+.idea/
+*.iml
+*.iws
+*.js
+
+# Mac
+.DS_Store
+
+# Maven
+log/
+target/
+
+# Directories #
+/build/
+/bin/
+target/
+modules/src/
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
+*.db
+
+#Eclipse
+.classpath
+.project
+.settings/
+
+#shade
+modules/shaded-gojira/dependency-reduced-pom.xml

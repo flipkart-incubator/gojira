@@ -1,0 +1,38 @@
+# Gojira 
+Gojira is a record and replay based regression testing tool. 
+
+## Features
+1. Record and Replay framework for single request-response scope executions, that goes beyond just recording http request and response data, by additionally enabling recording of any call, external to the jvm, and storing them against a single test-id.
+2. Start your JVM in 4 modes: PROFILE(for recording), TEST(when replaying), NONE and SERIALIZE(test de-serialization of recorded data).
+3. javax.servlet based Filter for capturing HTTP request(uri, headers, method, body, queryparams) and response(status code, headers, body) data.
+4. Request sampling capabilities based on URI signature and time-based sampling.
+5. Annotation based method interception support with Guice to capture method data - arguments before and after method execution, and return or exception data.
+6. Custom serialization handlers, compare handlers and hash handlers per method argument and return or exception data.
+7. Intermediate storage during recording in a BigQueue before flushing to data-store.
+6. Interfaces to plug-in data-store for storing recorded data.
+8. Test executors for running tests in replay mode.
+9. Very low overhead during NONE and PROFILE mode. TODO: Add metrics.
+
+## Changelog
+TODO: Refer Changelog file
+
+## Getting Started
+TODO: Add a simple javax.servlet example. 
+
+## Users
+[Flipkart](http://www.flipkart.com)
+
+## Getting Help
+TODO: Create a google group.
+
+## Contribution, Bugs and Feedback
+TODO: Add link to github issues.
+
+## License
+Copyright 2020 Flipkart Internet, pvt ltd.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
