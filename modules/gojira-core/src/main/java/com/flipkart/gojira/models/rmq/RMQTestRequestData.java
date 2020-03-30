@@ -37,7 +37,7 @@ public class RMQTestRequestData extends TestRequestData<RMQTestDataType> {
   @JsonDeserialize(using = RMQPropertiesDeserializer.class)
   private AMQP.BasicProperties properties;
 
-  public RMQTestRequestData() {
+  private RMQTestRequestData() {
     super(new RMQTestDataType());
   }
 
