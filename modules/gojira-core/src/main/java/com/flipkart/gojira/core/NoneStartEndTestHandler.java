@@ -37,7 +37,6 @@ public class NoneStartEndTestHandler<T extends TestDataType> implements StartEnd
    */
   @Override
   public void start(String id, TestRequestData<T> requestData) {
-    ProfileRepository.setProfileState(ProfileState.NONE);
   }
 
   /**

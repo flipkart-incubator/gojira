@@ -95,7 +95,6 @@ public class ProfileHttpFilterHandler extends HttpFilterHandler {
         body = IOUtils.toByteArray(request.getInputStream());
       } catch (IOException ex) {
         LOGGER.error("Unable to read the stream", ex);
-        ProfileRepository.setProfileState(ProfileState.FAILED);
         return true;
       }
       try {
