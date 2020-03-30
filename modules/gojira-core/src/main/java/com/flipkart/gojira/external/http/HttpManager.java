@@ -22,33 +22,44 @@ import com.flipkart.gojira.external.Managed;
 import com.flipkart.gojira.external.SetupException;
 import com.flipkart.gojira.external.ShutdownException;
 import com.flipkart.gojira.external.config.ExternalConfig;
-import java.util.Map;
+import com.flipkart.gojira.external.config.HttpConfig;
+import com.flipkart.gojira.models.http.HttpTestDataType;
 import org.asynchttpclient.DefaultAsyncHttpClient;
 import org.asynchttpclient.DefaultAsyncHttpClientConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Implementation of {@link IHttpManager} and {@link Managed}
- */
+import java.util.Map;
+
+/** Implementation of {@link IHttpManager} and {@link Managed} */
 public enum HttpManager implements IHttpManager, Managed {
-  HTTP_MANAGER; // TODO: there is a hard dependency in Managed. Need to figure out a way to decouple.
+  HTTP_MANAGER; // TODO: there is a hard dependency in Managed. Need to figure out a way to
+  // decouple.
   private static final Logger LOGGER = LoggerFactory.getLogger(HttpManager.class);
 
   @Override
   public void setup() throws SetupException {
     try {
-      for (Map.Entry<String, ExternalConfig> entry : TestExecutionInjector.getInjector()
-          .getInstance(ExternalConfigRepository.class).getExternalConfig().entrySet()) {
-        clientMap.put(entry.getKey(),
-            new DefaultAsyncHttpClient(new DefaultAsyncHttpClientConfig.Builder()
-                .setConnectTimeout(entry.getValue().getConnectionTimeout())
-                .setMaxConnections(entry.getValue().getMaxConnections())
-                .setMaxConnectionsPerHost(entry.getValue().getMaxConnections())
-                .setKeepAlive(true)
-                .setRequestTimeout(entry.getValue().getOperationTimeout())
-                .build()));
-      }
+      HttpTestDataType httpTestDataType = new HttpTestDataType();
+      Map<String, ExternalConfig> externalConfigMap =
+          TestExecutionInjector.getInjector()
+              .getInstance(ExternalConfigRepository.class)
+              .getExternalConfigByType(httpTestDataType);
+
+      for (Map.Entry<String, ExternalConfig> entry : externalConfigMap.entrySet())
+        if (entry.getValue() != null) {
+          HttpConfig httpConfig = (HttpConfig) entry.getValue();
+          clientMap.put(
+              entry.getKey(),
+              new DefaultAsyncHttpClient(
+                  new DefaultAsyncHttpClientConfig.Builder()
+                      .setConnectTimeout(httpConfig.getConnectionTimeout())
+                      .setMaxConnections(httpConfig.getMaxConnections())
+                      .setMaxConnectionsPerHost(httpConfig.getMaxConnections())
+                      .setKeepAlive(true)
+                      .setRequestTimeout(httpConfig.getOperationTimeout())
+                      .build()));
+        }
     } catch (Exception e) {
       LOGGER.error("error setting up http connections.", e);
       throw new SetupException("error setting up http connections.", e);

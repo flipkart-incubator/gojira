@@ -48,9 +48,9 @@ public class ProfileKafkaFilterHandler extends KafkaFilterHandler {
       Map<String, byte[]> headersMap) {
     String id = getTestId(headersMap);
     if (id != null) {
-      LOGGER.error("Header with name: " + TEST_HEADER
+      LOGGER.error("Header with name: " + FilterConstants.TEST_HEADER
           + " present. But service is not running in TEST mode. : " + ProfileRepository.getMode());
-      throw new RuntimeException("Header with name: " + TEST_HEADER
+      throw new RuntimeException("Header with name: " + FilterConstants.TEST_HEADER
           + " present. But service is not running in TEST mode. : " + ProfileRepository.getMode());
     }
     if (!isWhitelistedTopic(topicName)) {

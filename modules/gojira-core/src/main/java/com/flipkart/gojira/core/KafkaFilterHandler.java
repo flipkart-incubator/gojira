@@ -22,8 +22,12 @@ import com.flipkart.gojira.requestsampling.RequestSamplingRepository;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
+
+import com.rabbitmq.client.LongString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static com.flipkart.gojira.core.FilterConstants.TEST_HEADER;
 
 /**
  * This class is expected to provide an interface for implementing different logic for different
@@ -32,8 +36,6 @@ import org.slf4j.LoggerFactory;
 public abstract class KafkaFilterHandler {
 
   protected static final Logger LOGGER = LoggerFactory.getLogger(KafkaFilterHandler.class);
-  //TODO: Make this common.
-  protected final String TEST_HEADER = "X-GOJIRA-ID";
 
   /**
    * @param topicName  kafka topic name
@@ -76,6 +78,5 @@ public abstract class KafkaFilterHandler {
     byte[] id = headersMap.getOrDefault(TEST_HEADER, null);
     return id != null ? new String(id) : null;
   }
-
 
 }

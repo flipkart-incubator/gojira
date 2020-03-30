@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>gojira-core</artifactId>
-    <version>1.7.2-RELEASE</version>
+    <version>1.0-rmq-support-SNAPSHOT</version>
 
     <name>Gojira core libraries</name>
 
@@ -57,6 +57,12 @@
             <artifactId>junit</artifactId>
             <version>4.13</version>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.rabbitmq</groupId>
+            <artifactId>amqp-client</artifactId>
+            <version>5.6.0</version>
         </dependency>
 
         <dependency>

@@ -34,6 +34,8 @@ import javax.servlet.ServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static com.flipkart.gojira.core.FilterConstants.TEST_HEADER;
+
 /**
  * This class is expected to provide an interface for implementing different logic for different
  * {@link Mode} during request and response capture.
@@ -41,7 +43,6 @@ import org.slf4j.LoggerFactory;
 public abstract class HttpFilterHandler {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(HttpFilterHandler.class);
-  protected final String TEST_HEADER = "X-GOJIRA-ID";
 
   /**
    * @param request wrapped original http request as a {@link HttpFilter.CustomHttpServletRequestWrapper}

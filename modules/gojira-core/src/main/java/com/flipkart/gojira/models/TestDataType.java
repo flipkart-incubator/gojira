@@ -20,14 +20,14 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.flipkart.gojira.models.http.HttpTestDataType;
 import com.flipkart.gojira.models.kafka.KafkaTestDataType;
+import com.flipkart.gojira.models.rmq.RMQTestDataType;
 
-/**
- * Base class for different types of {@link TestData}
- */
+/** Base class for different types of {@link TestData} */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({
-    @JsonSubTypes.Type(value = HttpTestDataType.class, name = "HTTP"),
-    @JsonSubTypes.Type(value = KafkaTestDataType.class, name = "KAFKA"),
+  @JsonSubTypes.Type(value = HttpTestDataType.class, name = "HTTP"),
+  @JsonSubTypes.Type(value = KafkaTestDataType.class, name = "KAFKA"),
+  @JsonSubTypes.Type(value = RMQTestDataType.class, name = "RMQ")
 })
 public abstract class TestDataType {
 

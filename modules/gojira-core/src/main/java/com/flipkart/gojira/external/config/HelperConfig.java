@@ -16,6 +16,8 @@
 
 package com.flipkart.gojira.external.config;
 
+import com.flipkart.gojira.models.TestDataType;
+
 import java.util.Map;
 
 /**
@@ -24,22 +26,19 @@ import java.util.Map;
  */
 public class HelperConfig {
 
-  private Map<String, ExternalConfig> externalConfigMap = null;
+  private Map<String, Map<TestDataType, ExternalConfig>> externalConfigMap = null;
 
-  private HelperConfig() {
+  private HelperConfig() {}
 
+  public Map<String, Map<TestDataType, ExternalConfig>> getExternalConfigMap() {
+    return externalConfigMap;
   }
 
   public static Builder builder() {
     return new Builder();
   }
 
-  public Map<String, ExternalConfig> getExternalConfigMap() {
-    return externalConfigMap;
-  }
-
   public static class Builder {
-
     private HelperConfig helperConfigToBuild;
 
     private Builder() {
@@ -50,7 +49,8 @@ public class HelperConfig {
       return this.helperConfigToBuild;
     }
 
-    public Builder setExternalConfigMap(Map<String, ExternalConfig> externalConfigMap) {
+    public Builder setExternalConfigMap(
+        Map<String, Map<TestDataType, ExternalConfig>> externalConfigMap) {
       this.helperConfigToBuild.externalConfigMap = externalConfigMap;
       return this;
     }

@@ -16,47 +16,31 @@
 
 package com.flipkart.gojira.external.config;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.flipkart.gojira.models.TestDataType;
+
 /**
  * This class holds all config required for making external rpc calls. This needs to be provided by
  * the client application. // TODO: sub-calls it for different types of external calls like HTTP
  * etc.
  */
-public class ExternalConfig {
+@JsonTypeInfo(
+    use = JsonTypeInfo.Id.NAME,
+    include = JsonTypeInfo.As.EXISTING_PROPERTY,
+    property = "type")
+@JsonSubTypes({
+  @JsonSubTypes.Type(value = HttpConfig.class, name = "HTTP"),
+  @JsonSubTypes.Type(value = RMQConfig.class, name = "RMQ")
+})
+public abstract class ExternalConfig {
+  private TestDataType type;
 
-  private String hostNamePort;
-  private int maxConnections;
-  private int connectionTimeout;
-  private int operationTimeout;
-
-  public String getHostNamePort() {
-    return hostNamePort;
+  public TestDataType getType() {
+    return type;
   }
 
-  public void setHostNamePort(String hostNamePort) {
-    this.hostNamePort = hostNamePort;
-  }
-
-  public int getMaxConnections() {
-    return maxConnections;
-  }
-
-  public void setMaxConnections(int maxConnections) {
-    this.maxConnections = maxConnections;
-  }
-
-  public int getConnectionTimeout() {
-    return connectionTimeout;
-  }
-
-  public void setConnectionTimeout(int connectionTimeout) {
-    this.connectionTimeout = connectionTimeout;
-  }
-
-  public int getOperationTimeout() {
-    return operationTimeout;
-  }
-
-  public void setOperationTimeout(int operationTimeout) {
-    this.operationTimeout = operationTimeout;
+  public void setType(TestDataType type) {
+    this.type = type;
   }
 }

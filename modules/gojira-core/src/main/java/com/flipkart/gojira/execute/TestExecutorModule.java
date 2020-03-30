@@ -18,6 +18,7 @@ package com.flipkart.gojira.execute;
 
 import com.flipkart.gojira.execute.http.DefaultHttpTestExecutor;
 import com.flipkart.gojira.execute.kafka.DefaultKafkaTestExecutor;
+import com.flipkart.gojira.execute.rmq.DefaultRMQTestExecutor;
 import com.flipkart.gojira.models.TestData;
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
@@ -32,5 +33,6 @@ public class TestExecutorModule extends AbstractModule {
   protected void configure() {
     bind(TestExecutor.class).annotatedWith(Names.named("HTTP")).to(DefaultHttpTestExecutor.class);
     bind(TestExecutor.class).annotatedWith(Names.named("KAFKA")).to(DefaultKafkaTestExecutor.class);
+    bind(TestExecutor.class).annotatedWith(Names.named("RMQ")).to(DefaultRMQTestExecutor.class);
   }
 }
