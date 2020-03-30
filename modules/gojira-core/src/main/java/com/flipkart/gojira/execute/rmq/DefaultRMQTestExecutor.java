@@ -60,5 +60,19 @@ public class DefaultRMQTestExecutor
           "Unable to publish through RMQ with clientId :{} and testID:{}", clientId, testId, e);
       throw e;
     }
+    logRecordPublish(
+        requestData.getExchangeName(),
+        requestData.getRoutingKey(),
+        requestData.getData(),
+        clientId,
+        testId);
+  }
+
+  private void logRecordPublish(
+      String exchangeName, byte[] routingKey, byte[] data, String clientId, String testId) {
+    LOGGER.info(
+        String.format(
+            "published data to exchange: %s with routingKey: %s with data %s with clientId: %s for testId: %s. ",
+            exchangeName, new String(routingKey), new String(data), clientId, testId));
   }
 }
