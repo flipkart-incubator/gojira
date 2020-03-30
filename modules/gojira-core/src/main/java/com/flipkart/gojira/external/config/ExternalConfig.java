@@ -31,6 +31,7 @@ import com.flipkart.gojira.models.TestDataType;
     property = "type")
 @JsonSubTypes({
   @JsonSubTypes.Type(value = HttpConfig.class, name = "HTTP"),
+  @JsonSubTypes.Type(value = RMQConfig.class, name = "KAFKA"),
   @JsonSubTypes.Type(value = RMQConfig.class, name = "RMQ")
 })
 public abstract class ExternalConfig {
