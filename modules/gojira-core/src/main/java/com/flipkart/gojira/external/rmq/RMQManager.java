@@ -30,12 +30,11 @@ public enum RMQManager implements IRMQManager, Managed {
   @Override
   public void setup() throws SetupException {
     try {
-
-      RMQTestDataType rmqTestDataType = new RMQTestDataType();
       Map<String, ExternalConfig> externalConfigMap =
           TestExecutionInjector.getInjector()
               .getInstance(ExternalConfigRepository.class)
-              .getExternalConfigByType(rmqTestDataType);
+              .getExternalConfigByType(RMQTestDataType.class);
+
       if (!externalConfigMap.isEmpty()) {
         for (Map.Entry<String, ExternalConfig> entry : externalConfigMap.entrySet()) {
           ExternalConfig externalConfig = entry.getValue();

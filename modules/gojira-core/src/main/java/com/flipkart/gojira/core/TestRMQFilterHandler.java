@@ -2,6 +2,7 @@ package com.flipkart.gojira.core;
 
 import com.rabbitmq.client.AMQP;
 
+/** Implementation of {@link RMQFilterHandler} in mode {@link Mode#TEST} */
 public class TestRMQFilterHandler extends RMQFilterHandler {
 
   /**

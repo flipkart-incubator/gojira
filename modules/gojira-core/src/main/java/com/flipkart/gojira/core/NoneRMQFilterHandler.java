@@ -29,12 +29,12 @@ public class NoneRMQFilterHandler extends RMQFilterHandler {
           "Header with name: "
               + FilterConstants.TEST_HEADER
               + " present. But service is not running in mode. : "
-              + ProfileRepository.getMode());
+              + Mode.NONE);
       throw new RuntimeException(
           "Header with name: "
               + FilterConstants.TEST_HEADER
               + " present. But service is not running in mode. : "
-              + ProfileRepository.getMode());
+              + Mode.NONE);
     }
   }
 }

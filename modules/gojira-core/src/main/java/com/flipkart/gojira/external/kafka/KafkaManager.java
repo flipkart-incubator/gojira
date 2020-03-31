@@ -48,11 +48,10 @@ public enum KafkaManager implements IKafkaManager, Managed {
   public void setup() throws SetupException {
     try {
 
-      KafkaTestDataType kafkaTestDataType = new KafkaTestDataType();
       Map<String, ExternalConfig> externalConfigMap =
           TestExecutionInjector.getInjector()
               .getInstance(ExternalConfigRepository.class)
-              .getExternalConfigByType(kafkaTestDataType);
+              .getExternalConfigByType(KafkaTestDataType.class);
       for (Map.Entry<String, ExternalConfig> entry : externalConfigMap.entrySet()) {
         if (entry.getValue() != null) {
           KafkaConfig kafkaConfig = (KafkaConfig) entry.getValue();

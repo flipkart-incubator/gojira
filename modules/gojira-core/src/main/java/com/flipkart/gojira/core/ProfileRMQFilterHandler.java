@@ -2,7 +2,9 @@ package com.flipkart.gojira.core;
 
 import com.flipkart.gojira.models.rmq.RMQTestRequestData;
 import com.rabbitmq.client.AMQP;
-
+/**
+ * Implementation of {@link RMQFilterHandler} in mode {@link Mode#PROFILE}
+ */
 public class ProfileRMQFilterHandler extends RMQFilterHandler {
 
   /**
@@ -29,12 +31,12 @@ public class ProfileRMQFilterHandler extends RMQFilterHandler {
           "Header with name: "
               + FilterConstants.TEST_HEADER
               + " present. But service is not running in  mode. : "
-              + ProfileRepository.getMode());
+              + Mode.PROFILE);
       throw new RuntimeException(
           "Header with name: "
               + FilterConstants.TEST_HEADER
               + " present. But service is not running in  mode. : "
-              + ProfileRepository.getMode());
+              + Mode.PROFILE);
     }
     if (!isExchangeWhitelisted(exchangeName)) {
       LOGGER.error("Exchange is not whitelisted. Exchange name :{}", exchangeName);

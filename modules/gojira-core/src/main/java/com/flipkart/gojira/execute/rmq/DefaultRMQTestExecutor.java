@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
+/** RMQ Executor to publish messages i.e replay RMQ messages which were profiled.*/
 public class DefaultRMQTestExecutor
     implements TestExecutor<TestData<RMQTestRequestData, RMQTestResponseData, RMQTestDataType>> {
 
@@ -34,10 +35,15 @@ public class DefaultRMQTestExecutor
     execute(testData, "DEFAULT");
   }
 
+  /**
+   * @param testData testData which is used for invoking execution
+   * @param clientId identifier to indicate which system hit
+   * @throws RMQPublishException, thrown when unable to publish messages to RMQ
+   */
   @Override
   public void execute(
       TestData<RMQTestRequestData, RMQTestResponseData, RMQTestDataType> testData, String clientId)
-      throws TestExecutionException {
+      throws RMQPublishException {
     String testId = testData.getId();
     RMQTestRequestData requestData = testData.getRequestData();
     AMQP.BasicProperties basicProperties = requestData.getProperties();

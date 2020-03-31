@@ -26,11 +26,11 @@ import java.util.Map;
  */
 public class HelperConfig {
 
-  private Map<String, Map<TestDataType, ExternalConfig>> externalConfigMap = null;
+  private Map<String, Map<Class<? extends TestDataType>, ExternalConfig>> externalConfigMap = null;
 
   private HelperConfig() {}
 
-  public Map<String, Map<TestDataType, ExternalConfig>> getExternalConfigMap() {
+  public Map<String, Map<Class<? extends TestDataType>, ExternalConfig>> getExternalConfigMap() {
     return externalConfigMap;
   }
 
@@ -50,7 +50,7 @@ public class HelperConfig {
     }
 
     public Builder setExternalConfigMap(
-        Map<String, Map<TestDataType, ExternalConfig>> externalConfigMap) {
+        Map<String, Map<Class<? extends TestDataType>, ExternalConfig>> externalConfigMap) {
       this.helperConfigToBuild.externalConfigMap = externalConfigMap;
       return this;
     }

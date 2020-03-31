@@ -40,11 +40,10 @@ public enum HttpManager implements IHttpManager, Managed {
   @Override
   public void setup() throws SetupException {
     try {
-      HttpTestDataType httpTestDataType = new HttpTestDataType();
       Map<String, ExternalConfig> externalConfigMap =
           TestExecutionInjector.getInjector()
               .getInstance(ExternalConfigRepository.class)
-              .getExternalConfigByType(httpTestDataType);
+              .getExternalConfigByType(HttpTestDataType.class);
 
       for (Map.Entry<String, ExternalConfig> entry : externalConfigMap.entrySet())
         if (entry.getValue() != null) {

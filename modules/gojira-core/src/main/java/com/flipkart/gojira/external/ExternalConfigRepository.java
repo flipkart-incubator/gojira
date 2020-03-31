@@ -25,24 +25,27 @@ import java.util.Map;
 /** This class acts as repository interface for {@link ExternalConfig} */
 public abstract class ExternalConfigRepository {
 
-  protected static final Map<String, Map<TestDataType, ExternalConfig>> externalConfigHashMap =
-      new HashMap<>();
+  protected static final Map<String, Map<Class<? extends TestDataType>, ExternalConfig>>
+      externalConfigHashMap = new HashMap<>();
   /**
    * @param clientId clientId
    * @return {@link ExternalConfig} instance for the clientId. null if it is not present.
    */
-  public abstract ExternalConfig getExternalConfigFor(String clientId, TestDataType testDataType);
+  public abstract ExternalConfig getExternalConfigFor(
+      String clientId, Class<? extends TestDataType> testDataType);
 
   /** @return */
-  public abstract Map<String, Map<TestDataType, ExternalConfig>> getExternalConfig();
+  public abstract Map<String, Map<Class<? extends TestDataType>, ExternalConfig>>
+      getExternalConfig();
 
   /** @param externalConfig config to make external rpc calls */
   public abstract void setExternalConfig(
-      Map<String, Map<TestDataType, ExternalConfig>> externalConfig);
+      Map<String, Map<Class<? extends TestDataType>, ExternalConfig>> externalConfig);
 
   /**
    * @param testDataType
    * @return config by client map
    */
-  public abstract Map<String, ExternalConfig> getExternalConfigByType(TestDataType testDataType);
+  public abstract Map<String, ExternalConfig> getExternalConfigByType(
+      Class<? extends TestDataType> testDataType);
 }

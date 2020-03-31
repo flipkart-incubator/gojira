@@ -31,8 +31,10 @@ public class ExternalConfigRepositoryImpl extends ExternalConfigRepository {
 
   /** @param externalConfig config to make external rpc calls */
   @Override
-  public void setExternalConfig(Map<String, Map<TestDataType, ExternalConfig>> externalConfig) {
-    for (Map.Entry<String, Map<TestDataType, ExternalConfig>> entry : externalConfig.entrySet()) {
+  public void setExternalConfig(
+      Map<String, Map<Class<? extends TestDataType>, ExternalConfig>> externalConfig) {
+    for (Map.Entry<String, Map<Class<? extends TestDataType>, ExternalConfig>> entry :
+        externalConfig.entrySet()) {
       externalConfigHashMap.put(entry.getKey(), entry.getValue());
     }
   }
@@ -42,14 +44,15 @@ public class ExternalConfigRepositoryImpl extends ExternalConfigRepository {
    * @return config by client Map
    */
   @Override
-  public Map<String, ExternalConfig> getExternalConfigByType(TestDataType testDataType) {
+  public Map<String, ExternalConfig> getExternalConfigByType(
+      Class<? extends TestDataType> testDataType) {
 
     Map<String, ExternalConfig> clientMap = new HashMap<>();
     if (!externalConfigHashMap.isEmpty()) {
-      for (Map.Entry<String, Map<TestDataType, ExternalConfig>> entry :
+      for (Map.Entry<String, Map<Class<? extends TestDataType>, ExternalConfig>> entry :
           externalConfigHashMap.entrySet()) {
         String clientId = entry.getKey();
-        Map<TestDataType, ExternalConfig> externalConfigByType = entry.getValue();
+        Map<Class<? extends TestDataType>, ExternalConfig> externalConfigByType = entry.getValue();
         if (externalConfigByType != null && !externalConfigByType.isEmpty()) {
           ExternalConfig config = externalConfigByType.get(testDataType);
           if (config != null) {
@@ -66,8 +69,9 @@ public class ExternalConfigRepositoryImpl extends ExternalConfigRepository {
    * @return
    */
   @Override
-  public ExternalConfig getExternalConfigFor(String clientId, TestDataType testDataType) {
-    Map<TestDataType, ExternalConfig> testTypeExternalConfigMap =
+  public ExternalConfig getExternalConfigFor(
+      String clientId, Class<? extends TestDataType> testDataType) {
+    Map<Class<? extends TestDataType>, ExternalConfig> testTypeExternalConfigMap =
         externalConfigHashMap.get(clientId);
     if (testTypeExternalConfigMap != null) {
       return testTypeExternalConfigMap.get(testDataType);
@@ -78,7 +82,7 @@ public class ExternalConfigRepositoryImpl extends ExternalConfigRepository {
 
   /** @return */
   @Override
-  public Map<String, Map<TestDataType, ExternalConfig>> getExternalConfig() {
+  public Map<String, Map<Class<? extends TestDataType>, ExternalConfig>> getExternalConfig() {
     return externalConfigHashMap;
   }
 }

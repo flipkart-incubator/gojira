@@ -141,7 +141,7 @@ public class HttpHelper implements IHttpHelper {
     ExternalConfig clientConfig =
         TestExecutionInjector.getInjector()
             .getInstance(ExternalConfigRepository.class)
-            .getExternalConfigFor(clientId, new HttpTestDataType());
+            .getExternalConfigFor(clientId, HttpTestDataType.class);
 
     HttpConfig httpConfig = (HttpConfig) clientConfig;
     String externalCallUrl =
