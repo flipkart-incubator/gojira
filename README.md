@@ -1,5 +1,5 @@
 # Gojira[![Travis build status](https://travis-ci.org/flipkart-incubator/gojira.svg?branch=master)](https://travis-ci.org/flipkart-incubator/gojira) 
-Gojira is a record and replay based regression testing tool. 
+Gojira is a record and replay based regression testing tool for Java services. A well tested framework that is being used by `order management systems` at Flipkart.  
 
 ## Features
 1. Record and Replay framework for single request-response scope executions, that goes beyond just recording http request and response data, by additionally enabling recording of any call, external to the jvm, and storing them against a single test-id.
@@ -12,6 +12,31 @@ Gojira is a record and replay based regression testing tool.
 6. Interfaces to plug-in data-store for storing recorded data.
 8. Test executors for running tests in replay mode.
 9. Very low overhead during NONE and PROFILE mode. TODO: Add metrics.
+
+## Basic Terms:
+
+1. HttpFilter - Request Filter which helps to capture request, response and headers related to that request. 
+2. BindingsModule - This module is used for setting up method interceptors alone which uses `Google Guice AOP`
+3. SetupModule -  This module is used for setting up all the requirements of Gojira. The fields that are required for SetupModule installation
+   1. RequestSamplingConfig
+      a. Whitelist - URLs that needs to be whitelisted for gojira profiling and testing.
+      b. SamplingPercentage - Percentage of requests that needs to be profiled. 
+   2. SerdeConfig
+      a. DefaultSerdeHandler - This is used for serialising and deserialising of data profiled by Gojira. 
+   3. GojiraComparisonConfig
+      a. DiffIgnoreMap - This gives the client to ignore certain fields. For example, If a field is storing `timestamp` just for audit purposes, we can consider ignoring these during tests.
+      b. DefaultCompareHandler - This handler helps with comparing the profiled data and test data. Default compare handler is `JsonTestCompareHandler`
+      c. ResponseDataCompareHandler - This handler helps with comparing the response profiled data and response test data. If not provided, `JsonTestCompareHandler` is used. 
+   4. DataStoreConfig - Helps to bind `SinkHandler` with implementation.
+   5. TestQueuedSenderConfig
+      a. Path - Disk path in the box where the data needs to be stored temporarily before pushing it to DB.
+      b. QueueSize - Configure MaxQueue size so that your disk space usage can be limited.
+
+
+## Config Details: 
+
+
+
 
 ## Changelog
 [Changelog](https://github.com/flipkart-incubator/gojira/blob/initial-commit/CHANGELOG.md)
