@@ -4,6 +4,10 @@ public class KafkaConfig extends ExternalConfig {
 
   private String hostNamePort;
 
+  public KafkaConfig() {
+    super("KAFKA");
+  }
+
   public String getHostNamePort() {
     return hostNamePort;
   }

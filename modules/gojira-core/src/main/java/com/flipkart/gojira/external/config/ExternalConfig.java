@@ -35,13 +35,13 @@ import com.flipkart.gojira.models.TestDataType;
   @JsonSubTypes.Type(value = RMQConfig.class, name = "RMQ")
 })
 public abstract class ExternalConfig {
-  private TestDataType type;
+  private String type;
 
-  public TestDataType getType() {
-    return type;
+  public ExternalConfig(String type) {
+    this.type = type;
   }
 
-  public void setType(TestDataType type) {
-    this.type = type;
+  public final String getType() {
+    return type;
   }
 }

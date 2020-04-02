@@ -22,6 +22,10 @@ public class RMQConfig extends ExternalConfig {
   /** List of end-points for RMQ test machines. */
   private List<String> endpoints;
 
+  public RMQConfig() {
+    super("RMQ");
+  }
+
   public int getPort() {
     return port;
   }

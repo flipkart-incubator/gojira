@@ -23,7 +23,7 @@ import com.flipkart.gojira.models.kafka.KafkaTestDataType;
 import com.flipkart.gojira.models.rmq.RMQTestDataType;
 
 /** Base class for different types of {@link TestData} */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "type")
 @JsonSubTypes({
   @JsonSubTypes.Type(value = HttpTestDataType.class, name = "HTTP"),
   @JsonSubTypes.Type(value = KafkaTestDataType.class, name = "KAFKA"),

@@ -7,6 +7,10 @@ public class HttpConfig extends ExternalConfig {
   private int connectionTimeout;
   private int operationTimeout;
 
+  public HttpConfig() {
+    super("HTTP");
+  }
+
   public String getHostNamePort() {
     return hostNamePort;
   }
