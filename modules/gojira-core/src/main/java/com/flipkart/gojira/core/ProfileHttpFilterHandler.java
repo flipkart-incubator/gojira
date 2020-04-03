@@ -33,7 +33,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.flipkart.gojira.core.FilterConstants.TEST_HEADER;
+import static com.flipkart.gojira.core.GojiraConstants.TEST_HEADER;
 
 /** Implementation of {@link HttpFilterHandler} for mode {@link Mode#PROFILE} */
 public class ProfileHttpFilterHandler extends HttpFilterHandler {

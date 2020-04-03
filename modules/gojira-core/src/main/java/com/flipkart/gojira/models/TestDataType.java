@@ -22,12 +22,14 @@ import com.flipkart.gojira.models.http.HttpTestDataType;
 import com.flipkart.gojira.models.kafka.KafkaTestDataType;
 import com.flipkart.gojira.models.rmq.RMQTestDataType;
 
+import static com.flipkart.gojira.core.GojiraConstants.*;
+
 /** Base class for different types of {@link TestData} */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "type")
 @JsonSubTypes({
-  @JsonSubTypes.Type(value = HttpTestDataType.class, name = "HTTP"),
-  @JsonSubTypes.Type(value = KafkaTestDataType.class, name = "KAFKA"),
-  @JsonSubTypes.Type(value = RMQTestDataType.class, name = "RMQ")
+  @JsonSubTypes.Type(value = HttpTestDataType.class, name = HTTP_TEST_DATA_TYPE),
+  @JsonSubTypes.Type(value = KafkaTestDataType.class, name = KAFKA_TEST_DATA_TYPE),
+  @JsonSubTypes.Type(value = RMQTestDataType.class, name = RMQ_TEST_DATA_TYPE)
 })
 public abstract class TestDataType {
 

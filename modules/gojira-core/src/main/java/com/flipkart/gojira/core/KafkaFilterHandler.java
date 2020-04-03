@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import static com.flipkart.gojira.core.FilterConstants.TEST_HEADER;
+import static com.flipkart.gojira.core.GojiraConstants.TEST_HEADER;
 
 /**
  * This class is expected to provide an interface for implementing different logic for different

@@ -34,7 +34,7 @@ import javax.servlet.ServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.flipkart.gojira.core.FilterConstants.TEST_HEADER;
+import static com.flipkart.gojira.core.GojiraConstants.TEST_HEADER;
 
 /**
  * This class is expected to provide an interface for implementing different logic for different

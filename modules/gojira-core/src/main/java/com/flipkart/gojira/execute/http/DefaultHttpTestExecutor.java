@@ -16,7 +16,6 @@
 
 package com.flipkart.gojira.execute.http;
 
-import com.flipkart.gojira.core.FilterConstants;
 import com.flipkart.gojira.execute.TestExecutor;
 import com.flipkart.gojira.external.http.HttpCallException;
 import com.flipkart.gojira.external.http.IHttpHelper;
@@ -75,7 +74,7 @@ public class DefaultHttpTestExecutor
     Map<String, String> headers =
         requestData.getHeaders() != null ? requestData.getHeaders() : new HashMap<>();
     headers.remove(contentLengthHeader);
-    headers.put(FilterConstants.TEST_HEADER, testId);
+    headers.put(GojiraConstants.TEST_HEADER, testId);
 
     // body & method
     String httpMethod = requestData.getMethod().toUpperCase();

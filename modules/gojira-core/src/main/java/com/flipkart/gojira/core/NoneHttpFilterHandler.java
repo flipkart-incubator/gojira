@@ -23,7 +23,7 @@ import javax.servlet.ServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.flipkart.gojira.core.FilterConstants.TEST_HEADER;
+import static com.flipkart.gojira.core.GojiraConstants.TEST_HEADER;
 
 /**
  * Implementation of {@link HttpFilterHandler} for mode {@link Mode#NONE}

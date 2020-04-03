@@ -2,6 +2,8 @@ package com.flipkart.gojira.external.config;
 
 import java.util.List;
 
+import static com.flipkart.gojira.core.GojiraConstants.RMQ_TEST_DATA_TYPE;
+
 public class RMQConfig extends ExternalConfig {
   /** port at which RMQ is hosted */
   private int port;
@@ -23,7 +25,7 @@ public class RMQConfig extends ExternalConfig {
   private List<String> endpoints;
 
   public RMQConfig() {
-    super("RMQ");
+    super(RMQ_TEST_DATA_TYPE);
   }
 
   public int getPort() {

@@ -1,6 +1,5 @@
 package com.flipkart.gojira.execute.rmq;
 
-import com.flipkart.gojira.core.FilterConstants;
 import com.flipkart.gojira.execute.TestExecutionException;
 import com.flipkart.gojira.execute.TestExecutor;
 import com.flipkart.gojira.external.rmq.IRMQHelper;
@@ -51,7 +50,7 @@ public class DefaultRMQTestExecutor
     if (headers == null) {
       headers = new HashMap<>();
     }
-    headers.put(FilterConstants.TEST_HEADER, testId);
+    headers.put(GojiraConstants.TEST_HEADER, testId);
     AMQP.BasicProperties alteredProperties = basicProperties.builder().headers(headers).build();
     try {
       rmqHelper.publish(

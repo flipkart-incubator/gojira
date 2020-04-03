@@ -29,12 +29,12 @@ public class ProfileRMQFilterHandler extends RMQFilterHandler {
     if (id != null) {
       LOGGER.error(
           "Header with name: "
-              + FilterConstants.TEST_HEADER
+              + GojiraConstants.TEST_HEADER
               + " present. But service is not running in  mode. : "
               + Mode.PROFILE);
       throw new RuntimeException(
           "Header with name: "
-              + FilterConstants.TEST_HEADER
+              + GojiraConstants.TEST_HEADER
               + " present. But service is not running in  mode. : "
               + Mode.PROFILE);
     }

@@ -1,5 +1,7 @@
 package com.flipkart.gojira.external.config;
 
+import static com.flipkart.gojira.core.GojiraConstants.HTTP_TEST_DATA_TYPE;
+
 public class HttpConfig extends ExternalConfig {
 
   private String hostNamePort;
@@ -8,7 +10,7 @@ public class HttpConfig extends ExternalConfig {
   private int operationTimeout;
 
   public HttpConfig() {
-    super("HTTP");
+    super(HTTP_TEST_DATA_TYPE);
   }
 
   public String getHostNamePort() {

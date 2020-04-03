@@ -16,7 +16,6 @@
 
 package com.flipkart.gojira.execute.kafka;
 
-import com.flipkart.gojira.core.FilterConstants;
 import com.flipkart.gojira.execute.TestExecutor;
 import com.flipkart.gojira.external.kafka.IKafkaHelper;
 import com.flipkart.gojira.external.kafka.KafkaProducerException;
@@ -60,7 +59,7 @@ public class DefaultKafkaTestExecutor
     KafkaTestRequestData requestData = testData.getRequestData();
     RecordHeaders recordHeaders = new RecordHeaders();
     requestData.getHeaders().forEach((k, v) -> recordHeaders.add(new RecordHeader(k, v)));
-    recordHeaders.add(new RecordHeader(FilterConstants.TEST_HEADER, testId.getBytes()));
+    recordHeaders.add(new RecordHeader(GojiraConstants.TEST_HEADER, testId.getBytes()));
     ProducerRecord<byte[], byte[]> producerRecord =
         new ProducerRecord<>(
             requestData.getTopicName(),

@@ -20,6 +20,8 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.flipkart.gojira.models.TestDataType;
 
+import static com.flipkart.gojira.core.GojiraConstants.*;
+
 /**
  * This class holds all config required for making external rpc calls. This needs to be provided by
  * the client application. // TODO: sub-calls it for different types of external calls like HTTP
@@ -30,9 +32,9 @@ import com.flipkart.gojira.models.TestDataType;
     include = JsonTypeInfo.As.EXISTING_PROPERTY,
     property = "type")
 @JsonSubTypes({
-  @JsonSubTypes.Type(value = HttpConfig.class, name = "HTTP"),
-  @JsonSubTypes.Type(value = KafkaConfig.class, name = "KAFKA"),
-  @JsonSubTypes.Type(value = RMQConfig.class, name = "RMQ")
+  @JsonSubTypes.Type(value = HttpConfig.class, name = HTTP_TEST_DATA_TYPE),
+  @JsonSubTypes.Type(value = KafkaConfig.class, name = KAFKA_TEST_DATA_TYPE),
+  @JsonSubTypes.Type(value = RMQConfig.class, name = RMQ_TEST_DATA_TYPE)
 })
 public abstract class ExternalConfig {
   private String type;

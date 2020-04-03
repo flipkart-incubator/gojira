@@ -23,6 +23,8 @@ import com.flipkart.gojira.models.TestData;
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
 
+import static com.flipkart.gojira.core.GojiraConstants.*;
+
 /**
  * Guice module which contains bindings for different {@link TestExecutor} for different {@link
  * TestData}
@@ -31,8 +33,8 @@ public class TestExecutorModule extends AbstractModule {
 
   @Override
   protected void configure() {
-    bind(TestExecutor.class).annotatedWith(Names.named("HTTP")).to(DefaultHttpTestExecutor.class);
-    bind(TestExecutor.class).annotatedWith(Names.named("KAFKA")).to(DefaultKafkaTestExecutor.class);
-    bind(TestExecutor.class).annotatedWith(Names.named("RMQ")).to(DefaultRMQTestExecutor.class);
+    bind(TestExecutor.class).annotatedWith(Names.named(HTTP_TEST_DATA_TYPE)).to(DefaultHttpTestExecutor.class);
+    bind(TestExecutor.class).annotatedWith(Names.named(KAFKA_TEST_DATA_TYPE)).to(DefaultKafkaTestExecutor.class);
+    bind(TestExecutor.class).annotatedWith(Names.named(RMQ_TEST_DATA_TYPE)).to(DefaultRMQTestExecutor.class);
   }
 }
