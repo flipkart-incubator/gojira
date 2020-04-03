@@ -16,6 +16,7 @@
 
 package com.flipkart.gojira.execute.kafka;
 
+import com.flipkart.gojira.core.GojiraConstants;
 import com.flipkart.gojira.execute.TestExecutor;
 import com.flipkart.gojira.external.kafka.IKafkaHelper;
 import com.flipkart.gojira.external.kafka.KafkaProducerException;

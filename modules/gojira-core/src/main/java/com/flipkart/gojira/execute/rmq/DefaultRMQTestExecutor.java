@@ -1,5 +1,6 @@
 package com.flipkart.gojira.execute.rmq;
 
+import com.flipkart.gojira.core.GojiraConstants;
 import com.flipkart.gojira.execute.TestExecutionException;
 import com.flipkart.gojira.execute.TestExecutor;
 import com.flipkart.gojira.external.rmq.IRMQHelper;

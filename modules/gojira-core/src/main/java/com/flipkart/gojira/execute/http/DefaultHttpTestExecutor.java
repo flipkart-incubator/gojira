@@ -16,6 +16,7 @@
 
 package com.flipkart.gojira.execute.http;
 
+import com.flipkart.gojira.core.GojiraConstants;
 import com.flipkart.gojira.execute.TestExecutor;
 import com.flipkart.gojira.external.http.HttpCallException;
 import com.flipkart.gojira.external.http.IHttpHelper;

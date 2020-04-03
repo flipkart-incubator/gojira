@@ -18,7 +18,6 @@ package com.flipkart.gojira.external.config;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.flipkart.gojira.models.TestDataType;
 
 import static com.flipkart.gojira.core.GojiraConstants.*;
 
