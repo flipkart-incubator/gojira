@@ -16,8 +16,6 @@
 
 package com.flipkart.gojira.core;
 
-import static com.flipkart.gojira.core.DI.di;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flipkart.compare.handlers.json.JsonTestCompareHandler;
 import com.flipkart.gojira.compare.config.GojiraComparisonConfig;
@@ -26,9 +24,11 @@ import com.flipkart.gojira.models.http.HttpTestResponseData;
 import com.flipkart.gojira.queuedsender.config.TestQueuedSenderConfig;
 import com.flipkart.gojira.requestsampling.config.RequestSamplingConfig;
 import com.flipkart.gojira.serde.config.SerdeConfig;
-import com.flipkart.gojira.serde.handlers.json.JsonTestSerdeHandler;
+import com.flipkart.gojira.serde.handlers.json.JsonStdSerdeHandler;
 import com.flipkart.gojira.sinkstore.config.DataStoreConfig;
 import com.flipkart.gojira.sinkstore.file.FileBasedDataStoreHandler;
+import org.junit.BeforeClass;
+
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -39,7 +39,8 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import org.junit.BeforeClass;
+
+import static com.flipkart.gojira.core.DI.di;
 
 /**
  * Created by arunachalam.s on 10/10/17.
@@ -65,7 +66,7 @@ public class ParallelCallTest {
         .setWhitelist(new ArrayList<>())
         .build();
     SerdeConfig serdeConfig = SerdeConfig.builder()
-        .setDefaultSerdeHandler(new JsonTestSerdeHandler()).build();
+        .setDefaultSerdeHandler(new JsonStdSerdeHandler()).build();
     GojiraComparisonConfig comparisonConfig = GojiraComparisonConfig.builder()
         .setDiffIgnoreMap(jsonDiffIgnoreMap)
         .setDefaultCompareHandler(new JsonTestCompareHandler())

@@ -31,13 +31,14 @@ import com.flipkart.gojira.serde.TestSerdeException;
 import com.flipkart.gojira.serde.config.SerdeConfig;
 import com.flipkart.gojira.serde.handlers.TestSerdeHandler;
 import com.flipkart.gojira.serde.handlers.json.JsonDefaultTestSerdeHandler;
+import com.flipkart.gojira.serde.handlers.json.JsonStdSerdeHandler;
 import com.flipkart.gojira.serde.handlers.json.JsonTestSerdeHandler;
 import com.flipkart.gojira.sinkstore.config.DataStoreConfig;
 import com.flipkart.gojira.sinkstore.file.FileBasedDataStoreHandler;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.*;
 
 /**
  * Created by arunachalam.s on 11/10/17.
@@ -61,7 +62,7 @@ public class TestDataSerdeTest {
     String s1 = "abc";
     String s2 = "def";
 
-    new JsonTestSerdeHandler()
+    new JsonStdSerdeHandler()
         .deserializeToInstance(new JsonDefaultTestSerdeHandler().serialize(s1), s2);
 
     System.out.println(s2);
@@ -71,7 +72,7 @@ public class TestDataSerdeTest {
     int i1 = 3;
     int i2 = 4;
 
-    new JsonTestSerdeHandler()
+    new JsonStdSerdeHandler()
         .deserializeToInstance(new JsonDefaultTestSerdeHandler().serialize(i1), i2);
 
     System.out.println(i2);
@@ -81,7 +82,7 @@ public class TestDataSerdeTest {
     Integer i1 = 3;
     Integer i2 = 4;
 
-    new JsonTestSerdeHandler()
+    new JsonStdSerdeHandler()
         .deserializeToInstance(new JsonDefaultTestSerdeHandler().serialize(i1), i2);
 
     System.out.println(i2);
@@ -91,7 +92,7 @@ public class TestDataSerdeTest {
   public void checkCompare()
       throws TestSerdeException, TestCompareException, TestExecutionException {
     TestCompareHandler testCompareHandler = new JsonTestCompareHandler();
-    TestSerdeHandler testSerdeHandler = new JsonTestSerdeHandler();
+    TestSerdeHandler testSerdeHandler = new JsonStdSerdeHandler();
     TestClass testClass1 = new TestClass();
     Map<String, String> map1 = new HashMap<>();
     map1.put("hi", "hello");
@@ -109,7 +110,7 @@ public class TestDataSerdeTest {
         .setWhitelist(new ArrayList<>())
         .build();
     SerdeConfig serdeConfig = SerdeConfig.builder()
-        .setDefaultSerdeHandler(new JsonTestSerdeHandler()).build();
+        .setDefaultSerdeHandler(new JsonStdSerdeHandler()).build();
     GojiraComparisonConfig comparisonConfig = GojiraComparisonConfig.builder()
         .setDiffIgnoreMap(null)
         .setDefaultCompareHandler(new JsonTestCompareHandler())
@@ -131,6 +132,67 @@ public class TestDataSerdeTest {
 
     DI.install(profileOrTestModule);
     testCompareHandler.compare(testSerdeHandler.serialize(map1), testSerdeHandler.serialize(map2));
+  }
+
+  @Test
+  public void testSerDeser() throws TestSerdeException {
+    JsonStdSerdeHandler jsonStdSerdeHandler = new JsonStdSerdeHandler();
+    JsonTestSerdeHandler jsonTestSerdeHandler = new JsonTestSerdeHandler();
+
+    List<Map<List<Map<TestClass, String>>, TestClass>> list = new ArrayList<>();
+
+    Map<TestClass, String> internalMap = new HashMap<>();
+
+    TestClass internalTestClass = new TestClass();
+    Map<String, String> mapInInternalTestClass = new HashMap<>();
+    mapInInternalTestClass.put("hi", "hello");
+    mapInInternalTestClass.put("alpha", "beta");
+    internalTestClass.map = mapInInternalTestClass;
+    internalMap.put(internalTestClass, "testing");
+
+    List<Map<TestClass, String>> internalList = new ArrayList<>();
+    internalList.add(internalMap);
+
+    TestClass externalTestClass = new TestClass();
+    Map<String, String> mapInExternalTestClass = new LinkedHashMap<>();
+    mapInExternalTestClass.put("jingle", "bells");
+    mapInExternalTestClass.put("gamma", "delta");
+    externalTestClass.map = mapInExternalTestClass;
+
+    Map<List<Map<TestClass, String>>, TestClass> externalMap = new HashMap<>();
+    externalMap.put(internalList, externalTestClass);
+
+    list.add(externalMap);
+    String jsonStdSerdeHandlerResult;
+
+    try {
+      byte[] serDataForList = jsonStdSerdeHandler.serialize(list);
+      jsonStdSerdeHandler.deserialize(serDataForList, List.class);
+
+      byte[] serDataForMap = jsonStdSerdeHandler.serialize(externalMap);
+      jsonStdSerdeHandler.deserialize(serDataForMap, Map.class);
+      jsonStdSerdeHandlerResult = "SUCCESS";
+    } catch (Exception e) {
+      e.printStackTrace();
+      jsonStdSerdeHandlerResult = "FAILURE";
+    }
+
+    String jsonTestSerdeHandlerResult;
+    try {
+      byte[] serDataForList = jsonTestSerdeHandler.serialize(list);
+      jsonTestSerdeHandler.deserialize(serDataForList, List.class);
+
+      byte[] serDataForMap = jsonTestSerdeHandler.serialize(externalMap);
+      jsonTestSerdeHandler.deserialize(serDataForMap, Map.class);
+      jsonTestSerdeHandlerResult = "SUCCESS";
+    } catch (Exception e) {
+      e.printStackTrace();
+      jsonTestSerdeHandlerResult = "FAILURE";
+    }
+
+    Assert.assertEquals("SUCCESS", jsonStdSerdeHandlerResult);
+    Assert.assertEquals("FAILURE", jsonTestSerdeHandlerResult);
+
   }
 
   public static class TestClass {

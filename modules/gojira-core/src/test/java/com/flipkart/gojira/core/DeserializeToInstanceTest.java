@@ -22,16 +22,17 @@ import com.flipkart.gojira.models.http.HttpTestRequestData;
 import com.flipkart.gojira.models.http.HttpTestResponseData;
 import com.flipkart.gojira.serde.TestSerdeException;
 import com.flipkart.gojira.serde.handlers.json.JsonDefaultTestSerdeHandler;
-import com.flipkart.gojira.serde.handlers.json.JsonTestSerdeHandler;
-import java.util.ArrayList;
-import java.util.List;
+import com.flipkart.gojira.serde.handlers.json.JsonStdSerdeHandler;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DeserializeToInstanceTest {
   //Refer https://www.logicbig.com/tutorials/misc/jackson/reader-for-updating.html
 
-  private JsonTestSerdeHandler jsonTestSerdeHandler = new JsonTestSerdeHandler();
+  private JsonStdSerdeHandler jsonTestSerdeHandler = new JsonStdSerdeHandler();
   private JsonDefaultTestSerdeHandler jsonDefaultTestSerdeHandler = new JsonDefaultTestSerdeHandler();
 
   public void IntegerJsonUpdateTest() throws TestSerdeException {
@@ -102,7 +103,7 @@ public class DeserializeToInstanceTest {
   public void enumJsonUpdateTest() throws TestSerdeException {
     EnumTest et = EnumTest.TEST;
     EnumTest updated_et = EnumTest.CHECK;
-    JsonTestSerdeHandler jsonTestSerdeHandler = new JsonTestSerdeHandler();
+    JsonStdSerdeHandler jsonTestSerdeHandler = new JsonStdSerdeHandler();
     jsonTestSerdeHandler.deserialize(jsonTestSerdeHandler.serialize(et), EnumTest.class);
     jsonTestSerdeHandler.deserializeToInstance(jsonTestSerdeHandler.serialize(updated_et), et);
   }
