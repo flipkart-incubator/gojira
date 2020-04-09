@@ -32,7 +32,6 @@ import com.flipkart.gojira.serde.config.SerdeConfig;
 import com.flipkart.gojira.serde.handlers.TestSerdeHandler;
 import com.flipkart.gojira.serde.handlers.json.JsonDefaultTestSerdeHandler;
 import com.flipkart.gojira.serde.handlers.json.JsonStdSerdeHandler;
-import com.flipkart.gojira.serde.handlers.json.JsonTestSerdeHandler;
 import com.flipkart.gojira.sinkstore.config.DataStoreConfig;
 import com.flipkart.gojira.sinkstore.file.FileBasedDataStoreHandler;
 import org.junit.Assert;
@@ -137,7 +136,6 @@ public class TestDataSerdeTest {
   @Test
   public void testSerDeser() throws TestSerdeException {
     JsonStdSerdeHandler jsonStdSerdeHandler = new JsonStdSerdeHandler();
-    JsonTestSerdeHandler jsonTestSerdeHandler = new JsonTestSerdeHandler();
 
     List<Map<List<Map<TestClass, String>>, TestClass>> list = new ArrayList<>();
 
@@ -177,22 +175,7 @@ public class TestDataSerdeTest {
       jsonStdSerdeHandlerResult = "FAILURE";
     }
 
-    String jsonTestSerdeHandlerResult;
-    try {
-      byte[] serDataForList = jsonTestSerdeHandler.serialize(list);
-      jsonTestSerdeHandler.deserialize(serDataForList, List.class);
-
-      byte[] serDataForMap = jsonTestSerdeHandler.serialize(externalMap);
-      jsonTestSerdeHandler.deserialize(serDataForMap, Map.class);
-      jsonTestSerdeHandlerResult = "SUCCESS";
-    } catch (Exception e) {
-      e.printStackTrace();
-      jsonTestSerdeHandlerResult = "FAILURE";
-    }
-
     Assert.assertEquals("SUCCESS", jsonStdSerdeHandlerResult);
-    Assert.assertEquals("FAILURE", jsonTestSerdeHandlerResult);
-
   }
 
   public static class TestClass {

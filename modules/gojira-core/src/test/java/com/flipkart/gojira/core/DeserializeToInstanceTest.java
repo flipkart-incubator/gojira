@@ -32,13 +32,13 @@ import java.util.List;
 public class DeserializeToInstanceTest {
   //Refer https://www.logicbig.com/tutorials/misc/jackson/reader-for-updating.html
 
-  private JsonStdSerdeHandler jsonTestSerdeHandler = new JsonStdSerdeHandler();
+  private JsonStdSerdeHandler jsonStdSerdeHandler = new JsonStdSerdeHandler();
   private JsonDefaultTestSerdeHandler jsonDefaultTestSerdeHandler = new JsonDefaultTestSerdeHandler();
 
   public void IntegerJsonUpdateTest() throws TestSerdeException {
     Integer x = 1;
     Integer y = 2;
-    jsonTestSerdeHandler.deserializeToInstance(jsonTestSerdeHandler.serialize(y), x);
+    jsonStdSerdeHandler.deserializeToInstance(jsonStdSerdeHandler.serialize(y), x);
   }
 
   @Test
@@ -57,9 +57,9 @@ public class DeserializeToInstanceTest {
     strings2.add("stopped");
     y.setStringList(strings2);
 
-    jsonTestSerdeHandler
-        .deserialize(jsonTestSerdeHandler.serialize(y), IntegerAndListWrapper.class);
-    jsonTestSerdeHandler.deserializeToInstance(jsonTestSerdeHandler.serialize(y), x);
+    jsonStdSerdeHandler
+        .deserialize(jsonStdSerdeHandler.serialize(y), IntegerAndListWrapper.class);
+    jsonStdSerdeHandler.deserializeToInstance(jsonStdSerdeHandler.serialize(y), x);
     Assert.assertEquals(x.getInteger(), y.getInteger());
     Assert.assertEquals(x.getStringList(), y.getStringList());
   }
@@ -73,8 +73,8 @@ public class DeserializeToInstanceTest {
     y.add(2);
     y.add(3);
 
-    jsonTestSerdeHandler.deserializeToInstance(jsonDefaultTestSerdeHandler.serialize(y), x);
-    Assert.assertEquals(4, x.size());
+    jsonStdSerdeHandler.deserializeToInstance(jsonStdSerdeHandler.serialize(y), x);
+    Assert.assertEquals(2, x.size());
   }
 
   @Test
@@ -103,9 +103,9 @@ public class DeserializeToInstanceTest {
   public void enumJsonUpdateTest() throws TestSerdeException {
     EnumTest et = EnumTest.TEST;
     EnumTest updated_et = EnumTest.CHECK;
-    JsonStdSerdeHandler jsonTestSerdeHandler = new JsonStdSerdeHandler();
-    jsonTestSerdeHandler.deserialize(jsonTestSerdeHandler.serialize(et), EnumTest.class);
-    jsonTestSerdeHandler.deserializeToInstance(jsonTestSerdeHandler.serialize(updated_et), et);
+    JsonStdSerdeHandler jsonStdSerdeHandler = new JsonStdSerdeHandler();
+    jsonStdSerdeHandler.deserialize(jsonStdSerdeHandler.serialize(et), EnumTest.class);
+    jsonStdSerdeHandler.deserializeToInstance(jsonStdSerdeHandler.serialize(updated_et), et);
   }
 
   public enum EnumTest {

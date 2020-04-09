@@ -25,7 +25,8 @@ import java.util.Map;
  */
 public class JsonStdSerdeHandler implements TestSerdeHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(JsonStdSerdeHandler.class);
-    private static final ObjectMapper mapper = new ObjectMapper()
+    private static final SimpleModule SIMPLE_MODULE = new SimpleModule();
+    private static final ObjectMapper MAPPER = new ObjectMapper()
             .enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
             .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
             .enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT)
@@ -33,7 +34,7 @@ public class JsonStdSerdeHandler implements TestSerdeHandler {
             .enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING)
             .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
             .setSubtypeResolver(new StdSubtypeResolver())
-            .registerModule(new SimpleModule()
+            .registerModule(SIMPLE_MODULE
                     .addSerializer(List.class, new TestListSerializer())
                     .addDeserializer(List.class, new TestListDeserializer())
                     .addSerializer(Map.class, new TestMapSerializer())
@@ -42,7 +43,7 @@ public class JsonStdSerdeHandler implements TestSerdeHandler {
     @Override
     public <T> byte[] serialize(T obj) throws TestSerdeException {
         try {
-            return mapper.writeValueAsBytes(obj);
+            return MAPPER.writeValueAsBytes(obj);
         } catch (JsonProcessingException e) {
             LOGGER.error("error serializing data.", e);
             throw new TestSerdeException("error serializing data.", e);
@@ -53,12 +54,12 @@ public class JsonStdSerdeHandler implements TestSerdeHandler {
     public <T> T deserialize(byte[] bytes, Class<T> clazz) throws TestSerdeException {
         try {
             if (List.class.isAssignableFrom(clazz)) {
-                return mapper.readValue(bytes, (Class<T>) List.class);
+                return MAPPER.readValue(bytes, (Class<T>) List.class);
             }
             if (Map.class.isAssignableFrom(clazz)) {
-                return mapper.readValue(bytes, (Class<T>) Map.class);
+                return MAPPER.readValue(bytes, (Class<T>) Map.class);
             }
-            return mapper.readValue(bytes, clazz);
+            return MAPPER.readValue(bytes, clazz);
         } catch (IOException e) {
             LOGGER.error("error de-serializing data. class: " + clazz.toGenericString(), e);
             throw new TestSerdeException("error de-serializing data. class: " + clazz.toGenericString(),
@@ -70,16 +71,30 @@ public class JsonStdSerdeHandler implements TestSerdeHandler {
     public <T> void deserializeToInstance(byte[] bytes, T obj) throws TestSerdeException {
         try {
             if (List.class.isAssignableFrom(obj.getClass())) {
-                List tmpObj = (List) obj;
-                mapper.readerForUpdating(tmpObj).readValue(bytes);
+                ((List) obj).clear();
+                List tmpList = MAPPER.readValue(bytes, List.class);
+                ((List) obj).addAll(tmpList);
             } else if (Map.class.isAssignableFrom(obj.getClass())) {
-                Map tmpObj = (Map) obj;
-                mapper.readerForUpdating(tmpObj).readValue(bytes);
-            } else mapper.readerForUpdating(obj).readValue(bytes);
+                ((Map) obj).clear();
+                Map tmpMap = MAPPER.readValue(bytes, Map.class);
+                ((Map) obj).putAll(tmpMap);
+            } else MAPPER.readerForUpdating(obj).readValue(bytes);
         } catch (IOException e) {
             throw new TestSerdeException("error updating object.", e);
         }
 
+    }
+
+
+    public synchronized static <T> void registerSerializer(Class<T> type, JsonSerializer<T> ser) {
+        SIMPLE_MODULE.addSerializer(type, ser);
+        MAPPER.registerModule(SIMPLE_MODULE);
+    }
+
+    public synchronized static <T> void registerDeSerializer(Class<T> type,
+                                                             JsonDeserializer<T> deser) {
+        SIMPLE_MODULE.addDeserializer(type, deser);
+        MAPPER.registerModule(SIMPLE_MODULE);
     }
 
     public static class TestListSerializer extends JsonSerializer<List> {
@@ -133,10 +148,10 @@ public class JsonStdSerdeHandler implements TestSerdeHandler {
                         itemType = false;
                     } else {
                         list.add(List.class.isAssignableFrom(Class.forName(listItemType)) ?
-                                mapper.readValue(arrayNode.get(i).toString().getBytes(), List.class) :
+                                MAPPER.readValue(arrayNode.get(i).toString().getBytes(), List.class) :
                                 Map.class.isAssignableFrom(Class.forName(listItemType)) ?
-                                        mapper.readValue(arrayNode.get(i).toString().getBytes(), Map.class) :
-                                        mapper.readValue(arrayNode.get(i).toString().getBytes(),
+                                        MAPPER.readValue(arrayNode.get(i).toString().getBytes(), Map.class) :
+                                        MAPPER.readValue(arrayNode.get(i).toString().getBytes(),
                                                 Class.forName(listItemType)));
                         itemType = true;
                     }
@@ -172,7 +187,7 @@ public class JsonStdSerdeHandler implements TestSerdeHandler {
                                 value.get(value.keySet().toArray()[i]).getClass().getName());
                         gen.writeEndObject();
                         gen.writeStartObject();
-                        gen.writeObjectField(mapper.writeValueAsString(value.keySet().toArray()[i]),
+                        gen.writeObjectField(MAPPER.writeValueAsString(value.keySet().toArray()[i]),
                                 value.get(value.keySet().toArray()[i]));
                         gen.writeEndObject();
                     }
@@ -231,16 +246,16 @@ public class JsonStdSerdeHandler implements TestSerdeHandler {
                         while (keys.hasNext()) {
                             String key = keys.next();
                             map.put(Map.class.isAssignableFrom(Class.forName(mapKeyType)) ?
-                                            mapper.readValue(key.getBytes(), Map.class) :
+                                            MAPPER.readValue(key.getBytes(), Map.class) :
                                             List.class.isAssignableFrom(Class.forName(mapKeyType)) ?
-                                                    mapper.readValue(key.getBytes(), List.class) :
-                                                    mapper.readValue(key.getBytes(), Class.forName(mapKeyType)),
+                                                    MAPPER.readValue(key.getBytes(), List.class) :
+                                                    MAPPER.readValue(key.getBytes(), Class.forName(mapKeyType)),
 
                                     Map.class.isAssignableFrom(Class.forName(mapValueType)) ?
-                                            mapper.readValue(element.get(key).toString().getBytes(), Map.class) :
+                                            MAPPER.readValue(element.get(key).toString().getBytes(), Map.class) :
                                             List.class.isAssignableFrom(Class.forName(mapValueType)) ?
-                                                    mapper.readValue(element.get(key).toString().getBytes(), List.class) :
-                                                    mapper.readValue(element.get(key).toString().getBytes(),
+                                                    MAPPER.readValue(element.get(key).toString().getBytes(), List.class) :
+                                                    MAPPER.readValue(element.get(key).toString().getBytes(),
                                                             Class.forName(mapValueType)));
                         }
                         mapKey = true;
