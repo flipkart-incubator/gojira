@@ -28,23 +28,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Implementation of {@link TestSerdeHandler}
+ * Basic Implementation of {@link TestSerdeHandler}
  */
 public class JsonDefaultTestSerdeHandler implements TestSerdeHandler {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(JsonDefaultTestSerdeHandler.class);
-  private static final ObjectMapper mapper = new ObjectMapper();
-
-  // TODO: Remove static block. Remove these properties as well if feasible.
-  static {
-    mapper.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
-    mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-    mapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
-    mapper.enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING);
-    mapper.enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING);
-    mapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
-    mapper.setSubtypeResolver(new StdSubtypeResolver());
-  }
+  private static final ObjectMapper mapper = new ObjectMapper()
+          .enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
+          .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+          .enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT)
+          .enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING)
+          .enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING)
+          .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
+          .setSubtypeResolver(new StdSubtypeResolver());
 
   /**
    * @param obj object to be serialized
@@ -52,7 +48,6 @@ public class JsonDefaultTestSerdeHandler implements TestSerdeHandler {
    * @return
    * @throws TestSerdeException
    */
-
   @Override
   public <T> byte[] serialize(T obj) throws TestSerdeException {
     try {

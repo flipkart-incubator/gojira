@@ -1,3 +1,19 @@
+/*
+ * Copyright 2020 Flipkart Internet, pvt ltd.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.flipkart.gojira.serde.handlers.json;
 
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -21,7 +37,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author parth.shyara, file created on 05/04/20.
+ * Standard Implementation of {@link TestSerdeHandler}
  */
 public class JsonStdSerdeHandler implements TestSerdeHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(JsonStdSerdeHandler.class);
@@ -40,6 +56,12 @@ public class JsonStdSerdeHandler implements TestSerdeHandler {
                     .addSerializer(Map.class, new TestMapSerializer())
                     .addDeserializer(Map.class, new TestMapDeserializer()));
 
+    /**
+     * @param obj object to be serialized
+     * @param <T>
+     * @return
+     * @throws TestSerdeException
+     */
     @Override
     public <T> byte[] serialize(T obj) throws TestSerdeException {
         try {
@@ -50,6 +72,13 @@ public class JsonStdSerdeHandler implements TestSerdeHandler {
         }
     }
 
+    /**
+     * @param bytes serialized byte[] to be de-serialized.
+     * @param clazz class to de-serialize
+     * @param <T>
+     * @return
+     * @throws TestSerdeException
+     */
     @Override
     public <T> T deserialize(byte[] bytes, Class<T> clazz) throws TestSerdeException {
         try {
@@ -67,6 +96,12 @@ public class JsonStdSerdeHandler implements TestSerdeHandler {
         }
     }
 
+    /**
+     * @param bytes serialized byte[] to be de-serialized
+     * @param obj   object which needs to be updated with the above byte[]
+     * @param <T>
+     * @throws TestSerdeException
+     */
     @Override
     public <T> void deserializeToInstance(byte[] bytes, T obj) throws TestSerdeException {
         try {
@@ -86,17 +121,30 @@ public class JsonStdSerdeHandler implements TestSerdeHandler {
     }
 
 
+    /**
+     * @param type The class against which a custom serializer is to be added
+     * @param ser  Custom serializer for <code>type</code>
+     * @param <T>
+     */
     public synchronized static <T> void registerSerializer(Class<T> type, JsonSerializer<T> ser) {
         SIMPLE_MODULE.addSerializer(type, ser);
         MAPPER.registerModule(SIMPLE_MODULE);
     }
 
+    /**
+     * @param type  The class against which a custom deserializer is to be added
+     * @param deser Custom serializer for <code>type</code>
+     * @param <T>
+     */
     public synchronized static <T> void registerDeSerializer(Class<T> type,
                                                              JsonDeserializer<T> deser) {
         SIMPLE_MODULE.addDeserializer(type, deser);
         MAPPER.registerModule(SIMPLE_MODULE);
     }
 
+    /**
+     * Custom Serializer for List
+     */
     public static class TestListSerializer extends JsonSerializer<List> {
 
         @Override
@@ -117,6 +165,9 @@ public class JsonStdSerdeHandler implements TestSerdeHandler {
         }
     }
 
+    /**
+     * Custom Deserializer for List
+     */
     public static class TestListDeserializer extends JsonDeserializer<List> {
 
         @Override
@@ -163,6 +214,9 @@ public class JsonStdSerdeHandler implements TestSerdeHandler {
         }
     }
 
+    /**
+     * Custom Serializer for Map
+     */
     public static class TestMapSerializer extends JsonSerializer<Map> {
 
         @Override
@@ -197,6 +251,9 @@ public class JsonStdSerdeHandler implements TestSerdeHandler {
         }
     }
 
+    /**
+     * Custom Deserializer for Map
+     */
     public static class TestMapDeserializer extends JsonDeserializer<Map> {
 
         @Override
