@@ -42,6 +42,7 @@ public class TestStartEndTestHandler<T extends TestDataType> implements StartEnd
   // TODO: Move this global constants file.
   private static final String delim = " | ";
   private static final String RESULT_SUCCESS = "SUCCESS";
+  private static final String NON_EMPTY_METHOD_DATA_MAP = "NON_EMPTY_METHOD_DATA_MAP";
   private static final String READ_FAILURE = "READ_FAILED";
   private static final String COMPARE_FAILED = "COMPARE_FAILED";
   private static final String EXECUTION_FAILED = "EXECUTION_FAILED";
@@ -140,8 +141,15 @@ public class TestStartEndTestHandler<T extends TestDataType> implements StartEnd
               .compare(serdeHandlerRepository.getReqRespDataSerdeHandler()
                       .serialize(ProfileRepository.getTestData().getResponseData()),
                   serdeHandlerRepository.getReqRespDataSerdeHandler().serialize(responseData));
-          sinkHandler.writeResults(id, RESULT_SUCCESS);
-          LOGGER.info("RESULT_SUCCESS for " + id);
+          if(ProfileRepository.getTestData().getMethodDataMap().isEmpty()){
+            sinkHandler.writeResults(id, RESULT_SUCCESS);
+            LOGGER.info("RESULT_SUCCESS for " + id);
+          }
+          else{
+            sinkHandler.writeResults(id, NON_EMPTY_METHOD_DATA_MAP);
+            LOGGER.error("NON_EMPTY_METHOD_DATA_MAP for " + id);
+          }
+
         } catch (TestCompareException e) {
           LOGGER.error("test compare exception.", e);
           sinkHandler.writeResults(id, COMPARE_FAILED);
