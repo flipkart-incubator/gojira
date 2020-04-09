@@ -128,7 +128,6 @@ public class JsonStdSerdeHandler implements TestSerdeHandler {
      */
     public synchronized static <T> void registerSerializer(Class<T> type, JsonSerializer<T> ser) {
         SIMPLE_MODULE.addSerializer(type, ser);
-        MAPPER.registerModule(SIMPLE_MODULE);
     }
 
     /**
@@ -139,7 +138,6 @@ public class JsonStdSerdeHandler implements TestSerdeHandler {
     public synchronized static <T> void registerDeSerializer(Class<T> type,
                                                              JsonDeserializer<T> deser) {
         SIMPLE_MODULE.addDeserializer(type, deser);
-        MAPPER.registerModule(SIMPLE_MODULE);
     }
 
     /**
