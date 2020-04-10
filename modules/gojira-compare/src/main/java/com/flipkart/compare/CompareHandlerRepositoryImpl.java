@@ -19,7 +19,7 @@ package com.flipkart.compare;
 import com.flipkart.compare.handlers.TestCompareHandler;
 
 /**
- * Implementation of {@link CompareHandlerRepository}
+ * Implementation of {@link CompareHandlerRepository}.
  */
 public class CompareHandlerRepositoryImpl extends CompareHandlerRepository {
 

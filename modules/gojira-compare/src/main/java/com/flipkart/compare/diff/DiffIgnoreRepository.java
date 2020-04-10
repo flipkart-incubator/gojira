@@ -31,12 +31,12 @@ public abstract class DiffIgnoreRepository {
 
   /**
    * This variable holds the list of {@link DiffDetail#diffPath} values as Pattern for optimized
-   * matching during comparison per {@link DiffDetail#diffType}
+   * matching during comparison per {@link DiffDetail#diffType}.
    */
-  static final Map<DiffType, List<Pattern>> diffIgnorePatterns = new HashMap<DiffType, List<Pattern>>();
+  static final Map<DiffType, List<Pattern>> diffIgnorePatterns = new HashMap<>();
 
   /**
-   * This method sets up {@link DiffIgnoreRepository#diffIgnorePatterns}
+   * This method sets up {@link DiffIgnoreRepository#diffIgnorePatterns}.
    *
    * @param diffIgnoreMap map of diffType to list of diffPath Validation of key to DiffType and
    *                      converting list of diffPath to list of Pattern is the responsibility of
@@ -45,7 +45,7 @@ public abstract class DiffIgnoreRepository {
   public abstract void setupDiffIgnorePatterns(Map<String, List<String>> diffIgnoreMap);
 
   /**
-   * This method returns
+   * Gets the list of Pattern to be ignored.
    *
    * @return {@link DiffIgnoreRepository#diffIgnorePatterns}
    */

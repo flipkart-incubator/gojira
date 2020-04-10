@@ -38,7 +38,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Implementation of {@link TestCompareHandler} for comparing byte[] that can be de-serialized to
- * {@link JsonNode}
+ * {@link JsonNode}.
  */
 public class JsonTestCompareHandler extends TestCompareHandler {
 
@@ -48,26 +48,29 @@ public class JsonTestCompareHandler extends TestCompareHandler {
   /**
    * This method de-serializes byte[] to {@link com.fasterxml.jackson.databind.JsonNode} Depending
    * on whether the object is an {@link ObjectNode} or {@link ArrayNode} or {@link Object} invokes
-   * the respective overloaded method..
+   * the respective overloaded method.
    *
    * @param profiledData expected data in bytes
-   * @param testData     actual data in bytes
+   * @param testData actual data in bytes
    * @throws TestCompareException exception thrown when there is a diff
    */
   @Override
   protected void doCompare(byte[] profiledData, byte[] testData) throws TestCompareException {
     try {
       // return if both profiledData and testData are null or empty.
-      if ((profiledData == null && testData == null) ||
-          (profiledData != null && profiledData.length == 0 && testData.length == 0)) {
+      if ((profiledData == null && testData == null)
+          || (profiledData != null && profiledData.length == 0 && testData.length == 0)) {
         return;
       }
 
       // if either of them are null throw TestCompareException if it cannot be ignored.
       if (profiledData == null || testData == null) {
-        DiffDetail diffDetail = getDiffDetail(null,
-            profiledData == null ? null : new String(profiledData),
-            testData == null ? null : new String(testData), DiffType.MODIFY);
+        DiffDetail diffDetail =
+            getDiffDetail(
+                null,
+                profiledData == null ? null : new String(profiledData),
+                testData == null ? null : new String(testData),
+                DiffType.MODIFY);
         if (diffDetail != null) {
           throw new TestCompareException(Arrays.asList(diffDetail));
         }
@@ -84,44 +87,49 @@ public class JsonTestCompareHandler extends TestCompareHandler {
         compute((ArrayNode) expectedNode, (ArrayNode) actualNode, diffs, "/");
 
         for (DiffDetail diffDetail : diffs) {
-          logger.info("diff type: " + diffDetail.getDiffType() + ", diff path: " + diffDetail
-              .getDiffPath());
+          logger.info(
+              "diff type: "
+                  + diffDetail.getDiffType()
+                  + ", diff path: "
+                  + diffDetail.getDiffPath());
         }
         if (diffs.size() > 0) {
           throw new TestCompareException(diffs);
         }
 
-      }
-      // call compute(ObjectNode) if expectedNode & arrayNode are ObjectNode instances
-      else if (expectedNode.isObject() && actualNode.isObject()) {
+      } else if (expectedNode.isObject()
+          && actualNode.isObject()) {
+        // calling compute(ObjectNode) if expectedNode & arrayNode are ObjectNode instances
         List<DiffDetail> diffs = new ArrayList<>();
         compute((ObjectNode) expectedNode, (ObjectNode) actualNode, diffs, "/");
 
         for (DiffDetail diffDetail : diffs) {
-          logger.info("diff type: " + diffDetail.getDiffType() + ", diff path: " + diffDetail
-              .getDiffPath());
+          logger.info(
+              "diff type: "
+                  + diffDetail.getDiffType()
+                  + ", diff path: "
+                  + diffDetail.getDiffPath());
         }
         if (diffs.size() > 0) {
           throw new TestCompareException(diffs);
         }
 
-      }
-      // do byte[] comparison if expectedNode & arrayNode are neither ArrayNode or ObjectNode instances
-      else {
+      } else {
+        // do byte[] comparison if expectedNode & arrayNode are neither ArrayNode or ObjectNode
+        // instances
         if (!Arrays.equals(profiledData, testData)) {
-          DiffDetail diffDetail = getDiffDetail("/", new String(profiledData), new String(testData),
-              DiffType.MODIFY);
+          DiffDetail diffDetail =
+              getDiffDetail("/", new String(profiledData), new String(testData), DiffType.MODIFY);
           if (diffDetail != null) {
             throw new TestCompareException(Arrays.asList(diffDetail));
           }
         }
       }
-    }
-    // if we are not able to de-serialize to JsonNode, do byte[] comparison
-    catch (IOException e) {
+    } catch (IOException e) {
+      // if we are not able to de-serialize to JsonNode, do byte[] comparison
       if (!Arrays.equals(profiledData, testData)) {
-        DiffDetail diffDetail = getDiffDetail("/", new String(profiledData), new String(testData),
-            DiffType.MODIFY);
+        DiffDetail diffDetail =
+            getDiffDetail("/", new String(profiledData), new String(testData), DiffType.MODIFY);
         if (diffDetail != null) {
           throw new TestCompareException(Arrays.asList(diffDetail));
         }
@@ -130,15 +138,15 @@ public class JsonTestCompareHandler extends TestCompareHandler {
   }
 
   /**
-   * This method does ArrayNode to ArrayNode comparison
+   * This method does ArrayNode to ArrayNode comparison.
    *
    * @param expectedArray expected data as ArrayNode
-   * @param actualArray   actual data as ArrayNode
-   * @param diffs         previously generated diffs before this invocation
-   * @param diffKey       nested path for this current node TODO: Refactor this method.
+   * @param actualArray actual data as ArrayNode
+   * @param diffs previously generated diffs before this invocation
+   * @param diffKey nested path for this current node TODO: Refactor this method.
    */
-  private void compute(ArrayNode expectedArray, ArrayNode actualArray, List<DiffDetail> diffs,
-      String diffKey) {
+  private void compute(
+      ArrayNode expectedArray, ArrayNode actualArray, List<DiffDetail> diffs, String diffKey) {
     // Maintain 2 maps to identify ADD & REMOVE
     Map<Integer, Integer> mappedExpectedToActual = new HashMap<>();
     Map<Integer, Integer> mappedActualToExpected = new HashMap<>();
@@ -167,8 +175,8 @@ public class JsonTestCompareHandler extends TestCompareHandler {
 
         // create a diff of type move if i does not match j
         if (i != j) {
-          DiffDetail diff = getDiffDetail(diffKey + ", (.*), /", expectedObject, actualObject,
-              DiffType.MOVE);
+          DiffDetail diff =
+              getDiffDetail(diffKey + ", (.*), /", expectedObject, actualObject, DiffType.MOVE);
           if (diff != null) {
             diffs.add(diff);
           }
@@ -179,7 +187,8 @@ public class JsonTestCompareHandler extends TestCompareHandler {
 
     List<Integer> notMappedExpectedObjectNodesIndexList = new ArrayList<>();
     List<Integer> notMappedActualObjectNodesIndexList = new ArrayList<>();
-    Map<Integer, List<Integer>> notMappedExpectedToPotentialActualObjectNodesMapForDiffComp = new HashMap<>();
+    Map<Integer, List<Integer>> notMappedExpectedToPotentialActualObjectNodesMapForDiffComp =
+        new HashMap<>();
     for (int i = 0; i < expectedArray.size(); i++) {
       if (!mappedExpectedToActual.containsKey(i) && (expectedArray.get(i).isObject())) {
         notMappedExpectedObjectNodesIndexList.add(i);
@@ -193,21 +202,24 @@ public class JsonTestCompareHandler extends TestCompareHandler {
     }
 
     for (Integer notMappedExpectedObjectNodeIndex : notMappedExpectedObjectNodesIndexList) {
-      String[] expectedKeys = JsonTestCompareHandlerUtil
-          .getObjectKeys((ObjectNode) (expectedArray.get(notMappedExpectedObjectNodeIndex)));
+      String[] expectedKeys =
+          JsonTestCompareHandlerUtil.getObjectKeys(
+              (ObjectNode) (expectedArray.get(notMappedExpectedObjectNodeIndex)));
       for (Integer notMappedActualObjectNodeIndex : notMappedActualObjectNodesIndexList) {
-        String[] actualKeys = JsonTestCompareHandlerUtil
-            .getObjectKeys((ObjectNode) (actualArray.get(notMappedActualObjectNodeIndex)));
+        String[] actualKeys =
+            JsonTestCompareHandlerUtil.getObjectKeys(
+                (ObjectNode) (actualArray.get(notMappedActualObjectNodeIndex)));
         if (JsonTestCompareHandlerUtil.allExpectedKeysInActualKeys(expectedKeys, actualKeys)) {
-          if (notMappedExpectedToPotentialActualObjectNodesMapForDiffComp
-              .containsKey(notMappedExpectedObjectNodeIndex)) {
+          if (notMappedExpectedToPotentialActualObjectNodesMapForDiffComp.containsKey(
+              notMappedExpectedObjectNodeIndex)) {
             notMappedExpectedToPotentialActualObjectNodesMapForDiffComp
-                .get(notMappedExpectedObjectNodeIndex).add(notMappedActualObjectNodeIndex);
+                .get(notMappedExpectedObjectNodeIndex)
+                .add(notMappedActualObjectNodeIndex);
           } else {
             List<Integer> potentialActualNodeIndexList = new ArrayList<>();
             potentialActualNodeIndexList.add(notMappedActualObjectNodeIndex);
-            notMappedExpectedToPotentialActualObjectNodesMapForDiffComp
-                .put(notMappedExpectedObjectNodeIndex, potentialActualNodeIndexList);
+            notMappedExpectedToPotentialActualObjectNodesMapForDiffComp.put(
+                notMappedExpectedObjectNodeIndex, potentialActualNodeIndexList);
           }
         }
       }
@@ -224,8 +236,8 @@ public class JsonTestCompareHandler extends TestCompareHandler {
           continue;
         }
 
-        if (notMappedExpectedToPotentialActualObjectNodesMapForDiffComp.containsKey(i) &&
-            !notMappedExpectedToPotentialActualObjectNodesMapForDiffComp.get(i).contains(j)) {
+        if (notMappedExpectedToPotentialActualObjectNodesMapForDiffComp.containsKey(i)
+            && !notMappedExpectedToPotentialActualObjectNodesMapForDiffComp.get(i).contains(j)) {
           continue;
         }
 
@@ -241,15 +253,14 @@ public class JsonTestCompareHandler extends TestCompareHandler {
 
         mappedExpectedToActual.put(i, j);
         mappedActualToExpected.put(j, i);
-
       }
 
       if (mapOfAllDiffDetails.size() > 0) {
-        List<DiffDetail> minDiffDetail = mapOfAllDiffDetails.entrySet().iterator().next()
-            .getValue();
+        List<DiffDetail> minDiffDetail =
+            mapOfAllDiffDetails.entrySet().iterator().next().getValue();
         Integer j = mapOfAllDiffDetails.entrySet().iterator().next().getKey();
-        for (Map.Entry<Integer, List<DiffDetail>> diffDetailsEntry : mapOfAllDiffDetails
-            .entrySet()) {
+        for (Map.Entry<Integer, List<DiffDetail>> diffDetailsEntry :
+            mapOfAllDiffDetails.entrySet()) {
           if (diffDetailsEntry.getValue().size() < minDiffDetail.size()) {
             minDiffDetail = diffDetailsEntry.getValue();
             j = diffDetailsEntry.getKey();
@@ -267,8 +278,8 @@ public class JsonTestCompareHandler extends TestCompareHandler {
         continue;
       }
 
-      DiffDetail diffDetail = getDiffDetail(diffKey + ", (.*), /", null, actualArray.get(j),
-          DiffType.MODIFY);
+      DiffDetail diffDetail =
+          getDiffDetail(diffKey + ", (.*), /", null, actualArray.get(j), DiffType.MODIFY);
       if (diffDetail != null) {
         diffs.add(diffDetail);
       }
@@ -280,8 +291,8 @@ public class JsonTestCompareHandler extends TestCompareHandler {
         continue;
       }
 
-      DiffDetail diffDetail = getDiffDetail(diffKey + ", (.*), /", expectedArray.get(i), null,
-          DiffType.MODIFY);
+      DiffDetail diffDetail =
+          getDiffDetail(diffKey + ", (.*), /", expectedArray.get(i), null, DiffType.MODIFY);
       if (diffDetail != null) {
         diffs.add(diffDetail);
       }
@@ -289,15 +300,15 @@ public class JsonTestCompareHandler extends TestCompareHandler {
   }
 
   /**
-   * This method does ObjectNode to ObjectNode comparison
+   * This method does ObjectNode to ObjectNode comparison.
    *
    * @param expectedObject expected data as ObjectNode
-   * @param actualObject   actual data as ObjectNode
-   * @param diffs          previously generated diffs before this invocation
-   * @param diffKey        nested path for this current node
+   * @param actualObject actual data as ObjectNode
+   * @param diffs previously generated diffs before this invocation
+   * @param diffKey nested path for this current node
    */
-  private void compute(ObjectNode expectedObject, ObjectNode actualObject, List<DiffDetail> diffs,
-      String diffKey) {
+  private void compute(
+      ObjectNode expectedObject, ObjectNode actualObject, List<DiffDetail> diffs, String diffKey) {
     // get list of keys for expected and actual objects
     String[] expectedKeys = getObjectKeys(expectedObject);
     String[] actualKeys = getObjectKeys(actualObject);
@@ -305,8 +316,10 @@ public class JsonTestCompareHandler extends TestCompareHandler {
     // compare all expected objects in actual
     if (expectedKeys.length > 0) {
       for (String expectedKey : expectedKeys) {
-        compute(expectedObject.get(expectedKey),
-            actualObject.has(expectedKey) ? actualObject.get(expectedKey) : null, diffs,
+        compute(
+            expectedObject.get(expectedKey),
+            actualObject.has(expectedKey) ? actualObject.get(expectedKey) : null,
+            diffs,
             diffKey + ", " + expectedKey);
       }
     }
@@ -327,9 +340,9 @@ public class JsonTestCompareHandler extends TestCompareHandler {
    * ObjectNode} or {@link ArrayNode} invokes the respective overloaded method.
    *
    * @param expected expected data as Object
-   * @param actual   actual data as Object
-   * @param diffs    previously generated diffs before this invocation
-   * @param diffKey  nested path for this current node
+   * @param actual actual data as Object
+   * @param diffs previously generated diffs before this invocation
+   * @param diffKey nested path for this current node
    */
   private void compute(Object expected, Object actual, List<DiffDetail> diffs, String diffKey) {
     // base checks for null
@@ -348,14 +361,12 @@ public class JsonTestCompareHandler extends TestCompareHandler {
     // call compute(ArrayNode) if both expected & actual are ArrayNode instances
     if (expected instanceof ArrayNode && actual instanceof ArrayNode) {
       compute((ArrayNode) expected, (ArrayNode) actual, diffs, diffKey);
-    }
-    // call compute(ObjectNode) if both expected & actual are ObjectNode instances
-    else if (expected instanceof ObjectNode && actual instanceof ObjectNode) {
+    } else if (expected instanceof ObjectNode && actual instanceof ObjectNode) {
+      // call compute(ObjectNode) if both expected & actual are ObjectNode instances
       compute((ObjectNode) expected, (ObjectNode) actual, diffs, diffKey);
-    }
-    // compare them as object by calling equals. This should be most likely
-    // called only on primitive types.
-    else if (!expected.equals(actual)) {
+    } else if (!expected.equals(actual)) {
+      // compare them as object by calling equals. This should be most likely called only on
+      // primitive types.
       // TODO: Add warning log by mapping JsonNodeType to primitive and flag non-primitive types
       DiffDetail diffDetail = getDiffDetail(diffKey + ", /", expected, actual, DiffType.MODIFY);
       if (diffDetail != null) {

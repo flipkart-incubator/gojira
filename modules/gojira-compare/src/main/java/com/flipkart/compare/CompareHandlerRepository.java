@@ -19,21 +19,26 @@ package com.flipkart.compare;
 import com.flipkart.compare.handlers.TestCompareHandler;
 
 /**
- * CompareHandlerRepository is the repository for custom compare handlers
+ * CompareHandlerRepository is the repository for custom compare handlers.
  */
 public abstract class CompareHandlerRepository {
 
   protected TestCompareHandler defaultCompareHandler = null;
 
   /**
+   * {@link #defaultCompareHandler} will be used as default CompareHandler when no annotated
+   * CompareHandlers are provided.
+   *
    * @return {@link #defaultCompareHandler} set in {@link ComparisonModule}
    */
   public abstract TestCompareHandler getDefaultCompareHandler();
 
   /**
+   * {@link #defaultCompareHandler} will be used as default CompareHandler when no annotated
+   * CompareHandlers are provided.
+   *
    * @param compareHandler This method sets the default compare handler provided in {@link
    *                       ComparisonModule} to {@link #defaultCompareHandler}
    */
   public abstract void setDefaultCompareHandler(TestCompareHandler compareHandler);
-
 }

@@ -22,16 +22,17 @@ import java.lang.annotation.Annotation;
 import org.aopalliance.intercept.MethodInvocation;
 
 /**
- * This class extends {@link GojiraCompareHandlerRepository}
+ * This class extends {@link GojiraCompareHandlerRepository}.
  */
 public class GojiraCompareHandlerRepositoryImpl extends GojiraCompareHandlerRepository {
 
   /**
-   * Given a
+   * Returns a {@link CompareHandler} annotation associated with the argument for a given {@link
+   * MethodInvocation} instance and the position of the argument.
    *
-   * @param invocation {@link MethodInvocation} instance and
-   * @param position   the position of the argument
-   * @return the {@link CompareHandler} annotation associated with the argument
+   * @param invocation {@link MethodInvocation} instance.
+   * @param position the position of the argument.
+   * @return the {@link CompareHandler} annotation associated with the argument.
    */
   private static CompareHandler annotatedCompareHandler(MethodInvocation invocation, int position) {
     Annotation[] annotations = invocation.getMethod().getParameterAnnotations()[position];

@@ -23,14 +23,14 @@ import java.util.List;
 
 /**
  * JsonTestCompareHandlerUtil is a helper class with static methods called by {@link
- * JsonTestCompareHandler}
+ * JsonTestCompareHandler}.
  */
 public final class JsonTestCompareHandlerUtil {
 
   /**
-   * Helper function which given an
+   * Helper function to convert ObjectNode to String[].
    *
-   * @param objectNode returns
+   * @param objectNode ObjectNode to convert
    * @return string array of keys
    */
   static String[] getObjectKeys(ObjectNode objectNode) {
@@ -42,10 +42,11 @@ public final class JsonTestCompareHandlerUtil {
   }
 
   /**
-   * Helper function which checks if all
+   * Helper function which checks if all the elements in <code>expectedKeys</code> are present in
+   * <code>actualKeys</code>.
    *
-   * @param expectedKeys string array of expected keys are present in
-   * @param actualKeys   string array of actual keys and returns
+   * @param expectedKeys string array of expected keys
+   * @param actualKeys string array of actual keys
    * @return boolean value true if found else false
    */
   static boolean allExpectedKeysInActualKeys(String[] expectedKeys, String[] actualKeys) {
@@ -65,7 +66,7 @@ public final class JsonTestCompareHandlerUtil {
   }
 
   /**
-   * Helper function which checks if a
+   * Helper function which checks if a input string to be found is present in <code>data</code>.
    *
    * @param find input string to be found is present in
    * @param data data string array and returns
@@ -81,4 +82,3 @@ public final class JsonTestCompareHandlerUtil {
     return keyFound;
   }
 }
-

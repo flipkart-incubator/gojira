@@ -24,7 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Implementation of {@link DiffIgnoreRepository}
+ * Implementation of {@link DiffIgnoreRepository}.
  */
 public class DiffIgnoreRepositoryImpl extends DiffIgnoreRepository {
 

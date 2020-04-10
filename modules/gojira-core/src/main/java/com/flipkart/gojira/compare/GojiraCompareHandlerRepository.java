@@ -30,30 +30,35 @@ import org.aopalliance.intercept.MethodInvocation;
 public abstract class GojiraCompareHandlerRepository extends CompareHandlerRepository {
 
   protected TestCompareHandler responseDataCompareHandler = null;
-  protected ConcurrentHashMap<String, TestCompareHandler> methodArgumentDataCompareHandler = new ConcurrentHashMap<>();
+  protected ConcurrentHashMap<String, TestCompareHandler> methodArgumentDataCompareHandler =
+      new ConcurrentHashMap<>();
 
   /**
-   * @param compareHandler This sets the default response compare handler provided in {@link
-   *                       ComparisonModule} to {@link #responseDataCompareHandler}
-   */
-  abstract void setResponseDataCompareHandler(TestCompareHandler compareHandler);
-
-  /**
-   * @return {@link #responseDataCompareHandler} set in {@link ComparisonModule}
+   * Returns {@link #responseDataCompareHandler} set in {@link ComparisonModule}.
+   *
+   * @return {@link #responseDataCompareHandler} set in {@link ComparisonModule}.
    */
   public abstract TestCompareHandler getResponseDataCompareHandler();
 
   /**
-   * @param methodInvocation current methodInvocation instance.
-   * @param argument         specific argument sequence # whose compareHandler is needed.
-   * @return This method does the following: Checks if there is an entry in {@link
-   * #methodArgumentDataCompareHandler} Key is methodInvocation.getMethod().toGenericString() + "|"
-   * + argument If entry exists returns it. Else checks if there exists an {@link CompareHandler}
-   * associated with the method argument. If it exists, it will create an instance and add it to
+   * This sets the default response compare handler provided in {@link ComparisonModule}.
+   *
+   * @param compareHandler to set as {@link #responseDataCompareHandler}.
+   */
+  abstract void setResponseDataCompareHandler(TestCompareHandler compareHandler);
+
+  /**
+   * This method does the following: Checks if there is an entry in {@link
+   * #methodArgumentDataCompareHandler}. Key is methodInvocation.getMethod().toGenericString() + "|"
+   * + argument. If entry exists returns it. Else checks if there exists an {@link CompareHandler}
+   * associated with the method argument. If it exists, it will create an * instance and add it to
    * {@link #methodArgumentDataCompareHandler} else add {@link #defaultCompareHandler} to {@link
-   * #methodArgumentDataCompareHandler} return the entry against the key.
+   * #methodArgumentDataCompareHandler}
+   *
+   * @param methodInvocation current methodInvocation instance.
+   * @param argument specific argument sequence # whose compareHandler is needed.
+   * @return return the entry against the key specified above.
    */
   public abstract TestCompareHandler getOrUpdateAndGetOrDefaultMethodArgumentDataCompareHandler(
       MethodInvocation methodInvocation, int argument) throws Throwable;
-
 }
