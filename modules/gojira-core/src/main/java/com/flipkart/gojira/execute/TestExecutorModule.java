@@ -24,7 +24,7 @@ import com.google.inject.name.Names;
 
 /**
  * Guice module which contains bindings for different {@link TestExecutor} for different {@link
- * TestData}
+ * TestData}.
  */
 public class TestExecutorModule extends AbstractModule {
 

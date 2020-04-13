@@ -34,26 +34,26 @@ public class DefaultProfileOrTestHandler {
   private static final Logger LOGGER = LoggerFactory.getLogger(DefaultProfileOrTestHandler.class);
 
   /**
-   * Is an {@link java.util.Collections.UnmodifiableMap} of all handlers per {@link Mode}
+   * Is an {@link java.util.Collections.UnmodifiableMap} of all handlers per {@link Mode}.
    */
-  private static final Map<Mode, StartEndTestHandler> startTestHandlerHashMap = Collections
-      .unmodifiableMap(
-          new HashMap<Mode, StartEndTestHandler>() {{
-            put(Mode.PROFILE, new ProfileStartEndTestHandler());
-            put(Mode.TEST, new TestStartEndTestHandler());
-            put(Mode.NONE, new NoneStartEndTestHandler());
-            put(Mode.SERIALIZE, new SerializeStartEndTestHandler());
-          }}
-      );
-
+  private static final Map<Mode, StartEndTestHandler> startTestHandlerHashMap =
+      Collections.unmodifiableMap(
+          new HashMap<Mode, StartEndTestHandler>() {
+            {
+              put(Mode.PROFILE, new ProfileStartEndTestHandler());
+              put(Mode.TEST, new TestStartEndTestHandler());
+              put(Mode.NONE, new NoneStartEndTestHandler());
+              put(Mode.SERIALIZE, new SerializeStartEndTestHandler());
+            }
+          });
 
   /**
    * Simply gets the respective handler for {@link Mode} and calls {@link
    * StartEndTestHandler#start(String, TestRequestData)} method.
-   * <p>
-   * If mode is not registered, logs an error.
    *
-   * @param id          id for co-ordinating execution
+   * <p>If mode is not registered, logs an error.
+   *
+   * @param id id for co-ordinating execution
    * @param requestData request data at the start of execution
    */
   public static void start(String id, TestRequestData<? extends TestDataType> requestData) {
@@ -67,8 +67,8 @@ public class DefaultProfileOrTestHandler {
   /**
    * Simply gets the respective handler for {@link Mode} and calls {@link
    * StartEndTestHandler#end(TestResponseData)} method.
-   * <p>
-   * If mode is not registered, logs an error.
+   *
+   * <p>If mode is not registered, logs an error.
    *
    * @param responseData response data at the end of execution
    */

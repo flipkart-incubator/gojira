@@ -21,14 +21,14 @@ import java.util.Map;
 import org.asynchttpclient.DefaultAsyncHttpClient;
 
 /**
- * Interface which helps retrieve {@link DefaultAsyncHttpClient}
+ * Interface which helps retrieve {@link DefaultAsyncHttpClient}.
  */
 public interface IHttpManager {
 
   Map<String, DefaultAsyncHttpClient> clientMap = new HashMap<>();
 
   /**
-   * Given a clientId as key, return {@link DefaultAsyncHttpClient}
+   * Given a clientId as key, return {@link DefaultAsyncHttpClient}.
    *
    * @param key clientId
    * @return instance of {@link DefaultAsyncHttpClient}

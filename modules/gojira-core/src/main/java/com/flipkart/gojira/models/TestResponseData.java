@@ -22,9 +22,12 @@ import com.flipkart.gojira.models.http.HttpTestResponseData;
 import com.flipkart.gojira.models.kafka.KafkaTestResponseData;
 
 /**
- * Base response class for different types of {@link TestDataType}
+ * Base response class for different types of {@link TestDataType}.
  */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "testResponseDataType")
+@JsonTypeInfo(
+    use = JsonTypeInfo.Id.NAME,
+    include = JsonTypeInfo.As.PROPERTY,
+    property = "testResponseDataType")
 @JsonSubTypes({
     @JsonSubTypes.Type(value = HttpTestResponseData.class, name = "HTTP"),
     @JsonSubTypes.Type(value = KafkaTestResponseData.class, name = "KAFKA"),

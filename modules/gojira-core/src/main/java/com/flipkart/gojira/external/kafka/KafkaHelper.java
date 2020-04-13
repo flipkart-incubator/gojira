@@ -25,19 +25,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Implementation of {@link IKafkaHelper}
+ * Implementation of {@link IKafkaHelper}.
  */
 public class KafkaHelper implements IKafkaHelper {
 
   public static final Logger LOGGER = LoggerFactory.getLogger(KafkaHelper.class);
 
   /**
-   * Produces kafka message by calling {@link org.apache.kafka.clients.producer.KafkaProducer#send(ProducerRecord)}
-   * and then returns {@link RecordMetadata} by calling {@link Future#get()}
-   * <p>
-   * On error, throws {@link KafkaProducerException}
+   * Produces kafka message by calling {@link
+   * org.apache.kafka.clients.producer.KafkaProducer#send(ProducerRecord)} and then returns {@link
+   * RecordMetadata} by calling {@link Future#get()}.
    *
-   * @param client         clientId
+   * <p>On error, throws {@link KafkaProducerException}
+   *
+   * @param client clientId
    * @param producerRecord record to be produced to kafka.
    * @return metadata of produced record.
    * @throws KafkaProducerException exception if we are not able to produce message.
@@ -45,8 +46,8 @@ public class KafkaHelper implements IKafkaHelper {
   @Override
   public RecordMetadata produce(String client, ProducerRecord<byte[], byte[]> producerRecord)
       throws KafkaProducerException {
-    Producer<byte[], byte[]> producer = TestExecutionInjector.getInjector()
-        .getInstance(IKafkaManager.class).getProducer(client);
+    Producer<byte[], byte[]> producer =
+        TestExecutionInjector.getInjector().getInstance(IKafkaManager.class).getProducer(client);
     try {
       Future<RecordMetadata> recordMetadataFuture = producer.send(producerRecord);
       LOGGER.info("Producing record. ");

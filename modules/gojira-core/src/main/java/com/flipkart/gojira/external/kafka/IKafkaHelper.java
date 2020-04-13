@@ -25,7 +25,9 @@ import org.apache.kafka.clients.producer.RecordMetadata;
 public interface IKafkaHelper {
 
   /**
-   * @param client         clientId
+   * Produces the record provided as input.
+   *
+   * @param client clientId
    * @param producerRecord record to be produced to kafka.
    * @return metadata of produced record.
    * @throws KafkaProducerException exception if we are not able to produce message.

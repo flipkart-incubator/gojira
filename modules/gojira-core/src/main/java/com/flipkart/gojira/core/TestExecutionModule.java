@@ -44,14 +44,16 @@ public class TestExecutionModule extends AbstractModule {
 
   @Override
   protected void configure() {
-    Injector injector = Guice.createInjector(new AbstractModule() {
-      @Override
-      protected void configure() {
-        install(new ExternalModule(helperConfig));
-        install(new ManagedModule());
-        install(new SerdeModule(SerdeConfig.builder().build()));
-      }
-    });
+    Injector injector =
+        Guice.createInjector(
+            new AbstractModule() {
+              @Override
+              protected void configure() {
+                install(new ExternalModule(helperConfig));
+                install(new ManagedModule());
+                install(new SerdeModule(SerdeConfig.builder().build()));
+              }
+            });
 
     TestExecutionInjector.assignInjector(injector);
   }

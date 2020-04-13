@@ -18,12 +18,13 @@ package com.flipkart.gojira.models;
 
 import com.flipkart.gojira.core.Mode;
 import com.flipkart.gojira.core.ProfileState;
+import java.util.Objects;
 
 /**
  * This class contains execution related data for a given request-response cycle in different {@link
  * Mode}.
- * <p>
- * //TODO: Rename this ExecutionData
+ *
+ * <p>//TODO: Rename this ExecutionData
  */
 public class ProfileData<T extends TestDataType> {
 
@@ -33,7 +34,7 @@ public class ProfileData<T extends TestDataType> {
   private TestData<TestRequestData<T>, TestResponseData<T>, T> testData = new TestData<>();
 
   /**
-   * Keeps track of the current execution state. Defaults to {@link ProfileState#NONE}
+   * Keeps track of the current execution state. Defaults to {@link ProfileState#NONE}.
    */
   private ProfileState profileState = ProfileState.NONE;
 
@@ -55,20 +56,19 @@ public class ProfileData<T extends TestDataType> {
 
   @Override
   public boolean equals(Object o) {
-      if (this == o) {
-          return true;
-      }
-      if (o == null || getClass() != o.getClass()) {
-          return false;
-      }
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
 
     ProfileData that = (ProfileData) o;
 
-      if (testData != null ? !testData.equals(that.testData) : that.testData != null) {
-          return false;
-      }
+    if (!Objects.equals(testData, that.testData)) {
+      return false;
+    }
     return profileState == that.profileState;
-
   }
 
   @Override
@@ -80,9 +80,6 @@ public class ProfileData<T extends TestDataType> {
 
   @Override
   public String toString() {
-    return "ProfileData{" +
-        "profileState=" + profileState +
-        ", testData=" + testData +
-        '}';
+    return "ProfileData{" + "profileState=" + profileState + ", testData=" + testData + '}';
   }
 }

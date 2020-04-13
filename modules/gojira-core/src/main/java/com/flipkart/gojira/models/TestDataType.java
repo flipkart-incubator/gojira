@@ -22,7 +22,7 @@ import com.flipkart.gojira.models.http.HttpTestDataType;
 import com.flipkart.gojira.models.kafka.KafkaTestDataType;
 
 /**
- * Base class for different types of {@link TestData}
+ * Base class for different types of {@link TestData}.
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({

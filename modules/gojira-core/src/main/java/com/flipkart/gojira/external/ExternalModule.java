@@ -21,7 +21,7 @@ import com.flipkart.gojira.external.config.HelperConfig;
 import com.google.inject.AbstractModule;
 
 /**
- * Guice module which is used for binding {@link ExternalConfig}
+ * Guice module which is used for binding {@link ExternalConfig}.
  */
 public class ExternalModule extends AbstractModule {
 

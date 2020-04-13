@@ -20,30 +20,20 @@ import com.flipkart.gojira.external.config.ExternalConfig;
 import java.util.Map;
 
 /**
- * Implementation of {@link ExternalConfigRepository}
+ * Implementation of {@link ExternalConfigRepository}.
  */
 public class ExternalConfigRepositoryImpl extends ExternalConfigRepository {
 
-  /**
-   * @param key clientId
-   * @return
-   */
   @Override
   public ExternalConfig getExternalConfigFor(String key) {
     return externalConfigHashMap.get(key);
   }
 
-  /**
-   * @return
-   */
   @Override
   public Map<String, ExternalConfig> getExternalConfig() {
     return externalConfigHashMap;
   }
 
-  /**
-   * @param externalConfig config to make external rpc calls
-   */
   @Override
   public void setExternalConfig(Map<String, ExternalConfig> externalConfig) {
     for (Map.Entry<String, ExternalConfig> entry : externalConfig.entrySet()) {

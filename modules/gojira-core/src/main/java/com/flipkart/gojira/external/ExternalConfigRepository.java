@@ -21,24 +21,30 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * This class acts as repository interface for {@link ExternalConfig}
+ * This class acts as repository interface for {@link ExternalConfig}.
  */
 public abstract class ExternalConfigRepository {
 
   protected static final Map<String, ExternalConfig> externalConfigHashMap = new HashMap<>();
 
   /**
+   * Retrieve external config for a given clientId.
+   *
    * @param key clientId
    * @return {@link ExternalConfig} instance for the clientId. null if it is not present.
    */
   public abstract ExternalConfig getExternalConfigFor(String key);
 
   /**
-   * @return
+   * Retrieve all the external configs.
+   *
+   * @return Map of clientId vs ExternalConfig.
    */
   public abstract Map<String, ExternalConfig> getExternalConfig();
 
   /**
+   * Sets the {@link #externalConfigHashMap} to the map specified in {@link ExternalModule}.
+   *
    * @param externalConfig config to make external rpc calls
    */
   public abstract void setExternalConfig(Map<String, ExternalConfig> externalConfig);

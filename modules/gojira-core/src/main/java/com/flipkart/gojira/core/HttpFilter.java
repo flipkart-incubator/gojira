@@ -44,8 +44,8 @@ import org.slf4j.LoggerFactory;
 /**
  * Filter implementation to capture http request and response data. Also responsible for starting
  * and ending the recording of data per request-response capture lifecycle.
- * <p>
- * Integrating client application is expected to chain this filter to the list of filters when
+ *
+ * <p>Integrating client application is expected to chain this filter to the list of filters when
  * bootstrapping.
  */
 public class HttpFilter implements Filter {
@@ -55,69 +55,68 @@ public class HttpFilter implements Filter {
   /**
    * Initializes a map of {@link Mode} specific filter handlers.
    */
-  private static final Map<Mode, HttpFilterHandler> filterHashMap = Collections.unmodifiableMap(
-      new HashMap<Mode, HttpFilterHandler>() {{
-        put(Mode.NONE, new NoneHttpFilterHandler());
-        put(Mode.PROFILE, new ProfileHttpFilterHandler());
-        put(Mode.TEST, new TestHttpFilterHandler());
-        put(Mode.SERIALIZE, new SerializeHttpFilterHandler());
-      }}
-  );
+  private static final Map<Mode, HttpFilterHandler> filterHashMap =
+      Collections.unmodifiableMap(
+          new HashMap<Mode, HttpFilterHandler>() {
+            {
+              put(Mode.NONE, new NoneHttpFilterHandler());
+              put(Mode.PROFILE, new ProfileHttpFilterHandler());
+              put(Mode.TEST, new TestHttpFilterHandler());
+              put(Mode.SERIALIZE, new SerializeHttpFilterHandler());
+            }
+          });
 
   @Override
-  public void init(FilterConfig filterConfig) throws ServletException {
-
-  }
+  public void init(FilterConfig filterConfig) throws ServletException {}
 
   /**
-   * This filter wraps the incoming
+   * {@inheritDoc}
    *
-   * @param request  incoming request into a {@link CustomHttpServletRequestWrapper} and calls mode
-   *                 specific preFilter implementation. If {@link HttpFilterHandler#preFilter(CustomHttpServletRequestWrapper)}
-   *                 returns true, wraps the response object into a {@link
-   *                 TestServletResponseWrapper} before calling {@link HttpFilterHandler#filter(CustomHttpServletRequestWrapper,
-   *                 TestServletResponseWrapper, FilterChain)} in a try/finally block where {@link
-   *                 HttpFilterHandler#postFilter(CustomHttpServletRequestWrapper,
-   *                 TestServletResponseWrapper, ServletResponse)} is called in the finally block.
+   * <p>TODO: Add check for {@link HttpServletRequest}
+   * @param request incoming request into a {@link CustomHttpServletRequestWrapper} and calls mode
+   *     specific preFilter implementation. If {@link
+   *     HttpFilterHandler#preFilter(CustomHttpServletRequestWrapper)} returns true, wraps the
+   *     response object into a {@link TestServletResponseWrapper} before calling {@link
+   *     HttpFilterHandler#filter(CustomHttpServletRequestWrapper, TestServletResponseWrapper,
+   *     FilterChain)} in a try/finally block where {@link
+   *     HttpFilterHandler#postFilter(CustomHttpServletRequestWrapper, TestServletResponseWrapper,
+   *     ServletResponse)} is called in the finally block.
    * @param response outgoing response
-   * @param chain    invocation chain
-   * @throws IOException
+   * @param chain invocation chain
+   * @throws IOException if an input or output exception occurred
    * @throws ServletException If mode specific implementation is registered in the map, then simply
-   *                          calls {@link FilterChain#doFilter(ServletRequest, ServletResponse)}
-   *                          <p>
-   *                          TODO: Add check for {@link HttpServletRequest}
+   *     calls {@link FilterChain#doFilter(ServletRequest, ServletResponse)}
    */
   @Override
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
       throws IOException, ServletException {
     // Wrapping the ServletRequest to make the input stream N times readable
-    CustomHttpServletRequestWrapper requestWrapper = new CustomHttpServletRequestWrapper(
-        (HttpServletRequest) request);
+    CustomHttpServletRequestWrapper requestWrapper =
+        new CustomHttpServletRequestWrapper((HttpServletRequest) request);
     if (filterHashMap.containsKey(ProfileRepository.getMode())) {
-      if (filterHashMap.get(ProfileRepository.getMode()).preFilter(
-          requestWrapper)) {  //if put in try/catch, throw exception when Test Mode READ_FAILED
+      if (filterHashMap.get(ProfileRepository.getMode()).preFilter(requestWrapper)) {
         // Wrapping the ServletResponse to make the output stream readable
-        TestServletResponseWrapper testServletResponseWrapper = new TestServletResponseWrapper(
-            (HttpServletResponse) response);
+        TestServletResponseWrapper testServletResponseWrapper =
+            new TestServletResponseWrapper((HttpServletResponse) response);
         try {
-          filterHashMap.get(ProfileRepository.getMode())
+          filterHashMap
+              .get(ProfileRepository.getMode())
               .filter(requestWrapper, testServletResponseWrapper, chain);
         } finally {
-          filterHashMap.get(ProfileRepository.getMode())
+          filterHashMap
+              .get(ProfileRepository.getMode())
               .postFilter(requestWrapper, testServletResponseWrapper, response);
         }
       }
     } else {
-      LOGGER
-          .error("Processing logic not implemented for this mode: " + ProfileRepository.getMode());
+      LOGGER.error(
+          "Processing logic not implemented for this mode: " + ProfileRepository.getMode());
       chain.doFilter(request, response);
     }
   }
 
   @Override
-  public void destroy() {
-
-  }
+  public void destroy() {}
 
   /**
    * Wrapper class for {@link HttpServletResponseWrapper} Uses {@link
@@ -125,36 +124,33 @@ public class HttpFilter implements Filter {
    */
   public class TestServletResponseWrapper extends HttpServletResponseWrapper {
 
-    private TestBufferedServletOutputStream bufferedServletOut = new TestBufferedServletOutputStream();
+    private TestBufferedServletOutputStream bufferedServletOut =
+        new TestBufferedServletOutputStream();
     private ServletOutputStream outputStream = null;
 
     /**
      * Created with reference to the original {@link HttpServletResponse} so that response can be
-     * flushed into it's output stream
+     * flushed into it's output stream.
      *
      * @param servletResponse original http servlet response which was passed in the {@link
-     *                        FilterChain#doFilter(ServletRequest, ServletResponse)} method.
+     *     FilterChain#doFilter(ServletRequest, ServletResponse)} method.
      */
     public TestServletResponseWrapper(HttpServletResponse servletResponse) {
       super(servletResponse);
     }
 
     @Override
-    public void sendError(int sc, String msg) throws IOException {
-
-    }
+    public void sendError(int sc, String msg) throws IOException {}
 
     @Override
-    public void sendError(int sc) throws IOException {
-
-    }
+    public void sendError(int sc) throws IOException {}
 
     /**
      * Passes the reference of bufferedServletOut stream to outputStream if outputStream is not
      * null.
      *
      * @return output stream
-     * @throws IOException
+     * @throws IOException if an input or output exception occurred
      */
     @Override
     public ServletOutputStream getOutputStream() throws IOException {
@@ -167,7 +163,7 @@ public class HttpFilter implements Filter {
     /**
      * Calls {@link ServletOutputStream#flush()} on outputStream if not null.
      *
-     * @throws IOException
+     * @throws IOException if an input or output exception occurred
      */
     @Override
     public void flushBuffer() throws IOException {
@@ -177,14 +173,13 @@ public class HttpFilter implements Filter {
     }
 
     /**
-     * Helper method to return the byte[] from bufferedServletOut
+     * Helper method to return the byte[] from bufferedServletOut.
      *
      * @return
      */
     public byte[] getBuffer() {
       return this.bufferedServletOut.getBuffer();
     }
-
   }
 
   /**
@@ -205,15 +200,13 @@ public class HttpFilter implements Filter {
     }
 
     @Override
-    public void setWriteListener(WriteListener writeListener) {
-
-    }
+    public void setWriteListener(WriteListener writeListener) {}
 
     /**
-     * Helper method to return
+     * Helper method to get the stored byte array.
      *
      * @return byte[] from {@value bos} TODO: To be called only once. Need to do {@link
-     * ByteArrayOutputStream#reset()} if it needs to be called multiple times.
+     *     ByteArrayOutputStream#reset()} if it needs to be called multiple times.
      */
     public byte[] getBuffer() {
       return this.bos.toByteArray();
@@ -229,10 +222,11 @@ public class HttpFilter implements Filter {
     private final byte[] body;
 
     /**
-     * Calls {@link IOUtils#toByteArray(java.io.InputStream)} to get a copy of byte[] from
+     * Calls {@link IOUtils#toByteArray(java.io.InputStream)} to get a copy of byte[] from the
+     * incoming request.
      *
      * @param request original http request instance reference passed from {@link
-     *                FilterChain#doFilter(ServletRequest, ServletResponse)}
+     *     FilterChain#doFilter(ServletRequest, ServletResponse)}
      */
     public CustomHttpServletRequestWrapper(HttpServletRequest request) {
       super(request);
@@ -245,46 +239,45 @@ public class HttpFilter implements Filter {
     }
 
     /**
+     * {@inheritDoc}
+     *
+     * <p>TODO: check isFinished, isReady and setReadListener.
+     *
      * @return new instance of {@link ServletInputStream}
      * @throws IOException Uses a {@link ByteArrayInputStream} created with the body. This is used
-     *                     when {@link InputStream#read()} and {@link InputStream#available()} are
-     *                     called.
-     *                     <p>
-     *                     TODO: check isFinished, isReady and setReadListener.
+     *     when {@link InputStream#read()} and {@link InputStream#available()} are called.
      */
     @Override
     public ServletInputStream getInputStream() throws IOException {
 
       final ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(body);
 
-      ServletInputStream inputStream = new ServletInputStream() {
-        public int read() throws IOException {
-          return byteArrayInputStream.read();
-        }
+      ServletInputStream inputStream =
+          new ServletInputStream() {
+            public int read() throws IOException {
+              return byteArrayInputStream.read();
+            }
 
-        @Override
-        public int available() throws IOException {
-          return byteArrayInputStream.available();
-        }
+            @Override
+            public int available() throws IOException {
+              return byteArrayInputStream.available();
+            }
 
-        @Override
-        public boolean isFinished() {
-          return true;
-        }
+            @Override
+            public boolean isFinished() {
+              return true;
+            }
 
-        @Override
-        public boolean isReady() {
-          return true;
-        }
+            @Override
+            public boolean isReady() {
+              return true;
+            }
 
-        @Override
-        public void setReadListener(ReadListener readListener) {
-
-        }
-      };
+            @Override
+            public void setReadListener(ReadListener readListener) {}
+          };
 
       return inputStream;
     }
   }
-
 }

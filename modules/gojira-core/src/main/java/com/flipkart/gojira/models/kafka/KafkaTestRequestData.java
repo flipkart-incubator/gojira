@@ -31,17 +31,17 @@ public class KafkaTestRequestData extends TestRequestData<KafkaTestDataType> {
   private String topicName;
 
   /**
-   * key with which kafka message was produced
+   * key with which kafka message was produced.
    */
   private byte[] key;
 
   /**
-   * value with which kafka message was produced
+   * value with which kafka message was produced.
    */
   private byte[] value;
 
   /**
-   * headers with which kafka message was produced
+   * headers with which kafka message was produced.
    */
   private Map<String, byte[]> headers;
 

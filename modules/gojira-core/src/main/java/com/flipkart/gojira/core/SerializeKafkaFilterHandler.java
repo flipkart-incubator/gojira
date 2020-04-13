@@ -20,27 +20,28 @@ import com.flipkart.gojira.models.TestRequestData;
 import java.util.Map;
 
 /**
- * Implementation of {@link KafkaFilterHandler} in mode {@link Mode#SERIALIZE}
+ * Implementation of {@link KafkaFilterHandler} in mode {@link Mode#SERIALIZE}.
  */
 public class SerializeKafkaFilterHandler extends KafkaFilterHandler {
 
   /**
    * Validates that test-id is present. If not throws a {@link RuntimeException}
-   * <p>
-   * Starts execution by calling {@link DefaultProfileOrTestHandler#start(String, TestRequestData)}
    *
-   * @param topicName  kafka topic name
-   * @param key        key used for producing message to the topic
-   * @param value      body used for producing message to the topic
+   * <p>Starts execution by calling {@link DefaultProfileOrTestHandler#start(String,
+   * TestRequestData)}
+   *
+   * <p>Implementation of this is expected to call {@link DefaultProfileOrTestHandler#start(String,
+   * TestRequestData)}
+   *
+   * @param topicName kafka topic name
+   * @param key key used for producing message to the topic
+   * @param value body used for producing message to the topic
    * @param headersMap headers used for producing message to the topic with key as string and value
-   *                   as map
-   *                   <p>
-   *                   Implementation of this is expected to call {@link DefaultProfileOrTestHandler#start(String,
-   *                   TestRequestData)}
+   *     as map
    */
   @Override
-  protected void handle(String topicName, byte[] key, byte[] value,
-      Map<String, byte[]> headersMap) {
+  protected void handle(
+      String topicName, byte[] key, byte[] value, Map<String, byte[]> headersMap) {
     String id = getTestId(headersMap);
     if (id == null) {
       throw new RuntimeException("X-GOJIRA-ID header not present");

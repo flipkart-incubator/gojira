@@ -30,47 +30,49 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Helper class which implements {@link IHttpHelper}
+ * Helper class which implements {@link IHttpHelper}.
  */
 public class HttpHelper implements IHttpHelper {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(HttpHelper.class);
 
   /**
-   * @param clientId           identifier to fetch externalConfig
+   * {@inheritDoc}
+   *
+   * @param clientId identifier to fetch externalConfig
    * @param urlWithQueryParams http uri and query params
-   * @param header             headers as {@link Map}
+   * @param header headers as {@link Map}
    * @return returns the {@link Response} object.
    * @throws HttpCallException exception thrown if we are not able to initiate execution
    */
   @Override
   public Response doGet(String clientId, String urlWithQueryParams, Map<String, String> header)
       throws HttpCallException {
-    RequestBuilder requestBuilder = new RequestBuilder()
-        .setMethod(HttpConstants.Methods.GET);
+    RequestBuilder requestBuilder = new RequestBuilder().setMethod(HttpConstants.Methods.GET);
 
     for (Map.Entry<String, String> entry : header.entrySet()) {
       requestBuilder.addHeader(entry.getKey(), entry.getValue());
     }
 
     return execute(clientId, requestBuilder, urlWithQueryParams);
-
   }
 
   /**
-   * @param clientId           identifier to fetch externalConfig
+   * {@inheritDoc}
+   *
+   * @param clientId identifier to fetch externalConfig
    * @param urlWithQueryParams http uri and query params
-   * @param header             headers as {@link Map}
-   * @param payload            headers as {@link Map}
+   * @param header headers as {@link Map}
+   * @param payload headers as {@link Map}
    * @return returns the {@link Response} object.
    * @throws HttpCallException exception thrown if we are not able to initiate execution
    */
   @Override
-  public Response doPost(String clientId, String urlWithQueryParams, Map<String, String> header,
-      byte[] payload) throws HttpCallException {
-    RequestBuilder requestBuilder = new RequestBuilder()
-        .setMethod(HttpConstants.Methods.POST)
-        .setBody(payload);
+  public Response doPost(
+      String clientId, String urlWithQueryParams, Map<String, String> header, byte[] payload)
+      throws HttpCallException {
+    RequestBuilder requestBuilder =
+        new RequestBuilder().setMethod(HttpConstants.Methods.POST).setBody(payload);
 
     for (Map.Entry<String, String> entry : header.entrySet()) {
       requestBuilder.addHeader(entry.getKey(), entry.getValue());
@@ -80,19 +82,21 @@ public class HttpHelper implements IHttpHelper {
   }
 
   /**
-   * @param clientId           identifier to fetch externalConfig
+   * {@inheritDoc}
+   *
+   * @param clientId identifier to fetch externalConfig
    * @param urlWithQueryParams http uri and query params
-   * @param header             headers as {@link Map}
-   * @param payload            headers as {@link Map}
+   * @param header headers as {@link Map}
+   * @param payload headers as {@link Map}
    * @return returns the {@link Response} object.
    * @throws HttpCallException exception thrown if we are not able to initiate execution
    */
   @Override
-  public Response doPut(String clientId, String urlWithQueryParams, Map<String, String> header,
-      byte[] payload) throws HttpCallException {
-    RequestBuilder requestBuilder = new RequestBuilder()
-        .setMethod(HttpConstants.Methods.PUT)
-        .setBody(payload);
+  public Response doPut(
+      String clientId, String urlWithQueryParams, Map<String, String> header, byte[] payload)
+      throws HttpCallException {
+    RequestBuilder requestBuilder =
+        new RequestBuilder().setMethod(HttpConstants.Methods.PUT).setBody(payload);
 
     for (Map.Entry<String, String> entry : header.entrySet()) {
       requestBuilder.addHeader(entry.getKey(), entry.getValue());
@@ -102,17 +106,18 @@ public class HttpHelper implements IHttpHelper {
   }
 
   /**
-   * @param clientId           identifier to fetch externalConfig
+   * {@inheritDoc}
+   *
+   * @param clientId identifier to fetch externalConfig
    * @param urlWithQueryParams http uri and query params
-   * @param header             headers as {@link Map}
+   * @param header headers as {@link Map}
    * @return returns the {@link Response} object.
    * @throws HttpCallException exception thrown if we are not able to initiate execution
    */
   @Override
   public Response doDelete(String clientId, String urlWithQueryParams, Map<String, String> header)
       throws HttpCallException {
-    RequestBuilder requestBuilder = new RequestBuilder()
-        .setMethod(HttpConstants.Methods.DELETE);
+    RequestBuilder requestBuilder = new RequestBuilder().setMethod(HttpConstants.Methods.DELETE);
 
     for (Map.Entry<String, String> entry : header.entrySet()) {
       requestBuilder.addHeader(entry.getKey(), entry.getValue());
@@ -126,31 +131,37 @@ public class HttpHelper implements IHttpHelper {
    * clientId. Builds the complete http url with protocol, hostname, port, uri and queryParams. Then
    * invokes {@link DefaultAsyncHttpClient#executeRequest(RequestBuilder)} and calls {@link
    * ListenableFuture#get()}
-   * <p>
-   * On error, throws a {@link HttpCallException}, else returns {@link Response}
    *
-   * @param clientId           identifier to fetch externalConfig
-   * @param requestBuilder     requestBuilder object
+   * <p>On error, throws a {@link HttpCallException}, else returns {@link Response}
+   *
+   * @param clientId identifier to fetch externalConfig
+   * @param requestBuilder requestBuilder object
    * @param urlWithQueryParams http uri and query params
    * @return returns the {@link Response} object.
    * @throws HttpCallException exception thrown if we are not able to initiate execution
    */
-  private Response execute(String clientId, RequestBuilder requestBuilder,
-      String urlWithQueryParams) throws HttpCallException {
-    DefaultAsyncHttpClient defaultAsyncHttpClient = TestExecutionInjector.getInjector()
-        .getInstance(IHttpManager.class).getClient(clientId);
-    ExternalConfig clientConfig = TestExecutionInjector.getInjector()
-        .getInstance(ExternalConfigRepository.class).getExternalConfigFor(clientId);
+  private Response execute(
+      String clientId, RequestBuilder requestBuilder, String urlWithQueryParams)
+      throws HttpCallException {
+    DefaultAsyncHttpClient defaultAsyncHttpClient =
+        TestExecutionInjector.getInjector().getInstance(IHttpManager.class).getClient(clientId);
+    ExternalConfig clientConfig =
+        TestExecutionInjector.getInjector()
+            .getInstance(ExternalConfigRepository.class)
+            .getExternalConfigFor(clientId);
 
-    String externalCallUrl = new StringBuffer("http://").append(clientConfig.getHostNamePort())
-        .append(urlWithQueryParams).toString();
+    String externalCallUrl =
+        new StringBuffer("http://")
+            .append(clientConfig.getHostNamePort())
+            .append(urlWithQueryParams)
+            .toString();
     requestBuilder.setUrl(externalCallUrl);
-    LOGGER.info(String
-        .format("making an external call to uri: %s with clientId: %s.", externalCallUrl,
-            clientId));
+    LOGGER.info(
+        String.format(
+            "making an external call to uri: %s with clientId: %s.", externalCallUrl, clientId));
 
-    ListenableFuture<Response> responseListenableFuture = defaultAsyncHttpClient
-        .executeRequest(requestBuilder);
+    ListenableFuture<Response> responseListenableFuture =
+        defaultAsyncHttpClient.executeRequest(requestBuilder);
     try {
       Response response = responseListenableFuture.get();
       return response;

@@ -31,18 +31,19 @@ import org.slf4j.LoggerFactory;
  */
 public class ProfileOrTestMethodInterceptor implements MethodInterceptor {
 
-  private static final Logger LOGGER = LoggerFactory
-      .getLogger(ProfileOrTestMethodInterceptor.class);
+  private static final Logger LOGGER =
+      LoggerFactory.getLogger(ProfileOrTestMethodInterceptor.class);
 
-  private Map<Mode, MethodDataInterceptorHandler> modeMethodDataInterceptorHandlerMap = Collections
-      .unmodifiableMap(
-          new HashMap<Mode, MethodDataInterceptorHandler>() {{
-            put(Mode.NONE, new NoneMethodDataInterceptorHandler());
-            put(Mode.PROFILE, new ProfileMethodDataInterceptorHandler());
-            put(Mode.TEST, new TestMethodDataInterceptorHandler());
-            put(Mode.SERIALIZE, new SerializeMethodDataInterceptorHandler());
-          }}
-      );
+  private Map<Mode, MethodDataInterceptorHandler> modeMethodDataInterceptorHandlerMap =
+      Collections.unmodifiableMap(
+          new HashMap<Mode, MethodDataInterceptorHandler>() {
+            {
+              put(Mode.NONE, new NoneMethodDataInterceptorHandler());
+              put(Mode.PROFILE, new ProfileMethodDataInterceptorHandler());
+              put(Mode.TEST, new TestMethodDataInterceptorHandler());
+              put(Mode.SERIALIZE, new SerializeMethodDataInterceptorHandler());
+            }
+          });
 
   /**
    * Calls the {@link Mode} specific handler if available or calls {@link
@@ -55,7 +56,8 @@ public class ProfileOrTestMethodInterceptor implements MethodInterceptor {
   @Override
   public Object invoke(MethodInvocation invocation) throws Throwable {
     if (modeMethodDataInterceptorHandlerMap.containsKey(ProfileRepository.getMode())) {
-      return modeMethodDataInterceptorHandlerMap.get(ProfileRepository.getMode())
+      return modeMethodDataInterceptorHandlerMap
+          .get(ProfileRepository.getMode())
           .handle(invocation);
     }
 

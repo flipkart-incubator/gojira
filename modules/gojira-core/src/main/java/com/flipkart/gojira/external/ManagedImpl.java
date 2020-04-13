@@ -20,7 +20,7 @@ import com.flipkart.gojira.external.http.HttpManager;
 import com.flipkart.gojira.external.kafka.KafkaManager;
 
 /**
- * Implementation of {@link Managed}
+ * Implementation of {@link Managed}.
  */
 public class ManagedImpl implements Managed {
 

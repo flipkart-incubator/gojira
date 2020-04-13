@@ -26,9 +26,7 @@ public class HelperConfig {
 
   private Map<String, ExternalConfig> externalConfigMap = null;
 
-  private HelperConfig() {
-
-  }
+  private HelperConfig() {}
 
   public static Builder builder() {
     return new Builder();

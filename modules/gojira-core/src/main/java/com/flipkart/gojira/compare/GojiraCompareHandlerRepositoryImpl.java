@@ -45,11 +45,6 @@ public class GojiraCompareHandlerRepositoryImpl extends GojiraCompareHandlerRepo
   }
 
   @Override
-  void setResponseDataCompareHandler(TestCompareHandler compareHandler) {
-    responseDataCompareHandler = compareHandler;
-  }
-
-  @Override
   public TestCompareHandler getDefaultCompareHandler() {
     return defaultCompareHandler;
   }
@@ -65,6 +60,11 @@ public class GojiraCompareHandlerRepositoryImpl extends GojiraCompareHandlerRepo
   }
 
   @Override
+  void setResponseDataCompareHandler(TestCompareHandler compareHandler) {
+    responseDataCompareHandler = compareHandler;
+  }
+
+  @Override
   public TestCompareHandler getOrUpdateAndGetOrDefaultMethodArgumentDataCompareHandler(
       MethodInvocation methodInvocation, int argument) throws Throwable {
     String mapEntryVar = methodInvocation.getMethod().toGenericString() + "|" + argument;
@@ -72,8 +72,8 @@ public class GojiraCompareHandlerRepositoryImpl extends GojiraCompareHandlerRepo
       CompareHandler annotatedCompareHandler = annotatedCompareHandler(methodInvocation, argument);
       if (annotatedCompareHandler != null) {
         {
-          Class<? extends TestCompareHandler> compareHandler = annotatedCompareHandler
-              .compareHandlerClass();
+          Class<? extends TestCompareHandler> compareHandler =
+              annotatedCompareHandler.compareHandlerClass();
           TestCompareHandler testCompareHandler = compareHandler.newInstance();
           methodArgumentDataCompareHandler.put(mapEntryVar, testCompareHandler);
         }

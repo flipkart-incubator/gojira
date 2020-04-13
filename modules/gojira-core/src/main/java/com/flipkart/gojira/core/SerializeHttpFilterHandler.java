@@ -24,7 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Implementation of {@link HttpFilterHandler} for mode {@link Mode#SERIALIZE}
+ * Implementation of {@link HttpFilterHandler} for mode {@link Mode#SERIALIZE}.
  */
 public class SerializeHttpFilterHandler extends HttpFilterHandler {
 
@@ -32,14 +32,14 @@ public class SerializeHttpFilterHandler extends HttpFilterHandler {
 
   /**
    * Gets the test id and validates that it is not null.
-   * <p>
-   * If the URL is whitelisted, begins execution by calling {@link DefaultProfileOrTestHandler#start(String,
-   * TestRequestData)}
-   * <p>
-   * returns true if whitelisted else false.
    *
-   * @param request wrapped original http request as a {@link HttpFilter.CustomHttpServletRequestWrapper}
-   *                object
+   * <p>If the URL is whitelisted, begins execution by calling {@link
+   * DefaultProfileOrTestHandler#start(String, TestRequestData)}
+   *
+   * <p>returns true if whitelisted else false.
+   *
+   * @param request wrapped original http request as a {@link
+   *     HttpFilter.CustomHttpServletRequestWrapper} object
    * @return
    */
   @Override
@@ -50,7 +50,7 @@ public class SerializeHttpFilterHandler extends HttpFilterHandler {
       throw new RuntimeException(
           "X-GOJIRA-ID header not present but the service is running in SERIALIZE mode.");
     }
-    boolean whitelisted = isWhitelistedURL(request.getRequestURI(), request.getMethod());
+    boolean whitelisted = isWhitelistedUrl(request.getRequestURI(), request.getMethod());
     if (whitelisted) {
       DefaultProfileOrTestHandler.start(id, null);
     }
@@ -61,25 +61,28 @@ public class SerializeHttpFilterHandler extends HttpFilterHandler {
    * Calls {@link DefaultProfileOrTestHandler#end(TestResponseData)} as per {@link Mode} needs and
    * calls {@link javax.servlet.ServletOutputStream#write(byte[])} of {@link
    * javax.servlet.http.HttpServletResponse} by getting byte[] from {@link
-   * HttpFilter.TestServletResponseWrapper}
-   * <p>
-   * If URL is whitelisted, finishes execution by calling {@link DefaultProfileOrTestHandler#end(TestResponseData)}
+   * HttpFilter.TestServletResponseWrapper}.
    *
-   * @param request     wrapped original http request as a {@link HttpFilter.CustomHttpServletRequestWrapper}
-   *                    object
-   * @param respWrapper wrapped original http response as a {@link HttpFilter.TestServletResponseWrapper}
-   *                    object
-   * @param response    original http response as a {@link HttpFilter.CustomHttpServletRequestWrapper}
-   *                    object
-   * @throws IOException
+   * <p>If URL is whitelisted, finishes execution by calling {@link
+   * DefaultProfileOrTestHandler#end(TestResponseData)}
+   *
+   * @param request wrapped original http request as a {@link
+   *     HttpFilter.CustomHttpServletRequestWrapper} object
+   * @param respWrapper wrapped original http response as a {@link
+   *     HttpFilter.TestServletResponseWrapper} object
+   * @param response original http response as a {@link HttpFilter.CustomHttpServletRequestWrapper}
+   *     object
+   * @throws IOException if an input or output exception occurred
    */
   @Override
-  protected void postFilter(HttpFilter.CustomHttpServletRequestWrapper request,
-      HttpFilter.TestServletResponseWrapper respWrapper, ServletResponse response)
+  protected void postFilter(
+      HttpFilter.CustomHttpServletRequestWrapper request,
+      HttpFilter.TestServletResponseWrapper respWrapper,
+      ServletResponse response)
       throws IOException {
     byte[] outputBuffer = respWrapper.getBuffer();
     response.getOutputStream().write(outputBuffer);
-    if (isWhitelistedURL(request.getRequestURI(), request.getMethod())) {
+    if (isWhitelistedUrl(request.getRequestURI(), request.getMethod())) {
       DefaultProfileOrTestHandler.end(null);
     }
   }

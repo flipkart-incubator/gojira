@@ -28,7 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Implementation of {@link StartEndTestHandler} for mode {@link Mode#PROFILE}
+ * Implementation of {@link StartEndTestHandler} for mode {@link Mode#PROFILE}.
  *
  * @param <T> type of test-data
  */
@@ -43,8 +43,8 @@ public class ProfileStartEndTestHandler<T extends TestDataType> implements Start
    * of any failure, marks the {@link ProfileData#profileState} as {@link ProfileState#FAILED} to
    * avoid further recording of data.
    *
-   * @param id          this is the id, which will be used for synchronizing testing across multiple
-   *                    threads within a single request-response scope.
+   * @param id this is the id, which will be used for synchronizing testing across multiple threads
+   *     within a single request-response scope.
    * @param requestData this is the request-data with which test is initiated
    */
   @Override
@@ -69,34 +69,39 @@ public class ProfileStartEndTestHandler<T extends TestDataType> implements Start
    * of {@link TestQueuedSender}, we add {@link TestResponseData} to {@link TestData} by calling
    * {@link ProfileRepository#setResponseData(TestResponseData)} and sends it to {@link
    * TestQueuedSender}.
-   * <p>
-   * In case of any exception, we just log.
-   * <p>
-   * In the finally block, {@link ProfileRepository#end()} is called.
+   *
+   * <p>In case of any exception, we just log.
+   *
+   * <p>In the finally block, {@link ProfileRepository#end()} is called.
    *
    * @param responseData this is the response-data after the request is processed by the client
-   *                     application.
+   *     application.
    */
   @Override
   public void end(TestResponseData<T> responseData) {
     try {
-      TestQueuedSender testQueuedSender = GuiceInjector.getInjector()
-          .getInstance(TestQueuedSender.class);
+      TestQueuedSender testQueuedSender =
+          GuiceInjector.getInjector().getInstance(TestQueuedSender.class);
       if (ProfileState.INITIATED.equals(ProfileRepository.getProfileState())
           && testQueuedSender != null) {
         try {
           LOGGER.info("Profiling complete for id : " + ProfileRepository.getTestData().getId());
           ProfileRepository.setResponseData(responseData);
-          TestData<TestRequestData<T>, TestResponseData<T>, T> testData = ProfileRepository
-              .getTestData();
+          TestData<TestRequestData<T>, TestResponseData<T>, T> testData =
+              ProfileRepository.getTestData();
           if (testData != null) {
-            LOGGER.info("Profiling complete for id : " + ProfileRepository.getTestData().getId()
-                + " sending to queuedSender.");
+            LOGGER.info(
+                "Profiling complete for id : "
+                    + ProfileRepository.getTestData().getId()
+                    + " sending to queuedSender.");
             testQueuedSender.send(testData);
           }
         } catch (Exception e) {
-          LOGGER.warn("error writing test profile data to datastore" + " global_request_per_id: "
-              + ProfileRepository.getGlobalPerRequestID(), e);
+          LOGGER.warn(
+              "error writing test profile data to datastore"
+                  + " global_request_per_id: "
+                  + ProfileRepository.getGlobalPerRequestID(),
+              e);
         }
       }
     } finally {
@@ -107,13 +112,15 @@ public class ProfileStartEndTestHandler<T extends TestDataType> implements Start
   /**
    * Helper method to do time-based sampling.
    *
+   * <p>TODO: Use an interface to implement sampling functionality.
+   *
    * @return true if request can be sampled.
-   * <p>
-   * TODO: Use an interface to implement sampling functionality.
    */
   private boolean fallsInSamplingBucket() {
-    return ((System.nanoTime() % 10000) < (
-        GuiceInjector.getInjector().getInstance(RequestSamplingRepository.class)
-            .getSamplingPercentage() * 100));
+    return ((System.nanoTime() % 10000)
+        < (GuiceInjector.getInjector()
+                .getInstance(RequestSamplingRepository.class)
+                .getSamplingPercentage()
+            * 100));
   }
 }

@@ -32,22 +32,25 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Implementation for {@link IKafkaManager} and {@link Managed}
+ * Implementation for {@link IKafkaManager} and {@link Managed}.
  */
 public enum KafkaManager implements IKafkaManager, Managed {
   KAFKA_MANAGER;
   public static final Logger LOGGER = LoggerFactory.getLogger(KafkaManager.class);
 
   /**
-   * Sets up kafka connections by using properties in {@link ExternalConfig}
+   * Sets up kafka connections by using properties in {@link ExternalConfig}.
    *
-   * @throws SetupException
+   * @throws SetupException exception thrown if we are not able to setup kafka connection.
    */
   @Override
   public void setup() throws SetupException {
     try {
-      for (Map.Entry<String, ExternalConfig> entry : TestExecutionInjector.getInjector()
-          .getInstance(ExternalConfigRepository.class).getExternalConfig().entrySet()) {
+      for (Map.Entry<String, ExternalConfig> entry :
+          TestExecutionInjector.getInjector()
+              .getInstance(ExternalConfigRepository.class)
+              .getExternalConfig()
+              .entrySet()) {
         Properties props = new Properties();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, entry.getValue().getHostNamePort());
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, ByteArraySerializer.class);
@@ -58,13 +61,12 @@ public enum KafkaManager implements IKafkaManager, Managed {
       LOGGER.error("error setting up kafka producers.", e);
       throw new SetupException("error setting up kafka producers.", e);
     }
-
   }
 
   /**
-   * Closes kafka connections by calling {@link KafkaProducer#close()}
+   * Closes kafka connections by calling {@link KafkaProducer#close()}.
    *
-   * @throws ShutdownException
+   * @throws ShutdownException exception thrown if we are not able to shutdown kafka connection.
    */
   @Override
   public void shutdown() throws ShutdownException {
@@ -78,10 +80,6 @@ public enum KafkaManager implements IKafkaManager, Managed {
     }
   }
 
-  /**
-   * @param client clientId
-   * @return {@link Producer} instance for a given clientId
-   */
   @Override
   public Producer<byte[], byte[]> getProducer(String client) {
     return clientMap.get(client);

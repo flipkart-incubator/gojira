@@ -29,25 +29,30 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Implementation of {@link IHttpManager} and {@link Managed}
+ * Implementation of {@link IHttpManager} and {@link Managed}.
  */
 public enum HttpManager implements IHttpManager, Managed {
-  HTTP_MANAGER; // TODO: there is a hard dependency in Managed. Need to figure out a way to decouple.
+  HTTP_MANAGER; //TODO: there is a hard dependency in Managed. Need to figure out a way to decouple.
   private static final Logger LOGGER = LoggerFactory.getLogger(HttpManager.class);
 
   @Override
   public void setup() throws SetupException {
     try {
-      for (Map.Entry<String, ExternalConfig> entry : TestExecutionInjector.getInjector()
-          .getInstance(ExternalConfigRepository.class).getExternalConfig().entrySet()) {
-        clientMap.put(entry.getKey(),
-            new DefaultAsyncHttpClient(new DefaultAsyncHttpClientConfig.Builder()
-                .setConnectTimeout(entry.getValue().getConnectionTimeout())
-                .setMaxConnections(entry.getValue().getMaxConnections())
-                .setMaxConnectionsPerHost(entry.getValue().getMaxConnections())
-                .setKeepAlive(true)
-                .setRequestTimeout(entry.getValue().getOperationTimeout())
-                .build()));
+      for (Map.Entry<String, ExternalConfig> entry :
+          TestExecutionInjector.getInjector()
+              .getInstance(ExternalConfigRepository.class)
+              .getExternalConfig()
+              .entrySet()) {
+        clientMap.put(
+            entry.getKey(),
+            new DefaultAsyncHttpClient(
+                new DefaultAsyncHttpClientConfig.Builder()
+                    .setConnectTimeout(entry.getValue().getConnectionTimeout())
+                    .setMaxConnections(entry.getValue().getMaxConnections())
+                    .setMaxConnectionsPerHost(entry.getValue().getMaxConnections())
+                    .setKeepAlive(true)
+                    .setRequestTimeout(entry.getValue().getOperationTimeout())
+                    .build()));
       }
     } catch (Exception e) {
       LOGGER.error("error setting up http connections.", e);
