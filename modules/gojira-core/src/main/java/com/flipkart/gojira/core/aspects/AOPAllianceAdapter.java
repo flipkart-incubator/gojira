@@ -24,6 +24,9 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 
+/**
+ * Class that bridges MethodInterceptor of AOPAlliance and AspectJ aspects
+ */
 @Aspect
 public abstract class AOPAllianceAdapter {
 

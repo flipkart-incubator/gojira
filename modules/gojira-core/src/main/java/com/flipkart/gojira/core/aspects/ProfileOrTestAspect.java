@@ -21,6 +21,9 @@ import org.aopalliance.intercept.MethodInterceptor;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 
+/**
+ * Aspect that captures @ProfileOrTest annotation and binds the method interceptor
+ */
 @Aspect
 public class ProfileOrTestAspect extends AOPAllianceAdapter {
 

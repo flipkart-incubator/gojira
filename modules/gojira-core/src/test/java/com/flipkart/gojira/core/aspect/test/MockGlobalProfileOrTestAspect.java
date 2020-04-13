@@ -22,11 +22,6 @@ import com.flipkart.gojira.core.aspects.AOPAllianceAdapter;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aspectj.lang.annotation.Aspect;
 
-/**
- * Created on 13/04/20.
- *
- * @author bala.narayanasami.
- */
 @Aspect
 public abstract class MockGlobalProfileOrTestAspect extends AOPAllianceAdapter {
 

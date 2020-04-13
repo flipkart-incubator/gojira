@@ -22,6 +22,9 @@ import com.flipkart.gojira.core.ProfileOrTestMethodInterceptor;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aspectj.lang.annotation.Aspect;
 
+/**
+ * Use this class in aop.xml to extend to while defining concrete-aspects for defining custom pointcuts.
+ */
 @Aspect
 public abstract class GlobalProfileOrTestAspect extends AOPAllianceAdapter {
 
