@@ -12,7 +12,7 @@
   <artifactId>shaded-gojira-core</artifactId>
   <packaging>jar</packaging>
   <version>1.7.3</version>
-  <name>Shaded core Gojira libraries</name>
+  <name>Shaded Gojira core libraries</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
