@@ -141,6 +141,8 @@ public class TestStartEndTestHandler<T extends TestDataType> implements StartEnd
               .compare(serdeHandlerRepository.getReqRespDataSerdeHandler()
                       .serialize(ProfileRepository.getTestData().getResponseData()),
                   serdeHandlerRepository.getReqRespDataSerdeHandler().serialize(responseData));
+          // method data map must be empty at the end of the test.
+          // if it is non empty it indicates some failure due to which we were not able to consume stored method data for some annotated methods.
           if(ProfileRepository.getTestData().getMethodDataMap().isEmpty()){
             sinkHandler.writeResults(id, RESULT_SUCCESS);
             LOGGER.info("RESULT_SUCCESS for " + id);
