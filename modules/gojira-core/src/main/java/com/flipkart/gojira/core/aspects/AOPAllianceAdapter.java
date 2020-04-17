@@ -16,7 +16,6 @@
 
 package com.flipkart.gojira.core.aspects;
 
-import org.aopalliance.intercept.ConstructorInterceptor;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.SoftException;
@@ -38,24 +37,11 @@ public abstract class AOPAllianceAdapter {
      */
     protected abstract MethodInterceptor getMethodInterceptor();
 
-    /**
-     * Return the interceptor to use at constructor execution join points.
-     * May be overriden by subclasses.
-     *
-     * @return ConstructorInterceptor, or null if no constructor advice required
-     */
-    protected ConstructorInterceptor getConstructorInterceptor() {
-        return null;
-    }
-
     @Pointcut
     protected abstract void targetJoinPoint();
 
     @Pointcut("execution(* *(..))")
     public void methodExecution() {}
-
-    @Pointcut("execution(new(..))")
-    public void constructorExecution() {}
 
     @Around("targetJoinPoint() && methodExecution()")
     public Object around(ProceedingJoinPoint thisJoinPoint) throws Throwable {
@@ -73,25 +59,4 @@ public abstract class AOPAllianceAdapter {
             return thisJoinPoint.proceed();
         }
     }
-
-    @Around("targetJoinPoint() && constructorExecution()")
-    public Object aroundConstructor(ProceedingJoinPoint thisJoinPoint) throws Throwable {
-        ConstructorInvocationClosure cic = new ConstructorInvocationClosure(thisJoinPoint) {
-            public Object execute() throws Throwable {
-                thisJoinPoint.proceed();
-                return thisJoinPoint.getThis();
-            }
-        };
-        ConstructorInterceptor cInt = getConstructorInterceptor();
-        if (cInt != null) {
-            try {
-                return cInt.construct(cic);
-            } catch (Throwable t) {
-                throw new SoftException(t);
-            }
-        } else {
-            return thisJoinPoint.proceed();
-        }
-    }
-
 }

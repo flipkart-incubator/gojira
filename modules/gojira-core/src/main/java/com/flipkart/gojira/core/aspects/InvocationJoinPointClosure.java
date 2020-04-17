@@ -18,13 +18,12 @@
 
 package com.flipkart.gojira.core.aspects;
 
-import java.lang.reflect.AccessibleObject;
-
 import org.aopalliance.intercept.Invocation;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.reflect.CodeSignature;
-import org.aspectj.lang.reflect.ConstructorSignature;
 import org.aspectj.lang.reflect.MethodSignature;
+
+import java.lang.reflect.AccessibleObject;
 
 public abstract class InvocationJoinPointClosure extends JoinPointClosure implements Invocation {
 
@@ -42,8 +41,6 @@ public abstract class InvocationJoinPointClosure extends JoinPointClosure implem
         try {
             if (cSig instanceof MethodSignature) {
                 ret = clazz.getMethod(cSig.getName(), cSig.getParameterTypes());
-            } else if (cSig instanceof ConstructorSignature) {
-                ret = clazz.getConstructor(cSig.getParameterTypes());
             }
         } catch (NoSuchMethodException mEx) {
             throw new UnsupportedOperationException(

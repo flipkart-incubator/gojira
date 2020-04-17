@@ -29,11 +29,6 @@ public @interface AspectJConfig {
      * Use this to append additional classpath entries.
      * This is especially useful if you want your tests to use different
      * aop.xml files each.
-     * If your aop.xml file is located for example in
-     * {@code /home/joe/test/META-INF/aop.xml} then add {@code /home/joe/test}
-     * as classpathAddition.
-     * Depending on your project setup this might also work with relative
-     * parts.
      */
     String[] classpathAdditions() default "";
 }
