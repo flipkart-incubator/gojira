@@ -5,13 +5,12 @@
   <parent>
     <artifactId>gojira-parent</artifactId>
     <groupId>com.flipkart</groupId>
-    <version>1.7.3</version>
+    <version>${revision}</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>shaded-gojira-core</artifactId>
   <packaging>jar</packaging>
-  <version>1.7.3</version>
   <name>Shaded core Gojira libraries</name>
 
   <properties>

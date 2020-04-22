@@ -7,11 +7,10 @@
     <parent>
         <groupId>com.flipkart</groupId>
         <artifactId>gojira-parent</artifactId>
-        <version>1.7.3</version>
+        <version>${revision}</version>
     </parent>
 
     <artifactId>gojira-core</artifactId>
-    <version>1.7.3</version>
 
     <name>Gojira core libraries</name>
 
