@@ -32,7 +32,6 @@ import org.slf4j.LoggerFactory;
 public class KafkaFilter {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(KafkaFilter.class);
-  private static final String TEST_HEADER = "X-GOJIRA-ID";
 
   /**
    * Initializes a map of {@link Mode} specific filter handlers.

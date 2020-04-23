@@ -20,14 +20,19 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.flipkart.gojira.models.http.HttpTestResponseData;
 import com.flipkart.gojira.models.kafka.KafkaTestResponseData;
+import com.flipkart.gojira.models.rmq.RMQTestResponseData;
 
-/**
- * Base response class for different types of {@link TestDataType}
- */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "testResponseDataType")
+import static com.flipkart.gojira.core.GojiraConstants.*;
+
+/** Base response class for different types of {@link TestDataType} */
+@JsonTypeInfo(
+    use = JsonTypeInfo.Id.NAME,
+    include = JsonTypeInfo.As.PROPERTY,
+    property = "testResponseDataType")
 @JsonSubTypes({
-    @JsonSubTypes.Type(value = HttpTestResponseData.class, name = "HTTP"),
-    @JsonSubTypes.Type(value = KafkaTestResponseData.class, name = "KAFKA"),
+  @JsonSubTypes.Type(value = HttpTestResponseData.class, name = HTTP_TEST_DATA_TYPE),
+  @JsonSubTypes.Type(value = KafkaTestResponseData.class, name = KAFKA_TEST_DATA_TYPE),
+  @JsonSubTypes.Type(value = RMQTestResponseData.class, name = RMQ_TEST_DATA_TYPE)
 })
 public abstract class TestResponseData<T extends TestDataType> {
 

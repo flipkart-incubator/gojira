@@ -18,6 +18,8 @@ package com.flipkart.gojira.models.kafka;
 
 import com.flipkart.gojira.models.TestDataType;
 
+import static com.flipkart.gojira.core.GojiraConstants.KAFKA_TEST_DATA_TYPE;
+
 /**
  * Extends {@link TestDataType} to indicate Kafka data.
  */
@@ -25,6 +27,6 @@ public class KafkaTestDataType extends TestDataType {
 
   @Override
   public String getType() {
-    return "KAFKA";
+    return KAFKA_TEST_DATA_TYPE;
   }
 }
