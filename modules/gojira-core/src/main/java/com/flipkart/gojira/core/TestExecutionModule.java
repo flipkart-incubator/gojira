@@ -19,7 +19,7 @@ package com.flipkart.gojira.core;
 import com.flipkart.gojira.core.injectors.TestExecutionInjector;
 import com.flipkart.gojira.external.ExternalModule;
 import com.flipkart.gojira.external.ManagedModule;
-import com.flipkart.gojira.external.config.HelperConfig;
+import com.flipkart.gojira.external.config.ExternalConfig;
 import com.flipkart.gojira.serde.SerdeModule;
 import com.flipkart.gojira.serde.config.SerdeConfig;
 import com.google.inject.AbstractModule;
@@ -27,6 +27,9 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * This guice module contains all the configurations required for initiating tests by making calls
@@ -36,10 +39,10 @@ public class TestExecutionModule extends AbstractModule {
 
   public static final Logger LOGGER = LoggerFactory.getLogger(TestExecutionModule.class);
 
-  private HelperConfig helperConfig;
+  private final Map<String, List<ExternalConfig>> clientToListConfigMap;
 
-  public TestExecutionModule(HelperConfig helperConfig) {
-    this.helperConfig = helperConfig;
+  public TestExecutionModule(Map<String, List<ExternalConfig>> clientToListConfigMap) {
+    this.clientToListConfigMap = clientToListConfigMap;
   }
 
   @Override
@@ -47,7 +50,7 @@ public class TestExecutionModule extends AbstractModule {
     Injector injector = Guice.createInjector(new AbstractModule() {
       @Override
       protected void configure() {
-        install(new ExternalModule(helperConfig));
+        install(new ExternalModule(clientToListConfigMap));
         install(new ManagedModule());
         install(new SerdeModule(SerdeConfig.builder().build()));
       }
