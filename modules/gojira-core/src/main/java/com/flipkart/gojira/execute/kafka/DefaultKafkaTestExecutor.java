@@ -16,6 +16,7 @@
 
 package com.flipkart.gojira.execute.kafka;
 
+import com.flipkart.gojira.core.GojiraConstants;
 import com.flipkart.gojira.execute.TestExecutor;
 import com.flipkart.gojira.external.kafka.IKafkaHelper;
 import com.flipkart.gojira.external.kafka.KafkaProducerException;
@@ -31,11 +32,11 @@ import org.apache.kafka.common.header.internals.RecordHeaders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class DefaultKafkaTestExecutor implements
-    TestExecutor<TestData<KafkaTestRequestData, KafkaTestResponseData, KafkaTestDataType>> {
+public class DefaultKafkaTestExecutor
+    implements TestExecutor<
+        TestData<KafkaTestRequestData, KafkaTestResponseData, KafkaTestDataType>> {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(DefaultKafkaTestExecutor.class);
-  private static final String GOJIRA_TEST_HEADER = "X-GOJIRA-ID";
   public final IKafkaHelper kafkaHelper;
 
   @Inject
@@ -53,22 +54,30 @@ public class DefaultKafkaTestExecutor implements
   @Override
   public void execute(
       TestData<KafkaTestRequestData, KafkaTestResponseData, KafkaTestDataType> testData,
-      String clientId) throws KafkaProducerException {
+      String clientId)
+      throws KafkaProducerException {
     String testId = testData.getId();
     KafkaTestRequestData requestData = testData.getRequestData();
     RecordHeaders recordHeaders = new RecordHeaders();
     requestData.getHeaders().forEach((k, v) -> recordHeaders.add(new RecordHeader(k, v)));
-    recordHeaders.add(new RecordHeader(GOJIRA_TEST_HEADER, testId.getBytes()));
-    ProducerRecord<byte[], byte[]> producerRecord = new ProducerRecord<>(requestData.getTopicName(),
-        null, requestData.getKey(), requestData.getValue(), recordHeaders);
+    recordHeaders.add(new RecordHeader(GojiraConstants.TEST_HEADER, testId.getBytes()));
+    ProducerRecord<byte[], byte[]> producerRecord =
+        new ProducerRecord<>(
+            requestData.getTopicName(),
+            null,
+            requestData.getKey(),
+            requestData.getValue(),
+            recordHeaders);
     LOGGER.info("gojira test ID " + testId);
     RecordMetadata recordMetadata = kafkaHelper.produce(clientId, producerRecord);
     logRecordProduction(recordMetadata, clientId, testId);
   }
 
   private void logRecordProduction(RecordMetadata recordMetadata, String clientId, String testId) {
-    LOGGER.info(String.format("produced record to topic: %s with clientId: %s for testId: %s. ",
-        recordMetadata.topic(), clientId, testId));
+    LOGGER.info(
+        String.format(
+            "produced record to topic: %s with clientId: %s for testId: %s. ",
+            recordMetadata.topic(), clientId, testId));
   }
 
   @Override

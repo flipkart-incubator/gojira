@@ -18,6 +18,7 @@ package com.flipkart.gojira.external;
 
 import com.flipkart.gojira.external.http.HttpManager;
 import com.flipkart.gojira.external.kafka.KafkaManager;
+import com.flipkart.gojira.external.rmq.RMQManager;
 
 /**
  * Implementation of {@link Managed}
@@ -33,6 +34,7 @@ public class ManagedImpl implements Managed {
   public void setup() throws SetupException {
     HttpManager.HTTP_MANAGER.setup();
     KafkaManager.KAFKA_MANAGER.setup();
+    RMQManager.RMQ_MANAGER.setup();
   }
 
   /**
@@ -44,5 +46,7 @@ public class ManagedImpl implements Managed {
   public void shutdown() throws ShutdownException {
     HttpManager.HTTP_MANAGER.shutdown();
     KafkaManager.KAFKA_MANAGER.shutdown();
+    RMQManager.RMQ_MANAGER.shutdown();
+
   }
 }

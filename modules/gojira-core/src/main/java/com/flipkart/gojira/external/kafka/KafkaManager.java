@@ -22,8 +22,8 @@ import com.flipkart.gojira.external.Managed;
 import com.flipkart.gojira.external.SetupException;
 import com.flipkart.gojira.external.ShutdownException;
 import com.flipkart.gojira.external.config.ExternalConfig;
-import java.util.Map;
-import java.util.Properties;
+import com.flipkart.gojira.external.config.KafkaConfig;
+import com.flipkart.gojira.models.kafka.KafkaTestDataType;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -31,9 +31,10 @@ import org.apache.kafka.common.serialization.ByteArraySerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Implementation for {@link IKafkaManager} and {@link Managed}
- */
+import java.util.Map;
+import java.util.Properties;
+
+/** Implementation for {@link IKafkaManager} and {@link Managed} */
 public enum KafkaManager implements IKafkaManager, Managed {
   KAFKA_MANAGER;
   public static final Logger LOGGER = LoggerFactory.getLogger(KafkaManager.class);
@@ -46,19 +47,25 @@ public enum KafkaManager implements IKafkaManager, Managed {
   @Override
   public void setup() throws SetupException {
     try {
-      for (Map.Entry<String, ExternalConfig> entry : TestExecutionInjector.getInjector()
-          .getInstance(ExternalConfigRepository.class).getExternalConfig().entrySet()) {
-        Properties props = new Properties();
-        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, entry.getValue().getHostNamePort());
-        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, ByteArraySerializer.class);
-        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, ByteArraySerializer.class);
-        clientMap.put(entry.getKey(), new KafkaProducer<>(props));
+
+      Map<String, ExternalConfig> externalConfigMap =
+          TestExecutionInjector.getInjector()
+              .getInstance(ExternalConfigRepository.class)
+              .getExternalConfigByType(KafkaTestDataType.class);
+      for (Map.Entry<String, ExternalConfig> entry : externalConfigMap.entrySet()) {
+        if (entry.getValue() != null) {
+          KafkaConfig kafkaConfig = (KafkaConfig) entry.getValue();
+          Properties props = new Properties();
+          props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaConfig.getHostNamePort());
+          props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, ByteArraySerializer.class);
+          props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, ByteArraySerializer.class);
+          clientMap.put(entry.getKey(), new KafkaProducer<>(props));
+        }
       }
     } catch (Exception e) {
       LOGGER.error("error setting up kafka producers.", e);
       throw new SetupException("error setting up kafka producers.", e);
     }
-
   }
 
   /**

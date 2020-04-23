@@ -18,6 +18,8 @@ package com.flipkart.gojira.models.http;
 
 import com.flipkart.gojira.models.TestDataType;
 
+import static com.flipkart.gojira.core.GojiraConstants.HTTP_TEST_DATA_TYPE;
+
 /**
  * Extends {@link TestDataType} to indicate HTTP data.
  */
@@ -25,6 +27,6 @@ public class HttpTestDataType extends TestDataType {
 
   @Override
   public String getType() {
-    return "HTTP";
+    return HTTP_TEST_DATA_TYPE;
   }
 }
