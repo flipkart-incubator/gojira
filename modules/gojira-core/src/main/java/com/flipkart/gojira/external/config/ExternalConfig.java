@@ -16,47 +16,35 @@
 
 package com.flipkart.gojira.external.config;
 
+import static com.flipkart.gojira.core.GojiraConstants.HTTP_TEST_DATA_TYPE;
+import static com.flipkart.gojira.core.GojiraConstants.KAFKA_TEST_DATA_TYPE;
+import static com.flipkart.gojira.core.GojiraConstants.RMQ_TEST_DATA_TYPE;
+
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 /**
  * This class holds all config required for making external rpc calls. This needs to be provided by
  * the client application. // TODO: sub-calls it for different types of external calls like HTTP
  * etc.
  */
-public class ExternalConfig {
+@JsonTypeInfo(
+    use = JsonTypeInfo.Id.NAME,
+    include = JsonTypeInfo.As.EXISTING_PROPERTY,
+    property = "type")
+@JsonSubTypes({
+    @JsonSubTypes.Type(value = HttpConfig.class, name = HTTP_TEST_DATA_TYPE),
+    @JsonSubTypes.Type(value = KafkaConfig.class, name = KAFKA_TEST_DATA_TYPE),
+    @JsonSubTypes.Type(value = RmqConfig.class, name = RMQ_TEST_DATA_TYPE)
+})
+public abstract class ExternalConfig {
+  private String type;
 
-  private String hostNamePort;
-  private int maxConnections;
-  private int connectionTimeout;
-  private int operationTimeout;
-
-  public String getHostNamePort() {
-    return hostNamePort;
+  public ExternalConfig(String type) {
+    this.type = type;
   }
 
-  public void setHostNamePort(String hostNamePort) {
-    this.hostNamePort = hostNamePort;
-  }
-
-  public int getMaxConnections() {
-    return maxConnections;
-  }
-
-  public void setMaxConnections(int maxConnections) {
-    this.maxConnections = maxConnections;
-  }
-
-  public int getConnectionTimeout() {
-    return connectionTimeout;
-  }
-
-  public void setConnectionTimeout(int connectionTimeout) {
-    this.connectionTimeout = connectionTimeout;
-  }
-
-  public int getOperationTimeout() {
-    return operationTimeout;
-  }
-
-  public void setOperationTimeout(int operationTimeout) {
-    this.operationTimeout = operationTimeout;
+  public final String getType() {
+    return type;
   }
 }

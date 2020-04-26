@@ -52,7 +52,7 @@ public class JsonTestCompareHandler extends TestCompareHandler {
    *
    * @param profiledData expected data in bytes
    * @param testData actual data in bytes
-   * @throws TestCompareException exception thrown when there is a diff
+   * @throws TestCompareException when there is a diff
    */
   @Override
   protected void doCompare(byte[] profiledData, byte[] testData) throws TestCompareException {

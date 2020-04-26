@@ -40,7 +40,7 @@ public class SerializeHttpFilterHandler extends HttpFilterHandler {
    *
    * @param request wrapped original http request as a {@link
    *     HttpFilter.CustomHttpServletRequestWrapper} object
-   * @return
+   * @return true if whitelisted else false
    */
   @Override
   public boolean preFilter(HttpFilter.CustomHttpServletRequestWrapper request) {

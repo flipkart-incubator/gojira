@@ -28,7 +28,7 @@ public class NoneMethodDataInterceptorHandler implements MethodDataInterceptorHa
    *
    * @param invocation intercepted method invocation
    * @return the object returned by the called method
-   * @throws Throwable the exception thrown by the called method
+   * @throws Throwable for any exception thrown by the called method
    */
   @Override
   public Object handle(MethodInvocation invocation) throws Throwable {

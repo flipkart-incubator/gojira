@@ -19,6 +19,8 @@ package com.flipkart.gojira.external.http;
 import com.flipkart.gojira.core.injectors.TestExecutionInjector;
 import com.flipkart.gojira.external.ExternalConfigRepository;
 import com.flipkart.gojira.external.config.ExternalConfig;
+import com.flipkart.gojira.external.config.HttpConfig;
+import com.flipkart.gojira.models.http.HttpTestDataType;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import org.asynchttpclient.DefaultAsyncHttpClient;
@@ -42,8 +44,8 @@ public class HttpHelper implements IHttpHelper {
    * @param clientId identifier to fetch externalConfig
    * @param urlWithQueryParams http uri and query params
    * @param header headers as {@link Map}
-   * @return returns the {@link Response} object.
-   * @throws HttpCallException exception thrown if we are not able to initiate execution
+   * @return the {@link Response} object.
+   * @throws HttpCallException if we are not able to initiate execution
    */
   @Override
   public Response doGet(String clientId, String urlWithQueryParams, Map<String, String> header)
@@ -64,8 +66,8 @@ public class HttpHelper implements IHttpHelper {
    * @param urlWithQueryParams http uri and query params
    * @param header headers as {@link Map}
    * @param payload headers as {@link Map}
-   * @return returns the {@link Response} object.
-   * @throws HttpCallException exception thrown if we are not able to initiate execution
+   * @return the {@link Response} object.
+   * @throws HttpCallException if we are not able to initiate execution
    */
   @Override
   public Response doPost(
@@ -88,8 +90,8 @@ public class HttpHelper implements IHttpHelper {
    * @param urlWithQueryParams http uri and query params
    * @param header headers as {@link Map}
    * @param payload headers as {@link Map}
-   * @return returns the {@link Response} object.
-   * @throws HttpCallException exception thrown if we are not able to initiate execution
+   * @return the {@link Response} object.
+   * @throws HttpCallException if we are not able to initiate execution
    */
   @Override
   public Response doPut(
@@ -111,8 +113,8 @@ public class HttpHelper implements IHttpHelper {
    * @param clientId identifier to fetch externalConfig
    * @param urlWithQueryParams http uri and query params
    * @param header headers as {@link Map}
-   * @return returns the {@link Response} object.
-   * @throws HttpCallException exception thrown if we are not able to initiate execution
+   * @return the {@link Response} object.
+   * @throws HttpCallException if we are not able to initiate execution
    */
   @Override
   public Response doDelete(String clientId, String urlWithQueryParams, Map<String, String> header)
@@ -137,8 +139,8 @@ public class HttpHelper implements IHttpHelper {
    * @param clientId identifier to fetch externalConfig
    * @param requestBuilder requestBuilder object
    * @param urlWithQueryParams http uri and query params
-   * @return returns the {@link Response} object.
-   * @throws HttpCallException exception thrown if we are not able to initiate execution
+   * @return the {@link Response} object.
+   * @throws HttpCallException if we are not able to initiate execution
    */
   private Response execute(
       String clientId, RequestBuilder requestBuilder, String urlWithQueryParams)
@@ -148,11 +150,12 @@ public class HttpHelper implements IHttpHelper {
     ExternalConfig clientConfig =
         TestExecutionInjector.getInjector()
             .getInstance(ExternalConfigRepository.class)
-            .getExternalConfigFor(clientId);
+            .getExternalConfigFor(clientId, HttpTestDataType.class);
 
+    HttpConfig httpConfig = (HttpConfig) clientConfig;
     String externalCallUrl =
         new StringBuffer("http://")
-            .append(clientConfig.getHostNamePort())
+            .append(httpConfig.getHostNamePort())
             .append(urlWithQueryParams)
             .toString();
     requestBuilder.setUrl(externalCallUrl);

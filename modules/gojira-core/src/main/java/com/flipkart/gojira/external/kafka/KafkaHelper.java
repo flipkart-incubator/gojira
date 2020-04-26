@@ -41,7 +41,7 @@ public class KafkaHelper implements IKafkaHelper {
    * @param client clientId
    * @param producerRecord record to be produced to kafka.
    * @return metadata of produced record.
-   * @throws KafkaProducerException exception if we are not able to produce message.
+   * @throws KafkaProducerException if we are not able to produce message.
    */
   @Override
   public RecordMetadata produce(String client, ProducerRecord<byte[], byte[]> producerRecord)

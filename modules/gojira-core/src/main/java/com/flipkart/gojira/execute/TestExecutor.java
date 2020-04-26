@@ -27,7 +27,7 @@ public interface TestExecutor<T extends TestData> {
    *
    * @param testData testData which is used for invoking execution
    * @param clientId identifier to indicate which system hit
-   * @throws TestExecutionException exception thrown on failure to initiate a test execution
+   * @throws TestExecutionException on failure to initiate a test execution
    */
   void execute(T testData, String clientId) throws TestExecutionException;
 }

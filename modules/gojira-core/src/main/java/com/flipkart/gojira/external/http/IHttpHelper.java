@@ -30,8 +30,8 @@ public interface IHttpHelper {
    * @param clientId identifier to fetch externalConfig
    * @param urlWithQueryParams http uri and query params
    * @param header headers as {@link Map}
-   * @return returns the {@link Response} object.
-   * @throws HttpCallException exception to be thrown if we are not able to initiate execution
+   * @return the {@link Response} object.
+   * @throws HttpCallException if we are not able to initiate execution
    */
   Response doGet(String clientId, String urlWithQueryParams, Map<String, String> header)
       throws HttpCallException;
@@ -43,8 +43,8 @@ public interface IHttpHelper {
    * @param urlWithQueryParams http uri and query params
    * @param header headers as {@link Map}
    * @param payload headers as {@link Map}
-   * @return returns the {@link Response} object.
-   * @throws HttpCallException exception to be thrown if we are not able to initiate execution
+   * @return the {@link Response} object.
+   * @throws HttpCallException if we are not able to initiate execution
    */
   Response doPost(
       String clientId, String urlWithQueryParams, Map<String, String> header, byte[] payload)
@@ -57,8 +57,8 @@ public interface IHttpHelper {
    * @param urlWithQueryParams http uri and query params
    * @param header headers as {@link Map}
    * @param payload headers as {@link Map}
-   * @return returns the {@link Response} object.
-   * @throws HttpCallException exception to be thrown if we are not able to initiate execution
+   * @return the {@link Response} object.
+   * @throws HttpCallException if we are not able to initiate execution
    */
   Response doPut(
       String clientId, String urlWithQueryParams, Map<String, String> header, byte[] payload)
@@ -70,8 +70,8 @@ public interface IHttpHelper {
    * @param clientId identifier to fetch externalConfig
    * @param urlWithQueryParams http uri and query params
    * @param header headers as {@link Map}
-   * @return returns the {@link Response} object.
-   * @throws HttpCallException exception to be thrown if we are not able to initiate execution
+   * @return the {@link Response} object.
+   * @throws HttpCallException if we are not able to initiate execution
    */
   Response doDelete(String clientId, String urlWithQueryParams, Map<String, String> header)
       throws HttpCallException;

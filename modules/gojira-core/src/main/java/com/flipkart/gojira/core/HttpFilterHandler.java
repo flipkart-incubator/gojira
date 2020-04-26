@@ -16,6 +16,8 @@
 
 package com.flipkart.gojira.core;
 
+import static com.flipkart.gojira.core.GojiraConstants.TEST_HEADER;
+
 import com.flipkart.gojira.core.injectors.GuiceInjector;
 import com.flipkart.gojira.models.TestRequestData;
 import com.flipkart.gojira.models.TestResponseData;
@@ -40,7 +42,6 @@ import org.slf4j.LoggerFactory;
 public abstract class HttpFilterHandler {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(HttpFilterHandler.class);
-  protected static final String TEST_HEADER = "X-GOJIRA-ID";
 
   /**
    * Expected to call {@link DefaultProfileOrTestHandler#start(String, TestRequestData)} as per
@@ -51,7 +52,7 @@ public abstract class HttpFilterHandler {
    *
    * @param request wrapped original http request as a {@link
    *     HttpFilter.CustomHttpServletRequestWrapper} object
-   * @return boolean true if {@link FilterChain#doFilter(ServletRequest, ServletResponse)} should be
+   * @return true if {@link FilterChain#doFilter(ServletRequest, ServletResponse)} should be
    *     called, else false.
    */
   protected abstract boolean preFilter(HttpFilter.CustomHttpServletRequestWrapper request);
@@ -77,8 +78,12 @@ public abstract class HttpFilterHandler {
   }
 
   /**
-   * Executes the logic post getting the response from the subsequent channel.
-   * TODO: Can the above two be taken care of here itself?
+   * Executes the logic post getting the response from the subsequent channel. Expected to call
+   * {@link DefaultProfileOrTestHandler#end(TestResponseData)} as per {@link Mode} needs and call
+   * {@link javax.servlet.ServletOutputStream#write(byte[])} of {@link
+   * javax.servlet.http.HttpServletResponse} by getting byte[] from {@link
+   * HttpFilter.TestServletResponseWrapper}
+   * TODO: Can the below two be taken care of here itself?
    *
    * @param request wrapped original http request as a {@link
    *     HttpFilter.CustomHttpServletRequestWrapper} object
@@ -86,10 +91,7 @@ public abstract class HttpFilterHandler {
    *     HttpFilter.TestServletResponseWrapper} object
    * @param response original http response as a {@link HttpFilter.CustomHttpServletRequestWrapper}
    *     object
-   * @throws IOException Expected to call {@link DefaultProfileOrTestHandler#end(TestResponseData)}
-   *     as per {@link Mode} needs and call {@link javax.servlet.ServletOutputStream#write(byte[])}
-   *     of {@link javax.servlet.http.HttpServletResponse} by getting byte[] from {@link
-   *     HttpFilter.TestServletResponseWrapper}
+   * @throws IOException if an input or output exception occurred
    */
   protected abstract void postFilter(
       HttpFilter.CustomHttpServletRequestWrapper request,

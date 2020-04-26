@@ -51,10 +51,9 @@ public class IdBasedTestExecutor<T extends TestDataType> {
    *
    * @param testId testId against which we need to initiate execution.
    * @param clientId clientId is the identifier which can be used to know which system to hit.
-   * @throws TestExecutionException exception thrown if we are not able to initiate the execution
-   * @throws SinkException exception thrown if we are not able to read data from {@link SinkHandler}
-   *     implementation
-   * @throws TestSerdeException exception thrown if we are not able to deserialize read data to
+   * @throws TestExecutionException if we are not able to initiate the execution
+   * @throws SinkException if we are not able to read data from {@link SinkHandler} implementation
+   * @throws TestSerdeException if we are not able to deserialize read data to
    *     {@link TestData}
    */
   public void execute(String testId, String clientId)

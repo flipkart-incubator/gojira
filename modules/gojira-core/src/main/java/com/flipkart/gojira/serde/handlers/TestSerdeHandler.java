@@ -30,7 +30,7 @@ public interface TestSerdeHandler {
    *
    * @param obj object to be serialized
    * @return serialized byte[]
-   * @throws TestSerdeException exception thrown if serialization fails
+   * @throws TestSerdeException if serialization fails
    */
   <T> byte[] serialize(T obj) throws TestSerdeException;
 
@@ -40,7 +40,7 @@ public interface TestSerdeHandler {
    * @param bytes serialized byte[] to be de-serialized.
    * @param clazz class to de-serialize
    * @return de-serialized object
-   * @throws TestSerdeException exception thrown if de-serialization fails
+   * @throws TestSerdeException if de-serialization fails
    */
   <T> T deserialize(byte[] bytes, Class<T> clazz) throws TestSerdeException;
 
@@ -49,7 +49,7 @@ public interface TestSerdeHandler {
    *
    * @param bytes serialized byte[] to be de-serialized
    * @param obj object which needs to be updated with the above byte[]
-   * @throws TestSerdeException exception if we are not able to update
+   * @throws TestSerdeException if it is unable to update
    */
   <T> void deserializeToInstance(byte[] bytes, T obj) throws TestSerdeException;
 }

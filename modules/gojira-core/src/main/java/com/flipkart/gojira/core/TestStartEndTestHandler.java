@@ -42,6 +42,7 @@ public class TestStartEndTestHandler<T extends TestDataType> implements StartEnd
   // TODO: Move this global constants file.
   private static final String delim = " | ";
   private static final String RESULT_SUCCESS = "SUCCESS";
+  private static final String NON_EMPTY_METHOD_DATA_MAP = "NON_EMPTY_METHOD_DATA_MAP";
   private static final String READ_FAILURE = "READ_FAILED";
   private static final String COMPARE_FAILED = "COMPARE_FAILED";
   private static final String EXECUTION_FAILED = "EXECUTION_FAILED";
@@ -74,7 +75,7 @@ public class TestStartEndTestHandler<T extends TestDataType> implements StartEnd
    * TestData} for execution by calling {@link ProfileRepository#setTestData(TestData)} to make
    * method intercepted and response data recorded in {@link Mode#PROFILE} mode available.
    *
-   * <p>In case of any exception, marks {@link ProfileData#profileState} as {@link
+   * <p>In case of any exception, marks {@link ProfileData#getProfileState()} as {@link
    * ProfileState#FAILED} and stores result as {@value READ_FAILURE}.
    *
    * <p>In case {@link SinkHandler#writeResults(String, String)} throws {@link SinkException},
@@ -117,7 +118,7 @@ public class TestStartEndTestHandler<T extends TestDataType> implements StartEnd
   }
 
   /**
-   * If {@link ProfileData#profileState} is not {@link ProfileState#NONE}, compares the {@link
+   * If {@link ProfileData#getProfileState()} is not {@link ProfileState#NONE}, compares the {@link
    * TestResponseData} using {@link GojiraCompareHandlerRepository#getResponseDataCompareHandler()}
    * instance after serializing using {@link SerdeHandlerRepository#getReqRespDataSerdeHandler()}.
    *
@@ -148,8 +149,17 @@ public class TestStartEndTestHandler<T extends TestDataType> implements StartEnd
                       .getReqRespDataSerdeHandler()
                       .serialize(ProfileRepository.getTestData().getResponseData()),
                   serdeHandlerRepository.getReqRespDataSerdeHandler().serialize(responseData));
-          sinkHandler.writeResults(id, RESULT_SUCCESS);
-          LOGGER.info("RESULT_SUCCESS for " + id);
+          // method data map must be empty at the end of the test.
+          // if it is non empty it indicates some failure due to which we were not able to consume
+          // stored method data for some annotated methods.
+          if (ProfileRepository.getTestData().getMethodDataMap().isEmpty()) {
+            sinkHandler.writeResults(id, RESULT_SUCCESS);
+            LOGGER.info("RESULT_SUCCESS for " + id);
+          } else {
+            sinkHandler.writeResults(id, NON_EMPTY_METHOD_DATA_MAP);
+            LOGGER.error("NON_EMPTY_METHOD_DATA_MAP for " + id);
+          }
+
         } catch (TestCompareException e) {
           LOGGER.error("test compare exception.", e);
           sinkHandler.writeResults(id, COMPARE_FAILED);

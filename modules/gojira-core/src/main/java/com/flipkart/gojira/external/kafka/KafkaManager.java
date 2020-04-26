@@ -22,6 +22,8 @@ import com.flipkart.gojira.external.Managed;
 import com.flipkart.gojira.external.SetupException;
 import com.flipkart.gojira.external.ShutdownException;
 import com.flipkart.gojira.external.config.ExternalConfig;
+import com.flipkart.gojira.external.config.KafkaConfig;
+import com.flipkart.gojira.models.kafka.KafkaTestDataType;
 import java.util.Map;
 import java.util.Properties;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -41,21 +43,24 @@ public enum KafkaManager implements IKafkaManager, Managed {
   /**
    * Sets up kafka connections by using properties in {@link ExternalConfig}.
    *
-   * @throws SetupException exception thrown if we are not able to setup kafka connection.
+   * @throws SetupException if we are not able to setup kafka connection.
    */
   @Override
   public void setup() throws SetupException {
     try {
-      for (Map.Entry<String, ExternalConfig> entry :
+      Map<String, ExternalConfig> externalConfigMap =
           TestExecutionInjector.getInjector()
               .getInstance(ExternalConfigRepository.class)
-              .getExternalConfig()
-              .entrySet()) {
-        Properties props = new Properties();
-        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, entry.getValue().getHostNamePort());
-        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, ByteArraySerializer.class);
-        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, ByteArraySerializer.class);
-        clientMap.put(entry.getKey(), new KafkaProducer<>(props));
+              .getExternalConfigByType(KafkaTestDataType.class);
+      for (Map.Entry<String, ExternalConfig> entry : externalConfigMap.entrySet()) {
+        if (entry.getValue() != null) {
+          KafkaConfig kafkaConfig = (KafkaConfig) entry.getValue();
+          Properties props = new Properties();
+          props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaConfig.getHostNamePort());
+          props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, ByteArraySerializer.class);
+          props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, ByteArraySerializer.class);
+          clientMap.put(entry.getKey(), new KafkaProducer<>(props));
+        }
       }
     } catch (Exception e) {
       LOGGER.error("error setting up kafka producers.", e);
@@ -66,7 +71,7 @@ public enum KafkaManager implements IKafkaManager, Managed {
   /**
    * Closes kafka connections by calling {@link KafkaProducer#close()}.
    *
-   * @throws ShutdownException exception thrown if we are not able to shutdown kafka connection.
+   * @throws ShutdownException if we are not able to shutdown kafka connection.
    */
   @Override
   public void shutdown() throws ShutdownException {

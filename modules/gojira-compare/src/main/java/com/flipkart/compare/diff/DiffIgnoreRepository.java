@@ -23,15 +23,15 @@ import java.util.regex.Pattern;
 
 /**
  * DiffIgnoreRepository is the interface to hold DiffDetails that are to be ignored. Current
- * interface only takes care {@link DiffDetail#diffType} and {@link DiffDetail#diffPath} based
- * ignore patterns. {@link DiffDetail#expectedValue} and {@link DiffDetail#actualValue} based ignore
- * patterns are not supported as part of this interface.
+ * interface only takes care {@link DiffDetail#getDiffType()} and {@link DiffDetail#getDiffPath()}
+ * based ignore patterns. {@link DiffDetail#getExpectedValue()} and {@link
+ * DiffDetail#getActualValue()} based ignore patterns are not supported as part of this interface.
  */
 public abstract class DiffIgnoreRepository {
 
   /**
-   * This variable holds the list of {@link DiffDetail#diffPath} values as Pattern for optimized
-   * matching during comparison per {@link DiffDetail#diffType}.
+   * This variable holds the list of {@link DiffDetail#getDiffPath()} values as Pattern for
+   * optimized matching during comparison per {@link DiffDetail#getDiffType()}.
    */
   static final Map<DiffType, List<Pattern>> diffIgnorePatterns = new HashMap<>();
 

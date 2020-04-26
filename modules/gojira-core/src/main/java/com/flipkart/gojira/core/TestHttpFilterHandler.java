@@ -31,13 +31,6 @@ public class TestHttpFilterHandler extends HttpFilterHandler {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(TestHttpFilterHandler.class);
 
-  /**
-   * {@inheritDoc}
-   *
-   * @param request wrapped original http request as a {@link
-   *     HttpFilter.CustomHttpServletRequestWrapper} object
-   * @return
-   */
   @Override
   public boolean preFilter(HttpFilter.CustomHttpServletRequestWrapper request) {
     String id = super.getTestId(request);

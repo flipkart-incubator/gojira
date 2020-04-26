@@ -16,8 +16,13 @@
 
 package com.flipkart.gojira.execute;
 
+import static com.flipkart.gojira.core.GojiraConstants.HTTP_TEST_DATA_TYPE;
+import static com.flipkart.gojira.core.GojiraConstants.KAFKA_TEST_DATA_TYPE;
+import static com.flipkart.gojira.core.GojiraConstants.RMQ_TEST_DATA_TYPE;
+
 import com.flipkart.gojira.execute.http.DefaultHttpTestExecutor;
 import com.flipkart.gojira.execute.kafka.DefaultKafkaTestExecutor;
+import com.flipkart.gojira.execute.rmq.DefaultRmqTestExecutor;
 import com.flipkart.gojira.models.TestData;
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
@@ -30,7 +35,14 @@ public class TestExecutorModule extends AbstractModule {
 
   @Override
   protected void configure() {
-    bind(TestExecutor.class).annotatedWith(Names.named("HTTP")).to(DefaultHttpTestExecutor.class);
-    bind(TestExecutor.class).annotatedWith(Names.named("KAFKA")).to(DefaultKafkaTestExecutor.class);
+    bind(TestExecutor.class)
+        .annotatedWith(Names.named(HTTP_TEST_DATA_TYPE))
+        .to(DefaultHttpTestExecutor.class);
+    bind(TestExecutor.class)
+        .annotatedWith(Names.named(KAFKA_TEST_DATA_TYPE))
+        .to(DefaultKafkaTestExecutor.class);
+    bind(TestExecutor.class)
+        .annotatedWith(Names.named(RMQ_TEST_DATA_TYPE))
+        .to(DefaultRmqTestExecutor.class);
   }
 }

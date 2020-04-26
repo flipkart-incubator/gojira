@@ -16,10 +16,15 @@
 
 package com.flipkart.gojira.models;
 
+import static com.flipkart.gojira.core.GojiraConstants.HTTP_TEST_DATA_TYPE;
+import static com.flipkart.gojira.core.GojiraConstants.KAFKA_TEST_DATA_TYPE;
+import static com.flipkart.gojira.core.GojiraConstants.RMQ_TEST_DATA_TYPE;
+
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.flipkart.gojira.models.http.HttpTestRequestData;
 import com.flipkart.gojira.models.kafka.KafkaTestRequestData;
+import com.flipkart.gojira.models.rmq.RmqTestRequestData;
 
 /**
  * Base request class for different types of {@link TestDataType}.
@@ -29,8 +34,9 @@ import com.flipkart.gojira.models.kafka.KafkaTestRequestData;
     include = JsonTypeInfo.As.PROPERTY,
     property = "testRequestDataType")
 @JsonSubTypes({
-    @JsonSubTypes.Type(value = HttpTestRequestData.class, name = "HTTP"),
-    @JsonSubTypes.Type(value = KafkaTestRequestData.class, name = "KAFKA"),
+    @JsonSubTypes.Type(value = HttpTestRequestData.class, name = HTTP_TEST_DATA_TYPE),
+    @JsonSubTypes.Type(value = KafkaTestRequestData.class, name = KAFKA_TEST_DATA_TYPE),
+    @JsonSubTypes.Type(value = RmqTestRequestData.class, name = RMQ_TEST_DATA_TYPE)
 })
 public abstract class TestRequestData<T extends TestDataType> {
 

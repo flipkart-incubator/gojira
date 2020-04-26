@@ -49,7 +49,7 @@ public abstract class TestCompareHandler {
    *
    * @param profiledData data to be compared against
    * @param testData data generated during current execution
-   * @throws TestCompareException exception thrown if there is a non-ignorable {@link DiffDetail}
+   * @throws TestCompareException if there is a non-ignorable {@link DiffDetail}
    */
   public final void compare(byte[] profiledData, byte[] testData) throws TestCompareException {
     try {
@@ -86,7 +86,7 @@ public abstract class TestCompareHandler {
    *
    * @param profiledData data to be compared against
    * @param testData data generated during current execution
-   * @throws TestCompareException exception thrown if there is a non-ignorable {@link DiffDetail}
+   * @throws TestCompareException if there is a non-ignorable {@link DiffDetail}
    */
   protected abstract void doCompare(byte[] profiledData, byte[] testData)
       throws TestCompareException;

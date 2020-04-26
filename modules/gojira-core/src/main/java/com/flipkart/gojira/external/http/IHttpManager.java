@@ -30,8 +30,8 @@ public interface IHttpManager {
   /**
    * Given a clientId as key, return {@link DefaultAsyncHttpClient}.
    *
-   * @param key clientId
+   * @param clientId clientId
    * @return instance of {@link DefaultAsyncHttpClient}
    */
-  DefaultAsyncHttpClient getClient(String key);
+  DefaultAsyncHttpClient getClient(String clientId);
 }

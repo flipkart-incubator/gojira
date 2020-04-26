@@ -175,7 +175,7 @@ public class HttpFilter implements Filter {
     /**
      * Helper method to return the byte[] from bufferedServletOut.
      *
-     * @return
+     * @return the byte[] from bufferedServletOut.
      */
     public byte[] getBuffer() {
       return this.bufferedServletOut.getBuffer();

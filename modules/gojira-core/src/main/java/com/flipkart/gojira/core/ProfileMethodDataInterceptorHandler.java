@@ -86,8 +86,8 @@ public class ProfileMethodDataInterceptorHandler implements MethodDataIntercepto
    * object is retuned.
    *
    * @param invocation intercepted method invocation
-   * @return returns object passed along by the called method to the calling method
-   * @throws Throwable throws any exception by the called method
+   * @return object passed along by the called method to the calling method
+   * @throws Throwable for any exception by the called method
    */
   @Override
   public Object handle(MethodInvocation invocation) throws Throwable {

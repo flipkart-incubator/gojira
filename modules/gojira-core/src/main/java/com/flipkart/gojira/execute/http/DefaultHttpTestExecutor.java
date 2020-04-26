@@ -16,6 +16,7 @@
 
 package com.flipkart.gojira.execute.http;
 
+import com.flipkart.gojira.core.GojiraConstants;
 import com.flipkart.gojira.execute.TestExecutor;
 import com.flipkart.gojira.external.http.HttpCallException;
 import com.flipkart.gojira.external.http.IHttpHelper;
@@ -40,7 +41,6 @@ public class DefaultHttpTestExecutor
 
   private static final String queryParamDelimiter = "?";
   private static final String contentLengthHeader = "Content-Length";
-  private static final String gojiraTestHeader = "X-GOJIRA-ID";
   private final IHttpHelper httpHelper;
 
   @Inject
@@ -76,7 +76,7 @@ public class DefaultHttpTestExecutor
     Map<String, String> headers =
         requestData.getHeaders() != null ? requestData.getHeaders() : new HashMap<>();
     headers.remove(contentLengthHeader);
-    headers.put(gojiraTestHeader, testId);
+    headers.put(GojiraConstants.TEST_HEADER, testId);
 
     // body & method
     String httpMethod = requestData.getMethod().toUpperCase();
@@ -96,7 +96,7 @@ public class DefaultHttpTestExecutor
         response = httpHelper.doDelete(clientId, urlWithQueryParams, headers);
         break;
       default:
-        throw new IllegalStateException("Unexpected value: " + httpMethod);
+        throw new IllegalStateException("Unsupported Http Method: " + httpMethod);
     }
     logExternalCall(response, urlWithQueryParams, clientId, testId);
   }

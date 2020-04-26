@@ -47,7 +47,7 @@ public final class JsonTestCompareHandlerUtil {
    *
    * @param expectedKeys string array of expected keys
    * @param actualKeys string array of actual keys
-   * @return boolean value true if found else false
+   * @return true if found else false
    */
   static boolean allExpectedKeysInActualKeys(String[] expectedKeys, String[] actualKeys) {
     for (String expectedKey : expectedKeys) {
@@ -70,7 +70,7 @@ public final class JsonTestCompareHandlerUtil {
    *
    * @param find input string to be found is present in
    * @param data data string array and returns
-   * @return boolean value true if found else false
+   * @return true if found else false
    */
   static boolean findStringInArray(String find, String[] data) {
     boolean keyFound = false;

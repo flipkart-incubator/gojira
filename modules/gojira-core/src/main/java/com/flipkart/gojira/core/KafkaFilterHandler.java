@@ -16,6 +16,8 @@
 
 package com.flipkart.gojira.core;
 
+import static com.flipkart.gojira.core.GojiraConstants.TEST_HEADER;
+
 import com.flipkart.gojira.core.injectors.GuiceInjector;
 import com.flipkart.gojira.models.TestRequestData;
 import com.flipkart.gojira.requestsampling.RequestSamplingRepository;
@@ -32,8 +34,6 @@ import org.slf4j.LoggerFactory;
 public abstract class KafkaFilterHandler {
 
   protected static final Logger LOGGER = LoggerFactory.getLogger(KafkaFilterHandler.class);
-  // TODO: Make this common.
-  protected static final String TEST_HEADER = "X-GOJIRA-ID";
 
   /**
    * Implementation of this is expected to call {@link DefaultProfileOrTestHandler#start(String,
@@ -53,7 +53,7 @@ public abstract class KafkaFilterHandler {
    * various {@link Mode}.
    *
    * @param topic kafka topic
-   * @return boolean true if whitelisted, else false.
+   * @return true if whitelisted, else false.
    */
   protected final boolean isWhitelistedTopic(String topic) {
     List<Pattern> whitelistedTopics =

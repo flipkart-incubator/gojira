@@ -32,7 +32,6 @@ import org.slf4j.LoggerFactory;
 public class KafkaFilter {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(KafkaFilter.class);
-  private static final String TEST_HEADER = "X-GOJIRA-ID";
 
   /**
    * Initializes a map of {@link Mode} specific filter handlers.
@@ -72,8 +71,7 @@ public class KafkaFilter {
    * Integrating application is required to call this method during the start of request-response
    * capture life-cycle. Failure to do so may result in not capturing the request-response data.
    *
-   * <p>This method converts invokes the {@link Mode} specific handler to process the incoming
-   * request.
+   * <p>This method invokes the {@link Mode} specific handler to process the incoming request.
    *
    * @param topicName kafka topic name
    * @param key key used for producing message to the topic

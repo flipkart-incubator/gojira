@@ -56,8 +56,8 @@ public class SerializeMethodDataInterceptorHandler implements MethodDataIntercep
    * <p>If any de-serialization fails, an error is logged.
    *
    * @param invocation intercepted method invocation
-   * @return returns object passed along by the called method to the calling method
-   * @throws Throwable throws any exception by the called method or {@link TestExecutionException}
+   * @return object passed along by the called method to the calling method
+   * @throws Throwable for any exception by the called method or {@link TestExecutionException}
    */
   @Override
   public Object handle(MethodInvocation invocation) throws Throwable {

@@ -17,6 +17,7 @@
 package com.flipkart.gojira.external;
 
 import com.flipkart.gojira.external.config.ExternalConfig;
+import com.flipkart.gojira.models.TestDataType;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,27 +26,40 @@ import java.util.Map;
  */
 public abstract class ExternalConfigRepository {
 
-  protected static final Map<String, ExternalConfig> externalConfigHashMap = new HashMap<>();
+  protected static final Map<String, Map<Class<? extends TestDataType>, ExternalConfig>>
+      externalConfigHashMap = new HashMap<>();
 
   /**
    * Retrieve external config for a given clientId.
    *
-   * @param key clientId
+   * @param clientId clientId
    * @return {@link ExternalConfig} instance for the clientId. null if it is not present.
    */
-  public abstract ExternalConfig getExternalConfigFor(String key);
+  public abstract ExternalConfig getExternalConfigFor(
+      String clientId, Class<? extends TestDataType> testDataType);
 
   /**
    * Retrieve all the external configs.
    *
-   * @return Map of clientId vs ExternalConfig.
+   * @return Map of clientId vs Map of TestDataType vs External Config.
    */
-  public abstract Map<String, ExternalConfig> getExternalConfig();
+  public abstract Map<String, Map<Class<? extends TestDataType>, ExternalConfig>>
+      getExternalConfig();
 
   /**
    * Sets the {@link #externalConfigHashMap} to the map specified in {@link ExternalModule}.
    *
    * @param externalConfig config to make external rpc calls
    */
-  public abstract void setExternalConfig(Map<String, ExternalConfig> externalConfig);
+  public abstract void setExternalConfig(
+      Map<String, Map<Class<? extends TestDataType>, ExternalConfig>> externalConfig);
+
+  /**
+   * Retrieve external config for a given clientId.
+   *
+   * @param testDataType .class of testDataType
+   * @return config by client map
+   */
+  public abstract Map<String, ExternalConfig> getExternalConfigByType(
+      Class<? extends TestDataType> testDataType);
 }

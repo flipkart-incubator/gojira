@@ -16,11 +16,12 @@
 
 package com.flipkart.gojira.core;
 
+import static com.flipkart.gojira.core.GojiraConstants.TEST_HEADER;
+
 import com.flipkart.gojira.models.ProfileData;
 import com.flipkart.gojira.models.TestResponseData;
 import com.flipkart.gojira.models.http.HttpTestRequestData;
 import com.flipkart.gojira.models.http.HttpTestResponseData;
-import com.flipkart.gojira.serde.TestSerdeException;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -67,7 +68,7 @@ public class ProfileHttpFilterHandler extends HttpFilterHandler {
    *
    * <p>If whitelisted, makes a copy of {@link
    * HttpFilter.CustomHttpServletRequestWrapper#getInputStream()}. On error, marks {@link
-   * ProfileData#profileState} as {@link ProfileState#FAILED} and returns true enable {@link
+   * ProfileData#getProfileState()} as {@link ProfileState#FAILED} and returns true enable {@link
    * HttpFilter} to call {@link javax.servlet.FilterChain#doFilter(ServletRequest,
    * ServletResponse)}.
    *
@@ -76,7 +77,7 @@ public class ProfileHttpFilterHandler extends HttpFilterHandler {
    *
    * @param request wrapped original http request as a {@link
    *     HttpFilter.CustomHttpServletRequestWrapper} object
-   * @return boolean true if {@link FilterChain#doFilter(ServletRequest, ServletResponse)} should be
+   * @return true if {@link FilterChain#doFilter(ServletRequest, ServletResponse)} should be
    *     called, else false.
    */
   @Override
@@ -134,7 +135,7 @@ public class ProfileHttpFilterHandler extends HttpFilterHandler {
    * <p>If URL is whitelisted, adds the HTTP response data needed for comparison later during
    * execution and adds them to {@link HttpTestResponseData}.
    *
-   * <p>On failure, marks {@link ProfileData#profileState} as {@link ProfileState#FAILED}
+   * <p>On failure, marks {@link ProfileData#getProfileState()} as {@link ProfileState#FAILED}
    *
    * <p>In finally block, {@link DefaultProfileOrTestHandler#end(TestResponseData)} is called.
    *

@@ -16,6 +16,8 @@
 
 package com.flipkart.gojira.core;
 
+import static com.flipkart.gojira.core.GojiraConstants.TEST_HEADER;
+
 import com.flipkart.gojira.models.TestResponseData;
 import java.io.IOException;
 import javax.servlet.ServletRequest;
