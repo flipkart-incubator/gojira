@@ -3,12 +3,11 @@
   <parent>
     <artifactId>gojira-parent</artifactId>
     <groupId>com.flipkart</groupId>
-    <version>1.8.0</version>
+    <version>${revision}</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>shaded-gojira-core</artifactId>
   <name>Shaded Gojira core libraries</name>
-  <version>1.8.0</version>
   <build>
     <plugins>
       <plugin>
@@ -85,7 +84,7 @@
     <java.version>1.8</java.version>
     <maven.version>3.2</maven.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <gojira.core.model.version>1.8.0</gojira.core.model.version>
+    <gojira.core.model.version>${revision}</gojira.core.model.version>
   </properties>
 </project>
 
