@@ -22,17 +22,17 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 
 /**
- * Aspect that captures @ProfileOrTest annotation and binds the method interceptor
+ * Aspect that captures @ProfileOrTest annotation and binds the method interceptor.
  */
 @Aspect
-public class ProfileOrTestAspect extends AOPAllianceAdapter {
+public class ProfileOrTestAspect extends AopAllianceAdapter {
 
-    @Override
-    protected MethodInterceptor getMethodInterceptor() {
-        return new ProfileOrTestMethodInterceptor();
-    }
+  @Override
+  protected MethodInterceptor getMethodInterceptor() {
+    return new ProfileOrTestMethodInterceptor();
+  }
 
-    @Override
-    @Pointcut("@annotation(com.flipkart.gojira.core.annotations.ProfileOrTest)")
-    protected void targetJoinPoint() { }
+  @Override
+  @Pointcut("@annotation(com.flipkart.gojira.core.annotations.ProfileOrTest)")
+  protected void targetJoinPoint() {}
 }

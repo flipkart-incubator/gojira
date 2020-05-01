@@ -22,12 +22,12 @@ import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 
 public class MockProfileOrTestMethodInterceptor implements MethodInterceptor {
-    @Override
-    public Object invoke(MethodInvocation methodInvocation) throws Throwable {
-        if (methodInvocation.getArguments().length > 0) {
-            int i = (Integer) methodInvocation.getArguments()[0];
-            return i+1;
-        }
-        return 0;
+  @Override
+  public Object invoke(MethodInvocation methodInvocation) throws Throwable {
+    if (methodInvocation.getArguments().length > 0) {
+      int i = (Integer) methodInvocation.getArguments()[0];
+      return i + 1;
     }
+    return 0;
+  }
 }

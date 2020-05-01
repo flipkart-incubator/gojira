@@ -18,16 +18,15 @@
 
 package com.flipkart.gojira.core.aspect.test;
 
-import com.flipkart.gojira.core.aspects.AOPAllianceAdapter;
+import com.flipkart.gojira.core.aspects.AopAllianceAdapter;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aspectj.lang.annotation.Aspect;
 
 @Aspect
-public abstract class MockGlobalProfileOrTestAspect extends AOPAllianceAdapter {
+public abstract class MockGlobalProfileOrTestAspect extends AopAllianceAdapter {
 
-    @Override
-    protected MethodInterceptor getMethodInterceptor() {
-        return new MockProfileOrTestMethodInterceptor();
-    }
-
+  @Override
+  protected MethodInterceptor getMethodInterceptor() {
+    return new MockProfileOrTestMethodInterceptor();
+  }
 }

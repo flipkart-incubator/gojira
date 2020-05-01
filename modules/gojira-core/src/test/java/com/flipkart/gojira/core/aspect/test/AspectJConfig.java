@@ -18,17 +18,20 @@
 
 package com.flipkart.gojira.core.aspect.test;
 
-import java.lang.annotation.*;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Inherited
 public @interface AspectJConfig {
 
-    /**
-     * Use this to append additional classpath entries.
-     * This is especially useful if you want your tests to use different
-     * aop.xml files each.
-     */
-    String[] classpathAdditions() default "";
+  /**
+   * Use this to append additional classpath entries. This is especially useful if you want your
+   * tests to use different aop.xml files each.
+   */
+  String[] classpathAdditions() default "";
 }

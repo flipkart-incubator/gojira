@@ -18,35 +18,34 @@
 
 package com.flipkart.gojira.core;
 
+import static org.junit.Assert.assertEquals;
+
 import com.flipkart.gojira.core.annotations.ProfileOrTest;
 import com.flipkart.gojira.core.aspect.test.AspectJConfig;
 import com.flipkart.gojira.core.aspect.test.AspectJUnit4Runner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static org.junit.Assert.assertEquals;
-
 @AspectJConfig(classpathAdditions = "src/test/java/com/flipkart/gojira/core/aspect/test")
 @RunWith(AspectJUnit4Runner.class)
 public class AspectjMethodInterceptionTest {
 
-    @ProfileOrTest
-    private int testPrivateMethod (int i) {
-        return i;
-    }
+  @ProfileOrTest
+  private int testPrivateMethod(int i) {
+    return i;
+  }
 
-    private int testNonAnnotated (int i) {
-        return i;
-    }
+  private int testNonAnnotated(int i) {
+    return i;
+  }
 
-    @Test
-    public void testMethodInterception () throws Throwable {
-        assertEquals(11, testPrivateMethod(10));
-    }
+  @Test
+  public void testMethodInterception() throws Throwable {
+    assertEquals(11, testPrivateMethod(10));
+  }
 
-    @Test
-    public void testMethodInterception_nonAnnotated () throws Throwable {
-        assertEquals(11, testNonAnnotated(10));
-    }
-
+  @Test
+  public void testMethodInterception_nonAnnotated() throws Throwable {
+    assertEquals(11, testNonAnnotated(10));
+  }
 }

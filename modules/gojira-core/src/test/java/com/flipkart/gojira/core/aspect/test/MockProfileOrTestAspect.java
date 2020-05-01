@@ -18,21 +18,20 @@
 
 package com.flipkart.gojira.core.aspect.test;
 
-import com.flipkart.gojira.core.aspects.AOPAllianceAdapter;
+import com.flipkart.gojira.core.aspects.AopAllianceAdapter;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 
 @Aspect
-public class MockProfileOrTestAspect extends AOPAllianceAdapter {
+public class MockProfileOrTestAspect extends AopAllianceAdapter {
 
-    @Override
-    protected MethodInterceptor getMethodInterceptor() {
-        return new MockProfileOrTestMethodInterceptor();
-    }
+  @Override
+  protected MethodInterceptor getMethodInterceptor() {
+    return new MockProfileOrTestMethodInterceptor();
+  }
 
-    @Override
-    @Pointcut("@annotation(com.flipkart.gojira.core.annotations.ProfileOrTest)")
-    protected void targetJoinPoint() { }
-
+  @Override
+  @Pointcut("@annotation(com.flipkart.gojira.core.annotations.ProfileOrTest)")
+  protected void targetJoinPoint() {}
 }
