@@ -50,11 +50,7 @@ public abstract class AOPAllianceAdapter {
         };
         MethodInterceptor mInt = getMethodInterceptor();
         if (mInt != null) {
-            try {
-                return mInt.invoke(mic);
-            } catch (Throwable t) {
-                throw new SoftException(t);
-            }
+            return mInt.invoke(mic);
         } else {
             return thisJoinPoint.proceed();
         }
