@@ -7,7 +7,7 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>shaded-gojira-core</artifactId>
-  <name>Shaded core Gojira libraries</name>
+  <name>Shaded Gojira core libraries</name>
   <build>
     <plugins>
       <plugin>

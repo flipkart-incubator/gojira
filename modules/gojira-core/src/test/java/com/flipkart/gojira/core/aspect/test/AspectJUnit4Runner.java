@@ -26,7 +26,6 @@ import java.net.URLClassLoader;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
-
 import org.aspectj.weaver.loadtime.WeavingURLClassLoader;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -43,115 +42,114 @@ import org.junit.runners.model.Statement;
 import org.junit.runners.model.TestClass;
 
 /**
- * <p>Use this JUnit Runner if you want to enable AspectJ load time weaving in
- * your test. To use this runner place this annotation on your test class:</p>
- * <p>{@code @RunWith(AspectJUnit4Runner.class)}</p>
+ * Use this JUnit Runner if you want to enable AspectJ load time weaving in your test. To use this
+ * runner place this annotation on your test class:
  *
+ * <p>{@code @RunWith(AspectJUnit4Runner.class)}
  */
 public class AspectJUnit4Runner extends BlockJUnit4ClassRunner {
-    private WeavingURLClassLoader cl;
-    private TestClass testClass;
+  private WeavingURLClassLoader cl;
+  private TestClass testClass;
 
-    public AspectJUnit4Runner(Class<?> clazz) throws InitializationError {
-        super(clazz);
+  public AspectJUnit4Runner(Class<?> clazz) throws InitializationError {
+    super(clazz);
+  }
+
+  @SuppressWarnings("unchecked")
+  private static <T> Class<T> loadClassFromClassLoader(Class<T> clazz, ClassLoader cl) {
+    Class<T> loaded;
+    try {
+      loaded = (Class<T>) Class.forName(clazz.getName(), true, cl);
+    } catch (ClassNotFoundException e) {
+      throw new RuntimeException(e);
     }
+    return loaded;
+  }
 
-    protected TestClass createTestClass(Class<?> clazz) {
-        URL[] classpath = computeClasspath(clazz);
-        cl = new WeavingURLClassLoader(classpath, null);
-        clazz = loadClassFromClassLoader(clazz, cl);
-        testClass = new TestClass(clazz);
-        return testClass;
+  protected TestClass createTestClass(Class<?> clazz) {
+    URL[] classpath = computeClasspath(clazz);
+    cl = new WeavingURLClassLoader(classpath, null);
+    clazz = loadClassFromClassLoader(clazz, cl);
+    testClass = new TestClass(clazz);
+    return testClass;
+  }
+
+  private URL[] computeClasspath(Class<?> clazz) {
+    URLClassLoader originalClassLoader = (URLClassLoader) clazz.getClassLoader();
+    URL[] classpath = originalClassLoader.getURLs();
+    AspectJConfig config = clazz.getAnnotation(AspectJConfig.class);
+    if (config != null) {
+      classpath = appendToClasspath(classpath, config.classpathAdditions());
     }
+    return classpath;
+  }
 
-    private URL[] computeClasspath(Class<?> clazz) {
-        URLClassLoader originalClassLoader = (URLClassLoader)clazz.getClassLoader();
-        URL[] classpath = originalClassLoader.getURLs();
-        AspectJConfig config = clazz.getAnnotation(AspectJConfig.class);
-        if(config != null) {
-            classpath = appendToClasspath(classpath, config.classpathAdditions());
+  private URL[] appendToClasspath(URL[] classpath, String[] urls) {
+    URL[] extended = Arrays.copyOf(classpath, classpath.length + urls.length);
+    for (int i = 0; i < urls.length; i++) {
+      URL url;
+      try {
+        url = Paths.get(urls[i]).toAbsolutePath().toUri().toURL();
+      } catch (MalformedURLException e) {
+        throw new RuntimeException(e);
+      }
+      extended[classpath.length + i] = url;
+    }
+    return extended;
+  }
+
+  @Override
+  protected List<FrameworkMethod> computeTestMethods() {
+    Class<? extends Annotation> test = loadClassFromClassLoader(Test.class, cl);
+    return getTestClass().getAnnotatedMethods(test);
+  }
+
+  @Override
+  public void run(final RunNotifier notifier) {
+    Throwable firstException = null;
+    try {
+      super.run(notifier);
+    } catch (Exception e) {
+      firstException = e;
+      throw e;
+    } finally {
+      try {
+        cl.close();
+      } catch (IOException e) {
+        RuntimeException rte = new RuntimeException("Failed to close AspectJ classloader.", e);
+        if (firstException != null) {
+          rte.addSuppressed(firstException);
         }
-        return classpath;
+        throw rte;
+      }
     }
+  }
 
-    private URL[] appendToClasspath(URL[] classpath, String[] urls) {
-        URL[] extended = Arrays.copyOf(classpath, classpath.length + urls.length);
-        for(int i = 0; i < urls.length; i++) {
-            URL url;
-            try {
-                url = Paths.get(urls[i]).toAbsolutePath().toUri().toURL();
-            } catch (MalformedURLException e) {
-                throw new RuntimeException(e);
-            }
-            extended[classpath.length + i] = url;
-        }
-        return extended;
-    }
+  @Override
+  protected Statement withBeforeClasses(Statement statement) {
+    Class<? extends Annotation> beforeClass = loadClassFromClassLoader(BeforeClass.class, cl);
+    List<FrameworkMethod> befores = testClass.getAnnotatedMethods(beforeClass);
+    return befores.isEmpty() ? statement : new RunBefores(statement, befores, null);
+  }
 
-    @Override
-    protected List<FrameworkMethod> computeTestMethods() {
-        Class<? extends Annotation> test = loadClassFromClassLoader(Test.class, cl);
-        return getTestClass().getAnnotatedMethods(test);
-    }
+  @Override
+  protected Statement withAfterClasses(Statement statement) {
+    Class<? extends Annotation> afterClass = loadClassFromClassLoader(AfterClass.class, cl);
+    List<FrameworkMethod> afters = testClass.getAnnotatedMethods(afterClass);
+    return afters.isEmpty() ? statement : new RunAfters(statement, afters, null);
+  }
 
-    @Override
-    public void run(final RunNotifier notifier) {
-        Throwable firstException = null;
-        try {
-            super.run(notifier);
-        } catch (Exception e) {
-            firstException = e;
-            throw e;
-        } finally {
-            try {
-                cl.close();
-            } catch (IOException e) {
-                RuntimeException rte = new RuntimeException("Failed to close AspectJ classloader.", e);
-                if(firstException != null) {
-                    rte.addSuppressed(firstException);
-                }
-                throw rte;
-            }
-        }
-    }
+  @Override
+  protected Statement withBefores(FrameworkMethod method, Object target, Statement statement) {
+    Class<? extends Annotation> before = loadClassFromClassLoader(Before.class, cl);
+    List<FrameworkMethod> befores = getTestClass().getAnnotatedMethods(before);
+    return befores.isEmpty() ? statement : new RunBefores(statement, befores, target);
+  }
 
-    @Override
-    protected Statement withBeforeClasses(Statement statement) {
-        Class<? extends Annotation> beforeClass = loadClassFromClassLoader(BeforeClass.class, cl);
-        List<FrameworkMethod> befores = testClass.getAnnotatedMethods(beforeClass);
-        return befores.isEmpty() ? statement : new RunBefores(statement, befores, null);
-    }
-
-    @Override
-    protected Statement withAfterClasses(Statement statement) {
-        Class<? extends Annotation> afterClass = loadClassFromClassLoader(AfterClass.class, cl);
-        List<FrameworkMethod> afters = testClass.getAnnotatedMethods(afterClass);
-        return afters.isEmpty() ? statement : new RunAfters(statement, afters, null);
-    }
-
-    @Override
-    protected Statement withBefores(FrameworkMethod method, Object target, Statement statement) {
-        Class<? extends Annotation> before = loadClassFromClassLoader(Before.class, cl);
-        List<FrameworkMethod> befores = getTestClass().getAnnotatedMethods(before);
-        return befores.isEmpty() ? statement : new RunBefores(statement, befores, target);
-    }
-
-    @Override
-    protected Statement withAfters(FrameworkMethod method, Object target, Statement statement) {
-        Class<? extends Annotation> after = loadClassFromClassLoader(After.class, cl);
-        List<FrameworkMethod> afters = getTestClass().getAnnotatedMethods(after);
-        return afters.isEmpty() ? statement : new RunAfters(statement, afters, target);
-    }
-
-    @SuppressWarnings("unchecked")
-    private static <T> Class<T> loadClassFromClassLoader(Class<T> clazz, ClassLoader cl) {
-        Class<T> loaded;
-        try {
-            loaded = (Class<T>) Class.forName(clazz.getName(), true, cl);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-        return loaded;
-    }
-
+  @Override
+  protected Statement withAfters(FrameworkMethod method, Object target, Statement statement) {
+    Class<? extends Annotation> after = loadClassFromClassLoader(After.class, cl);
+    List<FrameworkMethod> afters = getTestClass().getAnnotatedMethods(after);
+    return afters.isEmpty() ? statement : new RunAfters(statement, afters, target);
+  }
 }

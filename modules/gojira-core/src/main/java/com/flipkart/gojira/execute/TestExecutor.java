@@ -22,14 +22,12 @@ import com.flipkart.gojira.models.TestData;
  * Interface to execute tests for different types of {@link TestData}.
  */
 public interface TestExecutor<T extends TestData> {
-
-  @Deprecated
-  void execute(T testData) throws TestExecutionException;
-
   /**
+   * Method to execute tests for given testData and clientId.
+   *
    * @param testData testData which is used for invoking execution
    * @param clientId identifier to indicate which system hit
-   * @throws TestExecutionException exception thrown on failure to initiate a test execution
+   * @throws TestExecutionException on failure to initiate a test execution
    */
   void execute(T testData, String clientId) throws TestExecutionException;
 }

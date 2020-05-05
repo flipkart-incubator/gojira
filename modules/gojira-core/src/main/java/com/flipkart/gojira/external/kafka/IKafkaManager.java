@@ -28,9 +28,11 @@ public interface IKafkaManager {
   Map<String, Producer<byte[], byte[]>> clientMap = new HashMap<>();
 
   /**
+   * Given a clientId as key, return {@link Producer}.
+   *
    * @param client clientId
    * @return retrieve the corresponding {@link org.apache.kafka.clients.producer.KafkaProducer} for
-   * clientId
+   *     clientId
    */
   Producer<byte[], byte[]> getProducer(String client);
 }

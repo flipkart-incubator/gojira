@@ -36,10 +36,10 @@ public class GojiraComparisonModule extends AbstractModule {
     this.gojiraComparisonConfig = gojiraComparisonConfig;
   }
 
-
   @Override
   protected void configure() {
-    GojiraCompareHandlerRepository gojiraCompareHandlerRepository = new GojiraCompareHandlerRepositoryImpl();
+    GojiraCompareHandlerRepository gojiraCompareHandlerRepository =
+        new GojiraCompareHandlerRepositoryImpl();
     gojiraCompareHandlerRepository
         .setDefaultCompareHandler(gojiraComparisonConfig.getDefaultCompareHandler());
     gojiraCompareHandlerRepository

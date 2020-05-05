@@ -19,7 +19,7 @@ package com.flipkart.gojira.external.http;
 import com.flipkart.gojira.execute.TestExecutionException;
 
 /**
- * This exception is thrown if we are not able to initiate http execution
+ * This exception is thrown if we are not able to initiate http execution.
  */
 public class HttpCallException extends TestExecutionException {
 

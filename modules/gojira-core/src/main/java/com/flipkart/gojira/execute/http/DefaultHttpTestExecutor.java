@@ -25,14 +25,15 @@ import com.flipkart.gojira.models.http.HttpTestDataType;
 import com.flipkart.gojira.models.http.HttpTestRequestData;
 import com.flipkart.gojira.models.http.HttpTestResponseData;
 import com.google.inject.Inject;
+import java.util.HashMap;
+import java.util.Map;
 import org.asynchttpclient.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.Map;
-
-/** Implementation of {@link TestExecutor} for {@link HttpTestDataType} */
+/**
+ * Implementation of {@link TestExecutor} for {@link HttpTestDataType}.
+ */
 public class DefaultHttpTestExecutor
     implements TestExecutor<TestData<HttpTestRequestData, HttpTestResponseData, HttpTestDataType>> {
 
@@ -52,7 +53,7 @@ public class DefaultHttpTestExecutor
    *
    * @param testData testData which is used for invoking execution
    * @param clientId identifier to indicate which system hit
-   * @throws HttpCallException
+   * @throws HttpCallException if HttpCall fails.
    */
   @Override
   public void execute(
@@ -94,6 +95,8 @@ public class DefaultHttpTestExecutor
       case "DELETE":
         response = httpHelper.doDelete(clientId, urlWithQueryParams, headers);
         break;
+      default:
+        throw new IllegalStateException("Unsupported Http Method: " + httpMethod);
     }
     logExternalCall(response, urlWithQueryParams, clientId, testId);
   }
@@ -108,12 +111,5 @@ public class DefaultHttpTestExecutor
             clientId,
             testId,
             response != null ? response.getStatusCode() : -1));
-  }
-
-  @Override
-  public void execute(
-      TestData<HttpTestRequestData, HttpTestResponseData, HttpTestDataType> testData)
-      throws HttpCallException {
-    execute(testData, "DEFAULT");
   }
 }

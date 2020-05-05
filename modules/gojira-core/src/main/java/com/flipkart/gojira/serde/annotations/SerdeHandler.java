@@ -26,16 +26,23 @@ import java.lang.annotation.Target;
  * SerdeHandler annotation on method parameters can be used to provide custom serialization handlers
  * that override default serialization handlers. This is especially useful when serialization of
  * objects are method specific and not class specific.
- * <p>
- * Using ElementType.TYPE_USE as a target annotation for SerdeHandler does not work with Guice for
- * now. For the time being, using ElementType.Method for custom return type serdehandler.
- * <p>
- * Refer: https://github.com/google/guice/issues/1193#issuecomment-402756883 (nearest possible
+ *
+ * <p>Using ElementType.TYPE_USE as a target annotation for SerdeHandler does not work with Guice
+ * for now. For the time being, using ElementType.Method for custom return type serdehandler.
+ *
+ * <p>Refer: https://github.com/google/guice/issues/1193#issuecomment-402756883 (nearest possible
  * document w.r.t. the mentioned issue)
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.PARAMETER, ElementType.METHOD})
 public @interface SerdeHandler {
 
+  /**
+   * If this annotation is added, during runtime, {@link
+   * com.flipkart.gojira.serde.SerdeHandlerRepository} will create an instance of the .class file
+   * specified with the annotation. Provide a class with a public no-args constructor.
+   *
+   * @return .class whose instance needs to be used for serialization/deserialization.
+   */
   Class<? extends TestSerdeHandler> serdeHandlerClass();
 }

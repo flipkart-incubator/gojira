@@ -16,9 +16,9 @@
 
 package com.flipkart.gojira.models.kafka;
 
-import com.flipkart.gojira.models.TestDataType;
-
 import static com.flipkart.gojira.core.GojiraConstants.KAFKA_TEST_DATA_TYPE;
+
+import com.flipkart.gojira.models.TestDataType;
 
 /**
  * Extends {@link TestDataType} to indicate Kafka data.

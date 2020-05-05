@@ -27,17 +27,17 @@ import java.util.Map;
 public class HttpTestResponseData extends TestResponseData<HttpTestDataType> {
 
   /**
-   * http status code
+   * http status code.
    */
   private int statusCode;
 
   /**
-   * http response headers
+   * http response headers.
    */
   private Map<String, String> headers;
 
   /**
-   * http response body
+   * http response body.
    */
   private byte[] body;
 
@@ -92,11 +92,14 @@ public class HttpTestResponseData extends TestResponseData<HttpTestDataType> {
 
   @Override
   public String toString() {
-    return "HttpTestResponseData{" +
-        "statusCode=" + statusCode +
-        ", headers=" + headers +
-        ", body=" + Arrays.toString(body) +
-        '}';
+    return "HttpTestResponseData{"
+        + "statusCode="
+        + statusCode
+        + ", headers="
+        + headers
+        + ", body="
+        + Arrays.toString(body)
+        + '}';
   }
 
   public static class Builder {
@@ -125,6 +128,5 @@ public class HttpTestResponseData extends TestResponseData<HttpTestDataType> {
       this.httpTestResponseDataToBuild.statusCode = statusCode;
       return this;
     }
-
   }
 }

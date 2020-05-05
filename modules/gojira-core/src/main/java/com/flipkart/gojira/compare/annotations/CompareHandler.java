@@ -34,7 +34,8 @@ public @interface CompareHandler {
 
   /**
    * If this annotation is added, during runtime, {@link GojiraCompareHandlerRepository} will create
-   * an instance of the .class file specified with the annotation
+   * an instance of the .class file specified with the annotation. Provide a class with a public
+   * no-args constructor.
    *
    * @return .class whose instance needs to be used for comparison
    */

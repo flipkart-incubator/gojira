@@ -24,17 +24,17 @@ import com.flipkart.gojira.external.ShutdownException;
 import com.flipkart.gojira.external.config.ExternalConfig;
 import com.flipkart.gojira.external.config.HttpConfig;
 import com.flipkart.gojira.models.http.HttpTestDataType;
+import java.util.Map;
 import org.asynchttpclient.DefaultAsyncHttpClient;
 import org.asynchttpclient.DefaultAsyncHttpClientConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
-
-/** Implementation of {@link IHttpManager} and {@link Managed} */
+/**
+ * Implementation of {@link IHttpManager} and {@link Managed}.
+ */
 public enum HttpManager implements IHttpManager, Managed {
-  HTTP_MANAGER; // TODO: there is a hard dependency in Managed. Need to figure out a way to
-  // decouple.
+  HTTP_MANAGER; //TODO: there is a hard dependency in Managed. Need to figure out a way to decouple.
   private static final Logger LOGGER = LoggerFactory.getLogger(HttpManager.class);
 
   @Override
@@ -45,7 +45,7 @@ public enum HttpManager implements IHttpManager, Managed {
               .getInstance(ExternalConfigRepository.class)
               .getExternalConfigByType(HttpTestDataType.class);
 
-      for (Map.Entry<String, ExternalConfig> entry : externalConfigMap.entrySet())
+      for (Map.Entry<String, ExternalConfig> entry : externalConfigMap.entrySet()) {
         if (entry.getValue() != null) {
           HttpConfig httpConfig = (HttpConfig) entry.getValue();
           clientMap.put(
@@ -59,6 +59,7 @@ public enum HttpManager implements IHttpManager, Managed {
                       .setRequestTimeout(httpConfig.getOperationTimeout())
                       .build()));
         }
+      }
     } catch (Exception e) {
       LOGGER.error("error setting up http connections.", e);
       throw new SetupException("error setting up http connections.", e);

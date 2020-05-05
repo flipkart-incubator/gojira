@@ -17,21 +17,18 @@
 package com.flipkart.gojira.core.aspects;
 
 import java.lang.reflect.Method;
-
 import org.aopalliance.intercept.MethodInvocation;
 import org.aspectj.lang.JoinPoint;
 
-public abstract class MethodInvocationClosure extends InvocationJoinPointClosure implements MethodInvocation {
+public abstract class MethodInvocationClosure extends InvocationJoinPointClosure
+    implements MethodInvocation {
 
-    public MethodInvocationClosure(JoinPoint jp) {
-        super(jp);
-    }
+  public MethodInvocationClosure(JoinPoint jp) {
+    super(jp);
+  }
 
-    /**
-     * @see org.aopalliance.intercept.MethodInvocation#getMethod()
-     */
-    public Method getMethod() {
-        return (Method) getStaticPart();
-    }
-
+  @Override
+  public Method getMethod() {
+    return (Method) getStaticPart();
+  }
 }

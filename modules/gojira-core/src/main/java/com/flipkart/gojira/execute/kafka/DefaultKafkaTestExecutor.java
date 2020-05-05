@@ -49,7 +49,7 @@ public class DefaultKafkaTestExecutor
    *
    * @param testData testData which is used for invoking execution
    * @param clientId identifier to indicate which system hit
-   * @throws KafkaProducerException
+   * @throws KafkaProducerException if RecordProduction fails.
    */
   @Override
   public void execute(
@@ -78,12 +78,5 @@ public class DefaultKafkaTestExecutor
         String.format(
             "produced record to topic: %s with clientId: %s for testId: %s. ",
             recordMetadata.topic(), clientId, testId));
-  }
-
-  @Override
-  public void execute(
-      TestData<KafkaTestRequestData, KafkaTestResponseData, KafkaTestDataType> testData)
-      throws KafkaProducerException {
-    execute(testData, "DEFAULT");
   }
 }

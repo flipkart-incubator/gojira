@@ -24,10 +24,10 @@ import com.flipkart.gojira.external.kafka.IKafkaHelper;
 import com.flipkart.gojira.external.kafka.IKafkaManager;
 import com.flipkart.gojira.external.kafka.KafkaHelper;
 import com.flipkart.gojira.external.kafka.KafkaManager;
-import com.flipkart.gojira.external.rmq.IRMQHelper;
-import com.flipkart.gojira.external.rmq.IRMQManager;
-import com.flipkart.gojira.external.rmq.RMQHelper;
-import com.flipkart.gojira.external.rmq.RMQManager;
+import com.flipkart.gojira.external.rmq.IRmqHelper;
+import com.flipkart.gojira.external.rmq.IRmqManager;
+import com.flipkart.gojira.external.rmq.RmqHelper;
+import com.flipkart.gojira.external.rmq.RmqManager;
 import com.google.inject.AbstractModule;
 
 /**
@@ -44,8 +44,7 @@ public class ManagedModule extends AbstractModule {
     bind(IHttpHelper.class).toInstance(new HttpHelper());
     bind(IKafkaManager.class).toInstance(KafkaManager.KAFKA_MANAGER);
     bind(IKafkaHelper.class).toInstance(new KafkaHelper());
-
-    bind(IRMQManager.class).toInstance(RMQManager.RMQ_MANAGER);
-    bind(IRMQHelper.class).toInstance(new RMQHelper());
+    bind(IRmqManager.class).toInstance(RmqManager.RMQ_MANAGER);
+    bind(IRmqHelper.class).toInstance(new RmqHelper());
   }
 }

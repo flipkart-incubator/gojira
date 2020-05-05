@@ -1,3 +1,19 @@
+/*
+ * Copyright 2020 Flipkart Internet, pvt ltd.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.flipkart.gojira.models.rmq;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -5,10 +21,10 @@ import com.flipkart.gojira.models.TestRequestData;
 import com.rabbitmq.client.AMQP;
 
 /**
- * Extends {@link com.flipkart.gojira.models.TestRequestData} for {@link RMQTestDataType}. Captures
+ * Extends {@link com.flipkart.gojira.models.TestRequestData} for {@link RmqTestDataType}. Captures
  * all information required for initiating a rmq request.
  */
-public class RMQTestRequestData extends TestRequestData<RMQTestDataType> {
+public class RmqTestRequestData extends TestRequestData<RmqTestDataType> {
 
   /** The exchange to which data will be published. */
   private String exchangeName;
@@ -34,15 +50,15 @@ public class RMQTestRequestData extends TestRequestData<RMQTestDataType> {
    * RabbitMQ for disk or memory backup of messages app-id and user-id : to track publishers, to
    * perform consumer side validation. headers : free-form property definition and RabbitMQ routing.
    */
-  @JsonDeserialize(using = RMQPropertiesDeserializer.class)
+  @JsonDeserialize(using = RmqPropertiesDeserializer.class)
   private AMQP.BasicProperties properties;
 
-  private RMQTestRequestData() {
-    super(new RMQTestDataType());
+  private RmqTestRequestData() {
+    super(new RmqTestDataType());
   }
 
-  public static RMQTestRequestData.Builder builder() {
-    return new RMQTestRequestData.Builder();
+  public static RmqTestRequestData.Builder builder() {
+    return new RmqTestRequestData.Builder();
   }
 
   public String getExchangeName() {
@@ -67,37 +83,37 @@ public class RMQTestRequestData extends TestRequestData<RMQTestDataType> {
 
   public static class Builder {
 
-    private RMQTestRequestData rmqTestRequestData;
+    private RmqTestRequestData rmqTestRequestData;
 
     private Builder() {
-      this.rmqTestRequestData = new RMQTestRequestData();
+      this.rmqTestRequestData = new RmqTestRequestData();
     }
 
-    public RMQTestRequestData build() {
+    public RmqTestRequestData build() {
       return this.rmqTestRequestData;
     }
 
-    public RMQTestRequestData.Builder setExchangeName(String exchangeName) {
+    public RmqTestRequestData.Builder setExchangeName(String exchangeName) {
       this.rmqTestRequestData.exchangeName = exchangeName;
       return this;
     }
 
-    public RMQTestRequestData.Builder setRoutingKey(byte[] routingKey) {
+    public RmqTestRequestData.Builder setRoutingKey(byte[] routingKey) {
       this.rmqTestRequestData.routingKey = routingKey;
       return this;
     }
 
-    public RMQTestRequestData.Builder setData(byte[] data) {
+    public RmqTestRequestData.Builder setData(byte[] data) {
       this.rmqTestRequestData.data = data;
       return this;
     }
 
-    public RMQTestRequestData.Builder setProperties(AMQP.BasicProperties basicProperties) {
+    public RmqTestRequestData.Builder setProperties(AMQP.BasicProperties basicProperties) {
       this.rmqTestRequestData.properties = basicProperties;
       return this;
     }
 
-    public RMQTestRequestData.Builder setMandatory(boolean mandatory) {
+    public RmqTestRequestData.Builder setMandatory(boolean mandatory) {
       this.rmqTestRequestData.mandatory = mandatory;
       return this;
     }

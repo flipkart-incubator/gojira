@@ -21,7 +21,7 @@ import java.util.List;
 
 /**
  * This is the exception thrown if comparison fails and it has the list of {@link DiffDetail}
- * instances
+ * instances.
  */
 public class TestCompareException extends Exception {
 

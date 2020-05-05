@@ -21,48 +21,55 @@ import com.flipkart.gojira.models.kafka.KafkaTestRequestData;
 import java.util.Map;
 
 /**
- * Implementation of {@link KafkaFilterHandler} for mode {@link Mode#PROFILE}
+ * Implementation of {@link KafkaFilterHandler} for mode {@link Mode#PROFILE}.
  */
 public class ProfileKafkaFilterHandler extends KafkaFilterHandler {
 
   /**
    * Gets test-id from headers for validation. If not null throws {@link RuntimeException}
-   * <p>
-   * Checks if whitelisted. If not return else capture the parameters required for making a kafka
+   *
+   * <p>Checks if whitelisted. If not return else capture the parameters required for making a kafka
    * request in other {@link Mode}.
-   * <p>
-   * Then begins recording session by calling {@link DefaultProfileOrTestHandler#start(String,
+   *
+   * <p>Then begins recording session by calling {@link DefaultProfileOrTestHandler#start(String,
    * TestRequestData)}
    *
-   * @param topicName  kafka topic name
-   * @param key        key used for producing message to the topic
-   * @param value      body used for producing message to the topic
+   * <p>Implementation of this is expected to call {@link DefaultProfileOrTestHandler#start(String,
+   * TestRequestData)}
+   *
+   * @param topicName kafka topic name
+   * @param key key used for producing message to the topic
+   * @param value body used for producing message to the topic
    * @param headersMap headers used for producing message to the topic with key as string and value
-   *                   as map
-   *                   <p>
-   *                   Implementation of this is expected to call {@link DefaultProfileOrTestHandler#start(String,
-   *                   TestRequestData)}
+   *     as map
    */
   @Override
-  protected void handle(String topicName, byte[] key, byte[] value,
-      Map<String, byte[]> headersMap) {
+  protected void handle(
+      String topicName, byte[] key, byte[] value, Map<String, byte[]> headersMap) {
     String id = getTestId(headersMap);
     if (id != null) {
-      LOGGER.error("Header with name: " + GojiraConstants.TEST_HEADER
-          + " present. But service is not running in TEST mode. : " + ProfileRepository.getMode());
-      throw new RuntimeException("Header with name: " + GojiraConstants.TEST_HEADER
-          + " present. But service is not running in TEST mode. : " + ProfileRepository.getMode());
+      LOGGER.error(
+          "Header with name: "
+              + GojiraConstants.TEST_HEADER
+              + " present. But service is not running in TEST mode. : "
+              + ProfileRepository.getMode());
+      throw new RuntimeException(
+          "Header with name: "
+              + GojiraConstants.TEST_HEADER
+              + " present. But service is not running in TEST mode. : "
+              + ProfileRepository.getMode());
     }
     if (!isWhitelistedTopic(topicName)) {
       return;
     }
     id = String.valueOf(System.nanoTime()) + Thread.currentThread().getId();
-    KafkaTestRequestData kafkaTestRequestData = KafkaTestRequestData.builder()
-        .setTopicName(topicName)
-        .setKey(key)
-        .setValue(value)
-        .setHeaders(headersMap)
-        .build();
+    KafkaTestRequestData kafkaTestRequestData =
+        KafkaTestRequestData.builder()
+            .setTopicName(topicName)
+            .setKey(key)
+            .setValue(value)
+            .setHeaders(headersMap)
+            .build();
     try {
       DefaultProfileOrTestHandler.start(id, kafkaTestRequestData);
     } catch (Exception e) {
