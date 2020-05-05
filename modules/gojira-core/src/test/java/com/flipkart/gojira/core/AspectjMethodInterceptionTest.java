@@ -41,7 +41,7 @@ public class AspectjMethodInterceptionTest {
         return i;
     }
 
-    private int testException () throws TestExecutionException {
+    private int testException (int... i) throws TestExecutionException {
         throw new TestExecutionException("test");
     }
 
@@ -51,13 +51,15 @@ public class AspectjMethodInterceptionTest {
     }
 
     @Test
-    public void testMethodInterception_nonAnnotated () throws Throwable {
+    public void testMethodInterceptionNonAnnotated () throws Throwable {
         assertEquals(11, testNonAnnotated(10));
     }
 
     @Test
-    public void testMethodInteception_exception () throws Throwable {
-        assertThrows("test", TestExecutionException.class, () -> testException());
+    public void testMethodInteceptionException () throws Throwable {
+        int [] arr = new int[] { 10 };
+        assertThrows("test", TestExecutionException.class, () -> testException(arr));
+        assertEquals(11, arr[0]);
     }
 
 }

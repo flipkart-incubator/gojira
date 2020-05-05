@@ -21,7 +21,8 @@
         <aspect name="com.flipkart.gojira.core.aspect.test.MockProfileOrTestAspect"/>
         <concrete-aspect name="com.flipkart.gojira.core.aspect.test.TestAspect"
                          extends="com.flipkart.gojira.core.aspect.test.MockGlobalProfileOrTestAspect">
-            <pointcut name="targetJoinPoint" expression="within(com.flipkart.gojira.core.AspectjMethodInterceptionTest)"/>
+            <pointcut name="targetJoinPoint" expression="execution(* com.flipkart.gojira.core.AspectjMethodInterceptionTest..*(..))
+                &amp;&amp; !@annotation(org.junit.Test) &amp;&amp; !execution(* *..lambda*(..))"/>
         </concrete-aspect>
     </aspects>
     <weaver options="-verbose -showWeaveInfo">
