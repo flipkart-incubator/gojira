@@ -56,7 +56,7 @@ public class AspectjMethodInterceptionTest {
     }
 
     @Test
-    public void testMethodInteceptionException () throws Throwable {
+    public void testMethodInterceptionException () throws Throwable {
         int [] arr = new int[] { 10 };
         assertThrows("test", TestExecutionException.class, () -> testException(arr));
         assertEquals(11, arr[0]);
