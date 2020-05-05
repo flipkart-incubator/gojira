@@ -31,8 +31,18 @@ public class HashHandlerUtil {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(HashHandlerUtil.class);
 
-  private static ConcurrentHashMap<String, TestHashHandler> hashHandlerMap = new ConcurrentHashMap<>();
+  private static ConcurrentHashMap<String, TestHashHandler> hashHandlerMap =
+      new ConcurrentHashMap<>();
 
+  /**
+   * Gets the {@link TestHashHandler} for the the key defined as
+   * methodInvocation.getMethod().toGenericString() + "|" + position.
+   *
+   * @param invocation The {@link MethodInvocation} instance which is intercepted by Guice.
+   * @param position The position of the argument of the intercepted method.
+   * @return {@link TestHashHandler} for corresponding method key.
+   * @throws TestHashException if error occurred while trying to execute the method.
+   */
   public static TestHashHandler getHashHandler(MethodInvocation invocation, int position)
       throws TestHashException {
     try {
@@ -42,7 +52,8 @@ public class HashHandlerUtil {
       } else {
         HashHandler annotatedHashHandler = annotatedHashHandler(invocation, position);
         if (annotatedHashHandler != null) {
-          hashHandlerMap.put(genericMethodName + "|" + position,
+          hashHandlerMap.put(
+              genericMethodName + "|" + position,
               annotatedHashHandler.hashHandlerClass().newInstance());
           return hashHandlerMap.get(genericMethodName + "|" + position);
         }

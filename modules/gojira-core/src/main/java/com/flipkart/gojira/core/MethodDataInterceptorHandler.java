@@ -27,9 +27,9 @@ public interface MethodDataInterceptorHandler {
    * Implementation of this method is specific to the mode.
    *
    * @param invocation intercepted method invocation
-   * @return returns object passed along by the called method to the calling method
-   * @throws Throwable throws any exception by the called method or any execution specific exception
-   *                   by gojira
+   * @return object passed along by the called method to the calling method
+   * @throws Throwable for any exception by the called method or any execution specific exception
+   *     by gojira
    */
   Object handle(MethodInvocation invocation) throws Throwable;
 }

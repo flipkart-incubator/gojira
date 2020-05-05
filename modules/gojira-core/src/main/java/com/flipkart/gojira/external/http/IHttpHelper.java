@@ -20,18 +20,18 @@ import java.util.Map;
 import org.asynchttpclient.Response;
 
 /**
- * Interface definition for HTTP calls. This interface is for async-http-client
+ * Interface definition for HTTP calls. This interface is for async-http-client.
  */
 public interface IHttpHelper {
 
   /**
    * Initiates a GET call with the below parameters.
    *
-   * @param clientId           identifier to fetch externalConfig
+   * @param clientId identifier to fetch externalConfig
    * @param urlWithQueryParams http uri and query params
-   * @param header             headers as {@link Map}
-   * @return returns the {@link Response} object.
-   * @throws HttpCallException exception to be thrown if we are not able to initiate execution
+   * @param header headers as {@link Map}
+   * @return the {@link Response} object.
+   * @throws HttpCallException if we are not able to initiate execution
    */
   Response doGet(String clientId, String urlWithQueryParams, Map<String, String> header)
       throws HttpCallException;
@@ -39,37 +39,39 @@ public interface IHttpHelper {
   /**
    * Initiates a POST call with the below parameters.
    *
-   * @param clientId           identifier to fetch externalConfig
+   * @param clientId identifier to fetch externalConfig
    * @param urlWithQueryParams http uri and query params
-   * @param header             headers as {@link Map}
-   * @param payload            headers as {@link Map}
-   * @return returns the {@link Response} object.
-   * @throws HttpCallException exception to be thrown if we are not able to initiate execution
+   * @param header headers as {@link Map}
+   * @param payload headers as {@link Map}
+   * @return the {@link Response} object.
+   * @throws HttpCallException if we are not able to initiate execution
    */
-  Response doPost(String clientId, String urlWithQueryParams, Map<String, String> header,
-      byte[] payload) throws HttpCallException;
+  Response doPost(
+      String clientId, String urlWithQueryParams, Map<String, String> header, byte[] payload)
+      throws HttpCallException;
 
   /**
    * Initiates a PUT call with the below parameters.
    *
-   * @param clientId           identifier to fetch externalConfig
+   * @param clientId identifier to fetch externalConfig
    * @param urlWithQueryParams http uri and query params
-   * @param header             headers as {@link Map}
-   * @param payload            headers as {@link Map}
-   * @return returns the {@link Response} object.
-   * @throws HttpCallException exception to be thrown if we are not able to initiate execution
+   * @param header headers as {@link Map}
+   * @param payload headers as {@link Map}
+   * @return the {@link Response} object.
+   * @throws HttpCallException if we are not able to initiate execution
    */
-  Response doPut(String clientId, String urlWithQueryParams, Map<String, String> header,
-      byte[] payload) throws HttpCallException;
+  Response doPut(
+      String clientId, String urlWithQueryParams, Map<String, String> header, byte[] payload)
+      throws HttpCallException;
 
   /**
    * Initiates a DELETE call with the below parameters.
    *
-   * @param clientId           identifier to fetch externalConfig
+   * @param clientId identifier to fetch externalConfig
    * @param urlWithQueryParams http uri and query params
-   * @param header             headers as {@link Map}
-   * @return returns the {@link Response} object.
-   * @throws HttpCallException exception to be thrown if we are not able to initiate execution
+   * @param header headers as {@link Map}
+   * @return the {@link Response} object.
+   * @throws HttpCallException if we are not able to initiate execution
    */
   Response doDelete(String clientId, String urlWithQueryParams, Map<String, String> header)
       throws HttpCallException;

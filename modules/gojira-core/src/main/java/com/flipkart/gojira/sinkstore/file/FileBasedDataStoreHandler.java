@@ -23,7 +23,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
- * Sample implementation of {@link SinkHandler}
+ * Sample implementation of {@link SinkHandler}.
  */
 public class FileBasedDataStoreHandler extends SinkHandler {
 
@@ -55,8 +55,5 @@ public class FileBasedDataStoreHandler extends SinkHandler {
   }
 
   @Override
-  public void writeResults(String id, String result) {
-
-  }
-
+  public void writeResults(String id, String result) {}
 }

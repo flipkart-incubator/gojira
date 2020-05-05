@@ -34,20 +34,22 @@ public abstract class TestQueuedSender {
 
   /**
    * This method sets up the in-memory queue to store and write asynchronously to {@link
-   * SinkHandler}
+   * SinkHandler}.
    *
    * @throws Exception if error while setting up the queue.
    */
   public abstract void setup() throws Exception;
 
   /**
-   * This method shuts down the in-memory queue set up in {@link #setup()}
+   * This method shuts down the in-memory queue set up in {@link #setup()}.
    *
    * @throws Exception if error while shutting down the queue.
    */
   public abstract void shutdown() throws Exception;
 
   /**
+   * This method writes to the in-memory queue.
+   *
    * @param testData is the data to be enqueued.
    * @throws Exception if error while writing the data to the in-memory queue.
    */

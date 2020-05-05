@@ -55,25 +55,25 @@ public class SetupModule extends AbstractModule {
   private TestQueuedSenderConfig testQueuedSenderConfig;
 
   /**
-   * @param mode                   Specifies the mode in which server needs to run. Can be {@link
-   *                               Mode#PROFILE} (when requests or annotated methods need to be
-   *                               recorded) {@link Mode#TEST} (when responses and annotated methods
-   *                               need to be compared against recorded data) {@link Mode#NONE}
-   *                               (when the server needs to run without recording or replaying
-   *                               mode) {@link Mode#SERIALIZE} (when the server needs to just test
-   *                               deserialization of recorded data)
-   * @param requestSamplingConfig  The requestSamplingConfig contains the sampling percentage and
-   *                               the whiteList to filter request profiling.
-   * @param serdeConfig            Contains serde Handler and config for the serialization-deserialization
-   *                               of the data.
+   * The basic module that initializes basic configuration of Gojira.
+   *
+   * @param mode Specifies the mode in which server needs to run. Can be {@link Mode#PROFILE} (when
+   *     requests or annotated methods need to be recorded) {@link Mode#TEST} (when responses and
+   *     annotated methods need to be compared against recorded data) {@link Mode#NONE} (when the
+   *     server needs to run without recording or replaying mode) {@link Mode#SERIALIZE} (when the
+   *     server needs to just test deserialization of recorded data)
+   * @param requestSamplingConfig The requestSamplingConfig contains the sampling percentage and the
+   *     whiteList to filter request profiling.
+   * @param serdeConfig Contains serde Handler and config for the serialization-deserialization of
+   *     the data.
    * @param gojiraComparisonConfig Contains the default and response compare handlers to be used in
-   *                               {@link Mode#TEST} mode and diffIgnoreMap for the same.
-   * @param dataStoreConfig        Implementation for writing/reading test data.
+   *     {@link Mode#TEST} mode and diffIgnoreMap for the same.
+   * @param dataStoreConfig Implementation for writing/reading test data.
    * @param testQueuedSenderConfig In {@link Mode#PROFILE} mode, requests that get profiled are
-   *                               written to a BigQueue implementation. This specifies the
-   *                               configuration for the same.
+   *     written to a BigQueue implementation. This specifies the configuration for the same.
    */
-  public SetupModule(Mode mode,
+  public SetupModule(
+      Mode mode,
       RequestSamplingConfig requestSamplingConfig,
       SerdeConfig serdeConfig,
       GojiraComparisonConfig gojiraComparisonConfig,
@@ -88,21 +88,25 @@ public class SetupModule extends AbstractModule {
   }
 
   protected void configure() {
-    // TODO: In TEST mode, enable host:port level validation here so that we are sure we are not connecting
-    //       to any box other than what we need when running gojira. This means the data required for running
-    //       gojira should be stored in a place other than production data
+    /*
+     * TODO: In TEST mode, enable host:port level validation here so that we are sure we are not
+     *       connecting to any box other than what we need when running gojira. This means the data
+     *       required for running gojira should be stored in a place other than production data.
+     */
     ProfileRepository.setMode(mode);
-    Injector injector = Guice.createInjector(new AbstractModule() {
-      @Override
-      protected void configure() {
-        bind(ObjectMapper.class).asEagerSingleton();
-        install(new RequestSamplingModule(requestSamplingConfig));
-        install(new SerdeModule(serdeConfig));
-        install(new GojiraComparisonModule(gojiraComparisonConfig));
-        install(new DataStoreModule(dataStoreConfig));
-        install(new TestQueuedSenderModule(testQueuedSenderConfig));
-      }
-    });
+    Injector injector =
+        Guice.createInjector(
+            new AbstractModule() {
+              @Override
+              protected void configure() {
+                bind(ObjectMapper.class).asEagerSingleton();
+                install(new RequestSamplingModule(requestSamplingConfig));
+                install(new SerdeModule(serdeConfig));
+                install(new GojiraComparisonModule(gojiraComparisonConfig));
+                install(new DataStoreModule(dataStoreConfig));
+                install(new TestQueuedSenderModule(testQueuedSenderConfig));
+              }
+            });
 
     GuiceInjector.assignInjector(injector);
   }

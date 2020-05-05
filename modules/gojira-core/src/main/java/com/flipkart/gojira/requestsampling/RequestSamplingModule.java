@@ -21,7 +21,7 @@ import com.google.inject.AbstractModule;
 
 /**
  * Guice module to setup all {@link RequestSamplingConfig} and bind {@link
- * RequestSamplingRepository}
+ * RequestSamplingRepository}.
  */
 public class RequestSamplingModule extends AbstractModule {
 

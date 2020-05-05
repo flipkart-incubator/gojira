@@ -32,7 +32,7 @@ public interface Managed {
   /**
    * Method to shutdown external connections.
    *
-   * @throws ShutdownException exception thrown if we are not able to shutdown connection.
+   * @throws ShutdownException if we are not able to shutdown connection.
    */
   void shutdown() throws ShutdownException;
 }

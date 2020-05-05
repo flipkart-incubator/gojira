@@ -28,7 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Implementation of {@link TestSerdeHandler}
+ * Implementation of {@link TestSerdeHandler}.
  */
 public class JsonDefaultTestSerdeHandler implements TestSerdeHandler {
 
@@ -46,13 +46,6 @@ public class JsonDefaultTestSerdeHandler implements TestSerdeHandler {
     mapper.setSubtypeResolver(new StdSubtypeResolver());
   }
 
-  /**
-   * @param obj object to be serialized
-   * @param <T>
-   * @return
-   * @throws TestSerdeException
-   */
-
   @Override
   public <T> byte[] serialize(T obj) throws TestSerdeException {
     try {
@@ -63,13 +56,6 @@ public class JsonDefaultTestSerdeHandler implements TestSerdeHandler {
     }
   }
 
-  /**
-   * @param bytes serialized byte[] to be de-serialized.
-   * @param clazz class to de-serialize
-   * @param <T>
-   * @return
-   * @throws TestSerdeException
-   */
   @Override
   public <T> T deserialize(byte[] bytes, Class<T> clazz) throws TestSerdeException {
     try {
@@ -80,12 +66,6 @@ public class JsonDefaultTestSerdeHandler implements TestSerdeHandler {
     }
   }
 
-  /**
-   * @param bytes serialized byte[] to be de-serialized
-   * @param obj   object which needs to be updated with the above byte[]
-   * @param <T>
-   * @throws TestSerdeException
-   */
   @Override
   public <T> void deserializeToInstance(byte[] bytes, T obj) throws TestSerdeException {
     try {

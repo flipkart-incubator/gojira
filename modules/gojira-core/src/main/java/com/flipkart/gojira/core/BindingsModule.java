@@ -34,8 +34,11 @@ public class BindingsModule extends AbstractModule {
   @Override
   protected void configure() {
     if (!ProfileRepository.getMode().equals(Mode.NONE)) {
-      ProfileOrTestMethodInterceptor profileOrTestMethodInterceptor = new ProfileOrTestMethodInterceptor();
-      bindInterceptor(Matchers.any(), Matchers.annotatedWith(ProfileOrTest.class),
+      ProfileOrTestMethodInterceptor profileOrTestMethodInterceptor =
+          new ProfileOrTestMethodInterceptor();
+      bindInterceptor(
+          Matchers.any(),
+          Matchers.annotatedWith(ProfileOrTest.class),
           profileOrTestMethodInterceptor);
     }
   }

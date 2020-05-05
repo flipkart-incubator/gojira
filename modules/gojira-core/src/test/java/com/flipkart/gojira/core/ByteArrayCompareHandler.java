@@ -20,9 +20,6 @@ import com.flipkart.compare.TestCompareException;
 import com.flipkart.compare.handlers.TestCompareHandler;
 import java.util.Arrays;
 
-/**
- * Created by arunachalam.s on 15/09/17.
- */
 public class ByteArrayCompareHandler extends TestCompareHandler {
 
   @Override

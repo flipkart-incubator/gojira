@@ -16,6 +16,7 @@
 
 package com.flipkart.gojira.execute.http;
 
+import com.flipkart.gojira.core.GojiraConstants;
 import com.flipkart.gojira.execute.TestExecutor;
 import com.flipkart.gojira.external.http.HttpCallException;
 import com.flipkart.gojira.external.http.IHttpHelper;
@@ -31,18 +32,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Implementation of {@link TestExecutor} for {@link HttpTestDataType}
+ * Implementation of {@link TestExecutor} for {@link HttpTestDataType}.
  */
-public class DefaultHttpTestExecutor implements
-    TestExecutor<TestData<HttpTestRequestData, HttpTestResponseData, HttpTestDataType>> {
+public class DefaultHttpTestExecutor
+    implements TestExecutor<TestData<HttpTestRequestData, HttpTestResponseData, HttpTestDataType>> {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(DefaultHttpTestExecutor.class);
 
   private static final String queryParamDelimiter = "?";
   private static final String contentLengthHeader = "Content-Length";
-  private static final String gojiraTestHeader = "X-GOJIRA-ID";
   private final IHttpHelper httpHelper;
-
 
   @Inject
   public DefaultHttpTestExecutor(final IHttpHelper httpHelper) {
@@ -54,29 +53,30 @@ public class DefaultHttpTestExecutor implements
    *
    * @param testData testData which is used for invoking execution
    * @param clientId identifier to indicate which system hit
-   * @throws HttpCallException
+   * @throws HttpCallException if HttpCall fails.
    */
   @Override
   public void execute(
       TestData<HttpTestRequestData, HttpTestResponseData, HttpTestDataType> testData,
-      String clientId) throws HttpCallException {
+      String clientId)
+      throws HttpCallException {
     HttpTestRequestData requestData = testData.getRequestData();
     String testId = testData.getId();
     LOGGER.debug(new StringBuffer().append("key :").append(testId).toString());
     // url with query params
     String requestUri = requestData.getUri();
-    String queryParamsWithDelimiter = requestData.getQueryParams() == null ? new String()
-        : queryParamDelimiter + requestData.getQueryParams();
-    String urlWithQueryParams = new StringBuffer()
-        .append(requestUri)
-        .append(queryParamsWithDelimiter)
-        .toString();
+    String queryParamsWithDelimiter =
+        requestData.getQueryParams() == null
+            ? new String()
+            : queryParamDelimiter + requestData.getQueryParams();
+    String urlWithQueryParams =
+        new StringBuffer().append(requestUri).append(queryParamsWithDelimiter).toString();
 
     // headers
     Map<String, String> headers =
         requestData.getHeaders() != null ? requestData.getHeaders() : new HashMap<>();
     headers.remove(contentLengthHeader);
-    headers.put(gojiraTestHeader, testId);
+    headers.put(GojiraConstants.TEST_HEADER, testId);
 
     // body & method
     String httpMethod = requestData.getMethod().toUpperCase();
@@ -95,23 +95,21 @@ public class DefaultHttpTestExecutor implements
       case "DELETE":
         response = httpHelper.doDelete(clientId, urlWithQueryParams, headers);
         break;
-
+      default:
+        throw new IllegalStateException("Unsupported Http Method: " + httpMethod);
     }
     logExternalCall(response, urlWithQueryParams, clientId, testId);
   }
 
-  private void logExternalCall(Response response, String urlWithQueryParams, String clientId,
-      String testId) {
-    LOGGER
-        .info(String.format("made an external call to uri: %s with clientId: %s for testId: %s. " +
-                "Response received: %d", urlWithQueryParams, clientId, testId,
+  private void logExternalCall(
+      Response response, String urlWithQueryParams, String clientId, String testId) {
+    LOGGER.info(
+        String.format(
+            "made an external call to uri: %s with clientId: %s for testId: %s. "
+                + "Response received: %d",
+            urlWithQueryParams,
+            clientId,
+            testId,
             response != null ? response.getStatusCode() : -1));
-  }
-
-  @Override
-  public void execute(
-      TestData<HttpTestRequestData, HttpTestResponseData, HttpTestDataType> testData)
-      throws HttpCallException {
-    execute(testData, "DEFAULT");
   }
 }

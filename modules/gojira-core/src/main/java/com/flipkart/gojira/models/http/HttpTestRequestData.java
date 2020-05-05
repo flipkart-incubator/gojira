@@ -32,22 +32,22 @@ public class HttpTestRequestData extends TestRequestData<HttpTestDataType> {
   private byte[] body;
 
   /**
-   * http request headers
+   * http request headers.
    */
   private Map<String, String> headers;
 
   /**
-   * http query parameters
+   * http query parameters.
    */
   private String queryParams;
 
   /**
-   * http uri
+   * http uri.
    */
   private String uri;
 
   /**
-   * http method
+   * http method.
    */
   private String method;
 
@@ -118,13 +118,18 @@ public class HttpTestRequestData extends TestRequestData<HttpTestDataType> {
 
   @Override
   public String toString() {
-    return "HttpTestRequestData{" +
-        "body=" + Arrays.toString(body) +
-        ", headers=" + headers +
-        ", queryParams=" + queryParams +
-        ", uri=" + uri +
-        ", method=" + method +
-        '}';
+    return "HttpTestRequestData{"
+        + "body="
+        + Arrays.toString(body)
+        + ", headers="
+        + headers
+        + ", queryParams="
+        + queryParams
+        + ", uri="
+        + uri
+        + ", method="
+        + method
+        + '}';
   }
 
   public static class Builder {

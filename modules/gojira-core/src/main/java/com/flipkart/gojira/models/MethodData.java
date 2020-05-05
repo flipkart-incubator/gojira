@@ -24,30 +24,26 @@ import com.flipkart.gojira.core.Mode;
  */
 public class MethodData {
 
-  /**
-   * Class name to help with deserialization.
-   */
+  /** Class name to help with deserialization. */
   private String className;
 
-  /**
-   * Data serialized as bytes.
-   */
+  /** Data serialized as bytes. */
   private byte[] data;
 
-  /**
-   * Type of method data.
-   */
+  /** Type of method data. */
   private MethodDataType dataType;
 
   /**
    * position of method data, applicable in case of {@link MethodDataType#ARGUMENT_AFTER} and {@link
-   * MethodDataType#ARGUMENT_BEFORE}
+   * MethodDataType#ARGUMENT_BEFORE}.
    */
   private int position;
 
-  private MethodData() {
-  }
+  private MethodData() {}
 
+  /**
+   * All-args MethodData constructor.
+   */
   public MethodData(MethodDataType dataType, String className, byte[] data, int position) {
     this.dataType = dataType;
     this.className = className;

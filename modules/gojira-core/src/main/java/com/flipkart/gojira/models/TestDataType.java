@@ -16,18 +16,27 @@
 
 package com.flipkart.gojira.models;
 
+import static com.flipkart.gojira.core.GojiraConstants.HTTP_TEST_DATA_TYPE;
+import static com.flipkart.gojira.core.GojiraConstants.KAFKA_TEST_DATA_TYPE;
+import static com.flipkart.gojira.core.GojiraConstants.RMQ_TEST_DATA_TYPE;
+
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.flipkart.gojira.models.http.HttpTestDataType;
 import com.flipkart.gojira.models.kafka.KafkaTestDataType;
+import com.flipkart.gojira.models.rmq.RmqTestDataType;
 
 /**
- * Base class for different types of {@link TestData}
+ * Base class for different types of {@link TestData}.
  */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonTypeInfo(
+    use = JsonTypeInfo.Id.NAME,
+    include = JsonTypeInfo.As.EXISTING_PROPERTY,
+    property = "type")
 @JsonSubTypes({
-    @JsonSubTypes.Type(value = HttpTestDataType.class, name = "HTTP"),
-    @JsonSubTypes.Type(value = KafkaTestDataType.class, name = "KAFKA"),
+    @JsonSubTypes.Type(value = HttpTestDataType.class, name = HTTP_TEST_DATA_TYPE),
+    @JsonSubTypes.Type(value = KafkaTestDataType.class, name = KAFKA_TEST_DATA_TYPE),
+    @JsonSubTypes.Type(value = RmqTestDataType.class, name = RMQ_TEST_DATA_TYPE)
 })
 public abstract class TestDataType {
 

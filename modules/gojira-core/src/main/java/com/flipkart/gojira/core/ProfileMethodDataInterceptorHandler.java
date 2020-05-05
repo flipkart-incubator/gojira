@@ -32,63 +32,62 @@ import org.aopalliance.intercept.MethodInvocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
- * Implementation for {@link MethodDataInterceptorHandler} for mode {@link Mode#PROFILE}
- * <p>
- * TODO: Refactor this class.
+ * Implementation for {@link MethodDataInterceptorHandler} for mode {@link Mode#PROFILE}.
+ *
+ * <p>TODO: Refactor this class.
  */
 public class ProfileMethodDataInterceptorHandler implements MethodDataInterceptorHandler {
 
-  private static final Logger LOGGER = LoggerFactory
-      .getLogger(ProfileOrTestMethodInterceptor.class);
+  private static final Logger LOGGER =
+      LoggerFactory.getLogger(ProfileOrTestMethodInterceptor.class);
 
-  private SerdeHandlerRepository serdeHandlerRepository = GuiceInjector.getInjector()
-      .getInstance(SerdeHandlerRepository.class);
+  private SerdeHandlerRepository serdeHandlerRepository =
+      GuiceInjector.getInjector().getInstance(SerdeHandlerRepository.class);
 
-  public ProfileMethodDataInterceptorHandler() {
-  }
+  public ProfileMethodDataInterceptorHandler() {}
 
   /**
    * Checks {@link ProfileData#profileState}, if not {@link ProfileState#INITIATED} calls {@link
    * MethodInvocation#proceed()} and returns the object returned by the invocation
-   * <p>
-   * On error checking for {@link ProfileData#profileState}  or when performing any of the below
+   *
+   * <p>On error checking for {@link ProfileData#profileState} or when performing any of the below
    * operations, marks {@link ProfileData#profileState} as {@link ProfileState#FAILED} and calls
    * {@link MethodInvocation#proceed()} if not already done and returns the object returned by the
    * invocation.
-   * <p>
-   * Gets {@link ProfileRepository#getGlobalPerRequestID()}.
-   * <p>
-   * Gets {@link Method#toGenericString()} of ()} of {@link MethodInvocation#getMethod()}.
-   * <p>
-   * Instantiates a map of {@link ConcurrentHashMap} with key as {@link MethodDataType} and value as
-   * {@link ArrayList} of {@link MethodData}.
-   * <p>
-   * Iterates through all method arguments. Hashes the data if required for security purposes. This
-   * is done by calling {@link TestHashHandler#hash(byte[])} method on {@link
+   *
+   * <p>Gets {@link ProfileRepository#getGlobalPerRequestID()}.
+   *
+   * <p>Gets {@link Method#toGenericString()} of ()} of {@link MethodInvocation#getMethod()}.
+   *
+   * <p>Instantiates a map of {@link ConcurrentHashMap} with key as {@link MethodDataType} and value
+   * as {@link ArrayList} of {@link MethodData}.
+   *
+   * <p>Iterates through all method arguments. Hashes the data if required for security purposes.
+   * This is done by calling {@link TestHashHandler#hash(byte[])} method on {@link
    * HashHandlerUtil#getHashHandler(MethodInvocation, int)} instance. Data is serialized by calling
-   * {@link TestSerdeHandler#serialize(Object)} method on {@link SerdeHandlerRepository#getOrUpdateAndGetOrDefaultMethodArgumentDataSerdeHandler(MethodInvocation,
-   * int)} instance.
-   * <p>
-   * After recording arguments before invocation, calls {@link MethodInvocation#proceed()} and
+   * {@link TestSerdeHandler#serialize(Object)} method on {@link SerdeHandlerRepository
+   * #getOrUpdateAndGetOrDefaultMethodArgumentDataSerdeHandler(MethodInvocation,int)} instance.
+   *
+   * <p>After recording arguments before invocation, calls {@link MethodInvocation#proceed()} and
    * stores the object returned if no exception or the exception object otherwise.
-   * <p>
-   * Ågain, iterates through all method arguments. Hashes the data if required for security
+   *
+   * <p>Again, iterates through all method arguments. Hashes the data if required for security
    * purposes. This is done by calling {@link TestHashHandler#hash(byte[])} method on {@link
    * HashHandlerUtil#getHashHandler(MethodInvocation, int)} instance. Data is serialized by calling
-   * {@link TestSerdeHandler#serialize(Object)} method on {@link SerdeHandlerRepository#getOrUpdateAndGetOrDefaultMethodArgumentDataSerdeHandler(MethodInvocation,
-   * int)} instance. This is to record method arguments after method execution, in case they are
-   * modified inside the method.
-   * <p>
-   * After that return object and exception data are serialized in a similar manner.
-   * <p>
-   * Then if an exception was thrown by the method being called, the same is thrown, else the object
-   * is retuned.
+   * {@link TestSerdeHandler#serialize(Object)} method on {@link SerdeHandlerRepository
+   * #getOrUpdateAndGetOrDefaultMethodArgumentDataSerdeHandler(MethodInvocation,int)} instance. This
+   * is to record method arguments after method execution, in case they are modified inside the
+   * method.
+   *
+   * <p>After that return object and exception data are serialized in a similar manner.
+   *
+   * <p>Then if an exception was thrown by the method being called, the same is thrown, else the
+   * object is retuned.
    *
    * @param invocation intercepted method invocation
-   * @return returns object passed along by the called method to the calling method
-   * @throws Throwable throws any exception by the called method
+   * @return object passed along by the called method to the calling method
+   * @throws Throwable for any exception by the called method
    */
   @Override
   public Object handle(MethodInvocation invocation) throws Throwable {
@@ -133,22 +132,36 @@ public class ProfileMethodDataInterceptorHandler implements MethodDataIntercepto
         for (Object arg : invocation.getArguments()) {
           index++;
           TestHashHandler hashHandler = HashHandlerUtil.getHashHandler(invocation, index);
-          MethodData methodData = new MethodData(MethodDataType.ARGUMENT_BEFORE,
-              arg == null ? null : arg.getClass().getName(),
-              arg == null ? null : hashHandler == null ? serdeHandlerRepository
-                  .getOrUpdateAndGetOrDefaultMethodArgumentDataSerdeHandler(invocation, index)
-                  .serialize(arg) :
-                  hashHandler.hash(serdeHandlerRepository
-                      .getOrUpdateAndGetOrDefaultMethodArgumentDataSerdeHandler(invocation, index)
-                      .serialize(arg)), index);
+          MethodData methodData =
+              new MethodData(
+                  MethodDataType.ARGUMENT_BEFORE,
+                  arg == null ? null : arg.getClass().getName(),
+                  arg == null
+                      ? null
+                      : hashHandler == null
+                          ? serdeHandlerRepository
+                              .getOrUpdateAndGetOrDefaultMethodArgumentDataSerdeHandler(
+                                  invocation, index)
+                              .serialize(arg)
+                          : hashHandler.hash(
+                              serdeHandlerRepository
+                                  .getOrUpdateAndGetOrDefaultMethodArgumentDataSerdeHandler(
+                                      invocation, index)
+                                  .serialize(arg)),
+                  index);
           argumentBeforeList.add(methodData);
         }
         methodDataMap.put(MethodDataType.ARGUMENT_BEFORE, argumentBeforeList);
       } catch (Exception e) {
         // on failure, mark failed and proceed with method invocation
         LOGGER.warn(
-            "error profiling argument data before method execution, method: " + methodGenericString
-                + " argument index: " + index + " globalPerRequestId: " + globalPerRequestId, e);
+            "error profiling argument data before method execution, method: "
+                + methodGenericString
+                + " argument index: "
+                + index
+                + " globalPerRequestId: "
+                + globalPerRequestId,
+            e);
         ProfileRepository.setProfileState(ProfileState.FAILED);
         return invocation.proceed();
       }
@@ -170,21 +183,35 @@ public class ProfileMethodDataInterceptorHandler implements MethodDataIntercepto
         for (Object arg : invocation.getArguments()) {
           index++;
           TestHashHandler hashHandler = HashHandlerUtil.getHashHandler(invocation, index);
-          MethodData methodData = new MethodData(MethodDataType.ARGUMENT_AFTER,
-              arg == null ? null : arg.getClass().getName(),
-              arg == null ? null : hashHandler == null ? serdeHandlerRepository
-                  .getOrUpdateAndGetOrDefaultMethodArgumentDataSerdeHandler(invocation, index)
-                  .serialize(arg) :
-                  hashHandler.hash(serdeHandlerRepository
-                      .getOrUpdateAndGetOrDefaultMethodArgumentDataSerdeHandler(invocation, index)
-                      .serialize(arg)), index);
+          MethodData methodData =
+              new MethodData(
+                  MethodDataType.ARGUMENT_AFTER,
+                  arg == null ? null : arg.getClass().getName(),
+                  arg == null
+                      ? null
+                      : hashHandler == null
+                          ? serdeHandlerRepository
+                              .getOrUpdateAndGetOrDefaultMethodArgumentDataSerdeHandler(
+                                  invocation, index)
+                              .serialize(arg)
+                          : hashHandler.hash(
+                              serdeHandlerRepository
+                                  .getOrUpdateAndGetOrDefaultMethodArgumentDataSerdeHandler(
+                                      invocation, index)
+                                  .serialize(arg)),
+                  index);
           argumentAfterList.add(methodData);
         }
         methodDataMap.put(MethodDataType.ARGUMENT_AFTER, argumentAfterList);
       } catch (Exception e) {
         LOGGER.warn(
-            "error profiling argument data after method execution, method: " + methodGenericString
-                + " argument index: " + index + " globalPerRequestId: " + globalPerRequestId, e);
+            "error profiling argument data after method execution, method: "
+                + methodGenericString
+                + " argument index: "
+                + index
+                + " globalPerRequestId: "
+                + globalPerRequestId,
+            e);
         ProfileRepository.setProfileState(ProfileState.FAILED);
       }
 
@@ -193,27 +220,45 @@ public class ProfileMethodDataInterceptorHandler implements MethodDataIntercepto
         if (invocationException == null) {
           try {
             // TODO: Take care of hashing for return object.
-            returnDataList.add(new MethodData(MethodDataType.RETURN,
-                invocationReturnData == null ? null : invocationReturnData.getClass().getName(),
-                invocationReturnData == null ? null : serdeHandlerRepository
-                    .getOrUpdateAndGetOrDefaultReturnDataSerdeHandler(invocation)
-                    .serialize(invocationReturnData), 0));
+            returnDataList.add(
+                new MethodData(
+                    MethodDataType.RETURN,
+                    invocationReturnData == null ? null : invocationReturnData.getClass().getName(),
+                    invocationReturnData == null
+                        ? null
+                        : serdeHandlerRepository
+                            .getOrUpdateAndGetOrDefaultReturnDataSerdeHandler(invocation)
+                            .serialize(invocationReturnData),
+                    0));
             methodDataMap.put(MethodDataType.RETURN, returnDataList);
           } catch (Exception e) {
-            LOGGER.warn("error profiling invocation return data after method execution, method: "
-                + methodGenericString + " globalPerRequestId: " + globalPerRequestId, e);
+            LOGGER.warn(
+                "error profiling invocation return data after method execution, method: "
+                    + methodGenericString
+                    + " globalPerRequestId: "
+                    + globalPerRequestId,
+                e);
             ProfileRepository.setProfileState(ProfileState.FAILED);
           }
         } else {
           try {
-            returnDataList.add(new MethodData(MethodDataType.EXCEPTION,
-                invocationException.getClass().getName(),
-                serdeHandlerRepository.getExceptionDataSerdeHandler(methodGenericString,
-                    invocationException.getClass().getName()).serialize(invocationException), 0));
+            returnDataList.add(
+                new MethodData(
+                    MethodDataType.EXCEPTION,
+                    invocationException.getClass().getName(),
+                    serdeHandlerRepository
+                        .getExceptionDataSerdeHandler(
+                            methodGenericString, invocationException.getClass().getName())
+                        .serialize(invocationException),
+                    0));
             methodDataMap.put(MethodDataType.EXCEPTION, returnDataList);
           } catch (Exception e) {
-            LOGGER.warn("error profiling invocation exception data after method execution, method: "
-                + methodGenericString + " globalPerRequestId: " + globalPerRequestId, e);
+            LOGGER.warn(
+                "error profiling invocation exception data after method execution, method: "
+                    + methodGenericString
+                    + " globalPerRequestId: "
+                    + globalPerRequestId,
+                e);
             ProfileRepository.setProfileState(ProfileState.FAILED);
           }
         }
@@ -222,13 +267,20 @@ public class ProfileMethodDataInterceptorHandler implements MethodDataIntercepto
       try {
         ProfileRepository.addInterceptedData(methodGenericString, methodDataMap);
       } catch (Exception e) {
-        LOGGER.error("error adding intercepted data against method : " + methodGenericString
-            + " globalPerRequestId: " + globalPerRequestId);
+        LOGGER.error(
+            "error adding intercepted data against method : "
+                + methodGenericString
+                + " globalPerRequestId: "
+                + globalPerRequestId);
         ProfileRepository.setProfileState(ProfileState.FAILED);
       }
     } catch (Exception e) {
-      LOGGER.warn("error profiling data, method: " + methodGenericString + " globalPerRequestId: "
-          + globalPerRequestId, e);
+      LOGGER.warn(
+          "error profiling data, method: "
+              + methodGenericString
+              + " globalPerRequestId: "
+              + globalPerRequestId,
+          e);
       ProfileRepository.setProfileState(ProfileState.FAILED);
     }
 
@@ -236,6 +288,5 @@ public class ProfileMethodDataInterceptorHandler implements MethodDataIntercepto
       throw invocationException;
     }
     return invocationReturnData;
-
   }
 }

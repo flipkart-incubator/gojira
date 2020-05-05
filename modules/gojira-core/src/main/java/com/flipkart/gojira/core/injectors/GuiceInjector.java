@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * GuiceInjector is primary guice injector instance for {@link SetupModule} and {@link
- * BindingsModule}
+ * BindingsModule}.
  */
 public class GuiceInjector {
 
@@ -33,7 +33,7 @@ public class GuiceInjector {
   private static Injector injector = null;
 
   /**
-   * Assigns the provided {@link Injector} instance
+   * Assigns the provided {@link Injector} instance.
    *
    * @param givenInjector If already assigned, throws an {@link IllegalStateException}
    */
@@ -52,7 +52,7 @@ public class GuiceInjector {
 
   /**
    * Retrieves the provided {@link Injector instance} If it is null, throws an {@link
-   * IllegalStateException}
+   * IllegalStateException}.
    */
   public static Injector getInjector() {
     if (injector == null) {

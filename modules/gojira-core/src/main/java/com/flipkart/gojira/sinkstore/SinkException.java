@@ -21,6 +21,4 @@ import com.flipkart.gojira.sinkstore.handlers.SinkHandler;
 /**
  * Exception thrown in case of any {@link SinkHandler} operation.
  */
-public class SinkException extends Exception {
-
-}
+public class SinkException extends Exception {}

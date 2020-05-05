@@ -29,5 +29,5 @@ public abstract class SinkHandler {
 
   public abstract void writeResults(String testId, String result) throws SinkException;
 
-  //TODO: Add method for reading results.
+  // TODO: Add method for reading results.
 }
