@@ -18,7 +18,6 @@ package com.flipkart.gojira.core.aspects;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.SoftException;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
@@ -57,11 +56,7 @@ public abstract class AopAllianceAdapter {
         };
     MethodInterceptor methodInterceptor = getMethodInterceptor();
     if (methodInterceptor != null) {
-      try {
-        return methodInterceptor.invoke(mic);
-      } catch (Throwable t) {
-        throw new SoftException(t);
-      }
+      return methodInterceptor.invoke(mic);
     } else {
       return thisJoinPoint.proceed();
     }
