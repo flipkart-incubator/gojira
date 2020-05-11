@@ -31,31 +31,33 @@ import org.slf4j.LoggerFactory;
  */
 public class ProfileOrTestMethodInterceptor implements MethodInterceptor {
 
-  private static final Logger LOGGER = LoggerFactory
-      .getLogger(ProfileOrTestMethodInterceptor.class);
+  private static final Logger LOGGER =
+      LoggerFactory.getLogger(ProfileOrTestMethodInterceptor.class);
 
-  private Map<Mode, MethodDataInterceptorHandler> modeMethodDataInterceptorHandlerMap = Collections
-      .unmodifiableMap(
-          new HashMap<Mode, MethodDataInterceptorHandler>() {{
-            put(Mode.NONE, new NoneMethodDataInterceptorHandler());
-            put(Mode.PROFILE, new ProfileMethodDataInterceptorHandler());
-            put(Mode.TEST, new TestMethodDataInterceptorHandler());
-            put(Mode.SERIALIZE, new SerializeMethodDataInterceptorHandler());
-          }}
-      );
+  private Map<Mode, MethodDataInterceptorHandler> modeMethodDataInterceptorHandlerMap =
+      Collections.unmodifiableMap(
+          new HashMap<Mode, MethodDataInterceptorHandler>() {
+            {
+              put(Mode.NONE, new NoneMethodDataInterceptorHandler());
+              put(Mode.PROFILE, new ProfileMethodDataInterceptorHandler());
+              put(Mode.TEST, new TestMethodDataInterceptorHandler());
+              put(Mode.SERIALIZE, new SerializeMethodDataInterceptorHandler());
+            }
+          });
 
   /**
    * Calls the {@link Mode} specific handler if available or calls {@link
    * MethodInvocation#proceed()} and returns the object returned by the invocation.
    *
    * @param invocation instance of {@link MethodInvocation} as part of this call chain.
-   * @return returns the object returned by the called method.
-   * @throws Throwable exception thrown by the called method.
+   * @return the object returned by the called method.
+   * @throws Throwable for any exception thrown by the called method.
    */
   @Override
   public Object invoke(MethodInvocation invocation) throws Throwable {
     if (modeMethodDataInterceptorHandlerMap.containsKey(ProfileRepository.getMode())) {
-      return modeMethodDataInterceptorHandlerMap.get(ProfileRepository.getMode())
+      return modeMethodDataInterceptorHandlerMap
+          .get(ProfileRepository.getMode())
           .handle(invocation);
     }
 

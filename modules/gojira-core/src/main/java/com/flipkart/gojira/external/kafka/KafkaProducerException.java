@@ -20,7 +20,7 @@ import com.flipkart.gojira.execute.TestExecutionException;
 import com.flipkart.gojira.models.kafka.KafkaTestDataType;
 
 /**
- * Exception thrown if we are not able initiate execution for {@link KafkaTestDataType}
+ * Exception thrown if we are not able initiate execution for {@link KafkaTestDataType}.
  */
 public class KafkaProducerException extends TestExecutionException {
 

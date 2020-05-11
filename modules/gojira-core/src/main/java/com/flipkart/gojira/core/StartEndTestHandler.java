@@ -22,32 +22,32 @@ import com.flipkart.gojira.models.TestRequestData;
 import com.flipkart.gojira.models.TestResponseData;
 
 /**
- * Interface for performing various logic around starting and ending test in various {@link Mode}
+ * Interface for performing various logic around starting and ending test in various {@link Mode}.
  */
 public interface StartEndTestHandler<T extends TestDataType> {
 
   /**
    * Implementations of this interface are expected to take care of setting {@link
-   * ProfileData#getProfileState()} ()} for different {@link Mode}
-   * <p>
-   * They are also expected to take care of retrieving test data against id if required and call
+   * ProfileData#getProfileState()} ()} for different {@link Mode}.
+   *
+   * <p>They are also expected to take care of retrieving test data against id if required and call
    * {@link ProfileRepository#begin(String)} as needed per {@link Mode}
    *
-   * @param id          this is the id, which will be used for synchronizing testing across multiple
-   *                    threads within a single request-response scope.
+   * @param id this is the id, which will be used for synchronizing testing across multiple threads
+   *     within a single request-response scope.
    * @param requestData this is the request-data with which test is initiated
    */
   void start(String id, TestRequestData<T> requestData);
 
   /**
    * Implementations of this interface are expected to take care of setting {@link
-   * ProfileData#getProfileState()} for different {@link Mode}
-   * <p>
-   * They are also expected to take care of storing test data against test-data id if required and
-   * call {@link ProfileRepository#end()} as needed per {@link Mode}
+   * ProfileData#getProfileState()} for different {@link Mode}.
+   *
+   * <p>They are also expected to take care of storing test data against test-data id if required
+   * and call {@link ProfileRepository#end()} as needed per {@link Mode}
    *
    * @param responseData this is the response-data after the request is processed by the client
-   *                     application.
+   *     application.
    */
   void end(TestResponseData<T> responseData);
 }

@@ -28,12 +28,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Basic Implementation of {@link TestSerdeHandler}
+ * Basic Implementation of {@link TestSerdeHandler}.
  */
 public class JsonDefaultTestSerdeHandler implements TestSerdeHandler {
-
   private static final Logger LOGGER = LoggerFactory.getLogger(JsonDefaultTestSerdeHandler.class);
-  private static final ObjectMapper mapper = new ObjectMapper()
+  private static final ObjectMapper MAPPER =
+      new ObjectMapper()
           .enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
           .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
           .enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT)
@@ -42,49 +42,30 @@ public class JsonDefaultTestSerdeHandler implements TestSerdeHandler {
           .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
           .setSubtypeResolver(new StdSubtypeResolver());
 
-  /**
-   * @param obj object to be serialized
-   * @param <T>
-   * @return
-   * @throws TestSerdeException
-   */
   @Override
   public <T> byte[] serialize(T obj) throws TestSerdeException {
     try {
-      return mapper.writeValueAsBytes(obj);
+      return MAPPER.writeValueAsBytes(obj);
     } catch (JsonProcessingException e) {
       LOGGER.error("error serializing data.", e);
       throw new TestSerdeException("error serializing data.", e);
     }
   }
 
-  /**
-   * @param bytes serialized byte[] to be de-serialized.
-   * @param clazz class to de-serialize
-   * @param <T>
-   * @return
-   * @throws TestSerdeException
-   */
   @Override
   public <T> T deserialize(byte[] bytes, Class<T> clazz) throws TestSerdeException {
     try {
-      return mapper.readValue(bytes, clazz);
+      return MAPPER.readValue(bytes, clazz);
     } catch (IOException e) {
       LOGGER.error("error de-serializing data.", e);
       throw new TestSerdeException("error de-serializing data.", e);
     }
   }
 
-  /**
-   * @param bytes serialized byte[] to be de-serialized
-   * @param obj   object which needs to be updated with the above byte[]
-   * @param <T>
-   * @throws TestSerdeException
-   */
   @Override
   public <T> void deserializeToInstance(byte[] bytes, T obj) throws TestSerdeException {
     try {
-      mapper.readerForUpdating(obj).readValue(bytes);
+      MAPPER.readerForUpdating(obj).readValue(bytes);
     } catch (IOException e) {
       throw new TestSerdeException("error updating object.", e);
     }

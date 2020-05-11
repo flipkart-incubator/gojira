@@ -27,42 +27,41 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Implementation of {@link StartEndTestHandler} for mode {@link Mode#SERIALIZE}
+ * Implementation of {@link StartEndTestHandler} for mode {@link Mode#SERIALIZE}.
  *
  * @param <T> type of test-data
  */
-public class SerializeStartEndTestHandler<T extends TestDataType> implements
-    StartEndTestHandler<T> {
+public class SerializeStartEndTestHandler<T extends TestDataType>
+    implements StartEndTestHandler<T> {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SerializeStartEndTestHandler.class);
 
   /**
-   * sinkHandler for persisting test-data
+   * sinkHandler for persisting test-data.
    */
   private SinkHandler sinkHandler = GuiceInjector.getInjector().getInstance(SinkHandler.class);
   /**
-   * serdeHandlerRepository to get serializer for test-data
+   * serdeHandlerRepository to get serializer for test-data.
    */
-  private SerdeHandlerRepository serdeHandlerRepository = GuiceInjector.getInjector()
-      .getInstance(SerdeHandlerRepository.class);
+  private SerdeHandlerRepository serdeHandlerRepository =
+      GuiceInjector.getInjector().getInstance(SerdeHandlerRepository.class);
 
-  public SerializeStartEndTestHandler() {
-  }
+  public SerializeStartEndTestHandler() {}
 
   /**
-   * If is is null or empty, throws a {@link RuntimeException}
-   * <p>
-   * Reads the test data using {@link SinkHandler#read(String)} and deserializes using {@link
-   * SerdeHandlerRepository#getTestDataSerdeHandler()} instance.
-   * <p>
-   * If testData is null, throws a {@link RuntimeException}
-   * <p>
-   * Begins execution by calling {@link ProfileRepository#begin(String)} and adds {@link TestData}
-   * for execution by calling {@link ProfileRepository#setTestData(TestData)} to make method
-   * intercepted and response data recorded in {@link Mode#PROFILE} mode available.
+   * If is is null or empty, throws a {@link RuntimeException}.
    *
-   * @param id          this is the id, which will be used for synchronizing testing across multiple
-   *                    threads within a single request-response scope.
+   * <p>Reads the test data using {@link SinkHandler#read(String)} and deserializes using {@link
+   * SerdeHandlerRepository#getTestDataSerdeHandler()} instance.
+   *
+   * <p>If testData is null, throws a {@link RuntimeException}
+   *
+   * <p>Begins execution by calling {@link ProfileRepository#begin(String)} and adds {@link
+   * TestData} for execution by calling {@link ProfileRepository#setTestData(TestData)} to make
+   * method intercepted and response data recorded in {@link Mode#PROFILE} mode available.
+   *
+   * @param id this is the id, which will be used for synchronizing testing across multiple threads
+   *     within a single request-response scope.
    * @param requestData this is the request-data with which test is initiated
    */
   @Override
@@ -73,8 +72,10 @@ public class SerializeStartEndTestHandler<T extends TestDataType> implements
     }
 
     try {
-      TestData<TestRequestData<T>, TestResponseData<T>, T> testData = serdeHandlerRepository
-          .getTestDataSerdeHandler().deserialize(sinkHandler.read(id), TestData.class);
+      TestData<TestRequestData<T>, TestResponseData<T>, T> testData =
+          serdeHandlerRepository
+              .getTestDataSerdeHandler()
+              .deserialize(sinkHandler.read(id), TestData.class);
       if (testData == null) {
         // TODO: Check if well-defined exception can be thrown.
         throw new RuntimeException("no data available against mentioned test id: " + id);
@@ -89,10 +90,10 @@ public class SerializeStartEndTestHandler<T extends TestDataType> implements
   }
 
   /**
-   * Ends the execution by calling {@link ProfileRepository#end()}
+   * Ends the execution by calling {@link ProfileRepository#end()}.
    *
    * @param responseData this is the response-data after the request is processed by the client
-   *                     application.
+   *     application.
    */
   @Override
   public void end(TestResponseData<T> responseData) {

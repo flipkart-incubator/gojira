@@ -20,7 +20,7 @@ import com.flipkart.gojira.serde.config.SerdeConfig;
 import com.google.inject.AbstractModule;
 
 /**
- * Guice module to setup {@link SerdeHandlerRepository} using {@link SerdeConfig}
+ * Guice module to setup {@link SerdeHandlerRepository} using {@link SerdeConfig}.
  */
 public class SerdeModule extends AbstractModule {
 
@@ -37,6 +37,5 @@ public class SerdeModule extends AbstractModule {
     serdeHandlerRepository.setReqRespDataSerdeHandler(serdeConfig.getReqRespDataSerdeHandler());
     serdeHandlerRepository.setTestDataSerdeHandler(serdeConfig.getTestDataSerdeHandler());
     bind(SerdeHandlerRepository.class).toInstance(serdeHandlerRepository);
-
   }
 }

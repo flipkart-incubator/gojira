@@ -7,11 +7,10 @@
     <parent>
         <artifactId>gojira-parent</artifactId>
         <groupId>com.flipkart</groupId>
-        <version>1.7.3</version>
+        <version>${revision}</version>
     </parent>
 
     <artifactId>gojira-compare</artifactId>
-    <version>1.7.3</version>
 
     <name>Compare with ignore patterns</name>
 

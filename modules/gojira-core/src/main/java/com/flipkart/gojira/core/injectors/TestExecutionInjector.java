@@ -22,7 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * TestExecutionInjector is the guice injector instance for {@link TestExecutorModule}
+ * TestExecutionInjector is the guice injector instance for {@link TestExecutorModule}.
  */
 public class TestExecutionInjector {
 
@@ -31,7 +31,7 @@ public class TestExecutionInjector {
   private static Injector injector = null;
 
   /**
-   * Assigns the provided {@link Injector instance}
+   * Assigns the provided {@link Injector instance}.
    *
    * @param givenInjector If already assigned, throws an {@link IllegalStateException}
    */
@@ -50,7 +50,7 @@ public class TestExecutionInjector {
 
   /**
    * Retrieves the provided {@link Injector instance} If it is null, throws an {@link
-   * IllegalStateException}
+   * IllegalStateException}.
    */
   public static Injector getInjector() {
     if (injector == null) {

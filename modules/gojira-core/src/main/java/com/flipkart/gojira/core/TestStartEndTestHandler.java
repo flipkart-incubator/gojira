@@ -31,7 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Implementation of {@link StartEndTestHandler} for mode {@link Mode#TEST}
+ * Implementation of {@link StartEndTestHandler} for mode {@link Mode#TEST}.
  *
  * @param <T> type of test-data
  */
@@ -42,47 +42,47 @@ public class TestStartEndTestHandler<T extends TestDataType> implements StartEnd
   // TODO: Move this global constants file.
   private static final String delim = " | ";
   private static final String RESULT_SUCCESS = "SUCCESS";
+  private static final String NON_EMPTY_METHOD_DATA_MAP = "NON_EMPTY_METHOD_DATA_MAP";
   private static final String READ_FAILURE = "READ_FAILED";
   private static final String COMPARE_FAILED = "COMPARE_FAILED";
   private static final String EXECUTION_FAILED = "EXECUTION_FAILED";
   private static final String UNKNOWN_FAILED = "UNKNOWN_FAILED";
-
   /**
-   * compareHandlerRepository for comparing  {@link TestResponseData}
+   * compareHandlerRepository for comparing {@link TestResponseData}.
    */
-  private GojiraCompareHandlerRepository gojiraCompareHandlerRepository = GuiceInjector
-      .getInjector().getInstance(GojiraCompareHandlerRepository.class);
+  private GojiraCompareHandlerRepository gojiraCompareHandlerRepository =
+      GuiceInjector.getInjector().getInstance(GojiraCompareHandlerRepository.class);
   /**
    * serdeHandlerRepository for de-serializing {@link TestData} and serializing {@link
-   * TestResponseData}
+   * TestResponseData}.
    */
-  private SerdeHandlerRepository serdeHandlerRepository = GuiceInjector.getInjector()
-      .getInstance(SerdeHandlerRepository.class);
+  private SerdeHandlerRepository serdeHandlerRepository =
+      GuiceInjector.getInjector().getInstance(SerdeHandlerRepository.class);
   /**
-   * sinkHandler for reading {@link TestData} and storing results of test execution
+   * sinkHandler for reading {@link TestData} and storing results of test execution.
    */
   private SinkHandler sinkHandler = GuiceInjector.getInjector().getInstance(SinkHandler.class);
 
   /**
    * If id is null or empty, throws a {@link RuntimeException}
-   * <p>
-   * Reads the test data using {@link SinkHandler#read(String)} and deserializes using {@link
-   * SerdeHandlerRepository#getTestDataSerdeHandler()} instance.
-   * <p>
-   * If testData is null, throws a {@link RuntimeException}
-   * <p>
-   * Begins execution by calling {@link ProfileRepository#begin(String)} and adds {@link TestData}
-   * for execution by calling {@link ProfileRepository#setTestData(TestData)} to make method
-   * intercepted and response data recorded in {@link Mode#PROFILE} mode available.
-   * <p>
-   * In case of any exception, marks {@link ProfileData#profileState} as {@link ProfileState#FAILED}
-   * and stores result as {@value READ_FAILURE}.
-   * <p>
-   * In case {@link SinkHandler#writeResults(String, String)} throws {@link SinkException}, simply
-   * logs and throws a {@link RuntimeException}
    *
-   * @param id          this is the id, which will be used for synchronizing testing across multiple
-   *                    threads within a single request-response scope.
+   * <p>Reads the test data using {@link SinkHandler#read(String)} and deserializes using {@link
+   * SerdeHandlerRepository#getTestDataSerdeHandler()} instance.
+   *
+   * <p>If testData is null, throws a {@link RuntimeException}
+   *
+   * <p>Begins execution by calling {@link ProfileRepository#begin(String)} and adds {@link
+   * TestData} for execution by calling {@link ProfileRepository#setTestData(TestData)} to make
+   * method intercepted and response data recorded in {@link Mode#PROFILE} mode available.
+   *
+   * <p>In case of any exception, marks {@link ProfileData#getProfileState()} as {@link
+   * ProfileState#FAILED} and stores result as {@value READ_FAILURE}.
+   *
+   * <p>In case {@link SinkHandler#writeResults(String, String)} throws {@link SinkException},
+   * simply logs and throws a {@link RuntimeException}
+   *
+   * @param id this is the id, which will be used for synchronizing testing across multiple threads
+   *     within a single request-response scope.
    * @param requestData this is the request-data with which test is initiated
    */
   @Override
@@ -92,8 +92,10 @@ public class TestStartEndTestHandler<T extends TestDataType> implements StartEnd
     }
 
     try {
-      TestData<TestRequestData<T>, TestResponseData<T>, T> testData = serdeHandlerRepository
-          .getTestDataSerdeHandler().deserialize(sinkHandler.read(id), TestData.class);
+      TestData<TestRequestData<T>, TestResponseData<T>, T> testData =
+          serdeHandlerRepository
+              .getTestDataSerdeHandler()
+              .deserialize(sinkHandler.read(id), TestData.class);
       if (testData == null) {
         throw new RuntimeException("no data available against mentioned test id: " + id);
       }
@@ -105,8 +107,10 @@ public class TestStartEndTestHandler<T extends TestDataType> implements StartEnd
       try {
         sinkHandler.writeResults(id, READ_FAILURE);
       } catch (SinkException se) {
-        LOGGER.error(String
-            .format("sink write of READ_FAILURE failed for test id : %s with exception: ", id), se);
+        LOGGER.error(
+            String.format(
+                "sink write of READ_FAILURE failed for test id : %s with exception: ", id),
+            se);
         throw new RuntimeException(se);
       }
       throw new RuntimeException(e);
@@ -114,21 +118,23 @@ public class TestStartEndTestHandler<T extends TestDataType> implements StartEnd
   }
 
   /**
-   * If {@link ProfileData#profileState} is not {@link ProfileState#NONE}, compares the {@link
+   * If {@link ProfileData#getProfileState()} is not {@link ProfileState#NONE}, compares the {@link
    * TestResponseData} using {@link GojiraCompareHandlerRepository#getResponseDataCompareHandler()}
    * instance after serializing using {@link SerdeHandlerRepository#getReqRespDataSerdeHandler()}.
-   * <p>
-   * Based on the result of comparison, {@link SinkHandler#writeResults(String, String)} is called.
-   * <p>
-   * If comparison is successful, {@value RESULT_SUCCESS} is written. On comparison failure, {@value
-   * COMPARE_FAILED} is written. On unknown exception, {@value UNKNOWN_FAILED} is written.
-   * <p>
-   * If {@link SinkHandler#writeResults(String, String)} fails, {@link RuntimeException} is thrown.
-   * <p>
-   * In the finally block, {@link ProfileRepository#end()} is caled.
+   *
+   * <p>Based on the result of comparison, {@link SinkHandler#writeResults(String, String)} is
+   * called.
+   *
+   * <p>If comparison is successful, {@value RESULT_SUCCESS} is written. On comparison failure,
+   * {@value COMPARE_FAILED} is written. On unknown exception, {@value UNKNOWN_FAILED} is written.
+   *
+   * <p>If {@link SinkHandler#writeResults(String, String)} fails, {@link RuntimeException} is
+   * thrown.
+   *
+   * <p>In the finally block, {@link ProfileRepository#end()} is caled.
    *
    * @param responseData this is the response-data after the request is processed by the client
-   *                     application.
+   *     application.
    */
   @Override
   public void end(TestResponseData<T> responseData) {
@@ -136,21 +142,35 @@ public class TestStartEndTestHandler<T extends TestDataType> implements StartEnd
       String id = ProfileRepository.getTestData().getId();
       if (!ProfileState.NONE.equals(ProfileRepository.getProfileState())) {
         try {
-          gojiraCompareHandlerRepository.getResponseDataCompareHandler()
-              .compare(serdeHandlerRepository.getReqRespDataSerdeHandler()
+          gojiraCompareHandlerRepository
+              .getResponseDataCompareHandler()
+              .compare(
+                  serdeHandlerRepository
+                      .getReqRespDataSerdeHandler()
                       .serialize(ProfileRepository.getTestData().getResponseData()),
                   serdeHandlerRepository.getReqRespDataSerdeHandler().serialize(responseData));
-          sinkHandler.writeResults(id, RESULT_SUCCESS);
-          LOGGER.info("RESULT_SUCCESS for " + id);
+          // method data map must be empty at the end of the test.
+          // if it is non empty it indicates some failure due to which we were not able to consume
+          // stored method data for some annotated methods.
+          if (ProfileRepository.getTestData().getMethodDataMap().isEmpty()) {
+            sinkHandler.writeResults(id, RESULT_SUCCESS);
+            LOGGER.info("RESULT_SUCCESS for " + id);
+          } else {
+            sinkHandler.writeResults(id, NON_EMPTY_METHOD_DATA_MAP);
+            LOGGER.error("NON_EMPTY_METHOD_DATA_MAP for " + id);
+          }
+
         } catch (TestCompareException e) {
           LOGGER.error("test compare exception.", e);
           sinkHandler.writeResults(id, COMPARE_FAILED);
           // Solve this to pass stack trace in payload
-//                sinkHandler.writeResults(id,COMPARE_FAILED + delim + e + delim+ stackTraceToString(e));
+          //                sinkHandler.writeResults(id,COMPARE_FAILED + delim + e + delim+
+          // stackTraceToString(e));
         } catch (Exception e) {
           sinkHandler.writeResults(id, UNKNOWN_FAILED);
           // Solve this to pass stack trace in payload
-//                sinkHandler.writeResults(id,UNKNOWN_FAILED + delim + e + delim + stackTraceToString(e));
+          //                sinkHandler.writeResults(id,UNKNOWN_FAILED + delim + e + delim +
+          // stackTraceToString(e));
           LOGGER.error("test unknown failed exception.", e);
         }
       }

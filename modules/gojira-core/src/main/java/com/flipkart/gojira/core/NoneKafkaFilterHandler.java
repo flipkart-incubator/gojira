@@ -19,28 +19,34 @@ package com.flipkart.gojira.core;
 import java.util.Map;
 
 /**
- * Implementation for {@link KafkaFilterHandler} for mode {@link Mode#NONE}
+ * Implementation for {@link KafkaFilterHandler} for mode {@link Mode#NONE}.
  */
 public class NoneKafkaFilterHandler extends KafkaFilterHandler {
 
   /**
-   * @param topicName  kafka topic name
-   * @param key        key used for producing message to the topic
-   * @param value      body used for producing message to the topic
+   * Get's the test-id and throws an exception if test-header is present.
+   *
+   * @param topicName kafka topic name
+   * @param key key used for producing message to the topic
+   * @param value body used for producing message to the topic
    * @param headersMap headers used for producing message to the topic with key as string and value
-   *                   as map
-   *                   <p>
-   *                   Get's the test-id and throws an exception if test-header is present.
+   *     as map
    */
   @Override
-  protected void handle(String topicName, byte[] key, byte[] value,
-      Map<String, byte[]> headersMap) {
+  protected void handle(
+      String topicName, byte[] key, byte[] value, Map<String, byte[]> headersMap) {
     String id = getTestId(headersMap);
     if (id != null) {
-      LOGGER.error("Header with name: " + TEST_HEADER
-          + " present. But service is not running in TEST mode. : " + ProfileRepository.getMode());
-      throw new RuntimeException("Header with name: " + TEST_HEADER
-          + " present. But service is not running in TEST mode. : " + ProfileRepository.getMode());
+      LOGGER.error(
+          "Header with name: "
+              + GojiraConstants.TEST_HEADER
+              + " present. But service is not running in TEST mode. : "
+              + ProfileRepository.getMode());
+      throw new RuntimeException(
+          "Header with name: "
+              + GojiraConstants.TEST_HEADER
+              + " present. But service is not running in TEST mode. : "
+              + ProfileRepository.getMode());
     }
   }
 }

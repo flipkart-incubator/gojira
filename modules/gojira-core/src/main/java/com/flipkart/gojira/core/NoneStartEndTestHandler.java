@@ -22,29 +22,28 @@ import com.flipkart.gojira.models.TestRequestData;
 import com.flipkart.gojira.models.TestResponseData;
 
 /**
- * Implementation of {@link StartEndTestHandler} for mode {@link Mode#NONE}
+ * Implementation of {@link StartEndTestHandler} for mode {@link Mode#NONE}.
  *
  * @param <T> type of test-data
  */
 public class NoneStartEndTestHandler<T extends TestDataType> implements StartEndTestHandler<T> {
 
   /**
-   * Sets the value of {@link ProfileData#profileState} to {@link ProfileState#NONE}
+   * Sets the value of {@link ProfileData#profileState} to {@link ProfileState#NONE}.
    *
-   * @param id          this is the id, which will be used for synchronizing testing across multiple
-   *                    threads within a single request-response scope.
+   * @param id this is the id, which will be used for synchronizing testing across multiple threads
+   *     within a single request-response scope.
    * @param requestData this is the request-data with which test is initiated
    */
   @Override
-  public void start(String id, TestRequestData<T> requestData) {
-  }
+  public void start(String id, TestRequestData<T> requestData) {}
 
   /**
    * Calls {@link ProfileRepository#end()} to remove any thread-local associated with this
    * request-response lifecycle.
    *
    * @param responseData this is the response-data after the request is processed by the client
-   *                     application.
+   *     application.
    */
   @Override
   public void end(TestResponseData<T> responseData) {

@@ -16,43 +16,29 @@
 
 package com.flipkart.gojira.requestsampling;
 
-import com.flipkart.gojira.core.Mode;
 import java.util.List;
 import java.util.regex.Pattern;
 
 /**
- * Implementation for {@link RequestSamplingRepository}
+ * Implementation for {@link RequestSamplingRepository}.
  */
 public class RequestSamplingRepositoryImpl extends RequestSamplingRepository {
 
-  /**
-   * @return
-   */
   @Override
   public double getSamplingPercentage() {
     return super.samplingPercentage;
   }
 
-  /**
-   * @param samplingPercentage This method sets the sampling percentage for {@link Mode#PROFILE}
-   *                           mode in
-   */
   @Override
   void setSamplingPercentage(double samplingPercentage) {
     super.samplingPercentage = samplingPercentage;
   }
 
-  /**
-   * @return
-   */
   @Override
   public List<Pattern> getWhitelist() {
     return whitelist;
   }
 
-  /**
-   * @param whitelist This method sets the whiteList for {@link Mode#PROFILE} mode in
-   */
   @Override
   void setWhitelist(List<Pattern> whitelist) {
     super.whitelist = whitelist;

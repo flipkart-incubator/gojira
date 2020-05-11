@@ -19,9 +19,6 @@ package com.flipkart.gojira.core;
 import com.flipkart.gojira.hash.TestHashException;
 import com.flipkart.gojira.hash.TestHashHandler;
 
-/**
- * Created by arunachalam.s on 27/03/18.
- */
 public class ByteArrayHashHandler implements TestHashHandler {
 
   @Override

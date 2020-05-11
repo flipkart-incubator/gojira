@@ -43,9 +43,7 @@ public class TestQueuedSenderConfig {
    */
   private int queuePurgeInterval = 30;
 
-  private TestQueuedSenderConfig() {
-
-  }
+  private TestQueuedSenderConfig() {}
 
   public static Builder builder() {
     return new Builder();

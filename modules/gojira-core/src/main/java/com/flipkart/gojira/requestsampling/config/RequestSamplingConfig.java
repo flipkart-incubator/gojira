@@ -41,9 +41,7 @@ public class RequestSamplingConfig {
    */
   private List<Pattern> whitelist = null;
 
-  private RequestSamplingConfig() {
-
-  }
+  private RequestSamplingConfig() {}
 
   public static Builder builder() {
     return new Builder();
@@ -69,12 +67,15 @@ public class RequestSamplingConfig {
       return this.requestSamplingConfigToBuild;
     }
 
+    // multiply and divide by 100.00 for setting the precision to two decimal places
     public Builder setSamplingPercentage(double samplingPercentage) {
-      // multiply and divide by 100.00 for setting the precision to two decimal places
       this.requestSamplingConfigToBuild.samplingPercentage = (samplingPercentage * 100.00 / 100.00);
       return this;
     }
 
+    /**
+     * Converts the list of string to a list of {@link Pattern}.
+     */
     public Builder setWhitelist(List<String> whitelist) {
       if (whitelist == null) {
         return this;

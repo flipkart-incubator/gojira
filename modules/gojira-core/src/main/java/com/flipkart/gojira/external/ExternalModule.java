@@ -16,25 +16,48 @@
 
 package com.flipkart.gojira.external;
 
+import static com.flipkart.gojira.core.GojiraConstants.TEST_DATA_TYPE_STRING_TO_CLASS;
+
 import com.flipkart.gojira.external.config.ExternalConfig;
-import com.flipkart.gojira.external.config.HelperConfig;
+import com.flipkart.gojira.models.TestDataType;
 import com.google.inject.AbstractModule;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
- * Guice module which is used for binding {@link ExternalConfig}
+ * Guice module which is used for binding {@link ExternalConfig}.
  */
 public class ExternalModule extends AbstractModule {
 
-  private final HelperConfig helperConfig;
+  private final Map<String, List<ExternalConfig>> clientToListConfigMap;
 
-  public ExternalModule(HelperConfig helperConfig) {
-    this.helperConfig = helperConfig;
+  public ExternalModule(Map<String, List<ExternalConfig>> clientToListConfigMap) {
+    this.clientToListConfigMap = clientToListConfigMap;
   }
 
   @Override
   protected void configure() {
     ExternalConfigRepositoryImpl externalConfigRepository = new ExternalConfigRepositoryImpl();
-    externalConfigRepository.setExternalConfig(helperConfig.getExternalConfigMap());
+    Map<String, Map<Class<? extends TestDataType>, ExternalConfig>> externalConfigMap =
+        new HashMap<>();
+
+    clientToListConfigMap.forEach(
+        (client, configList) -> {
+          externalConfigMap.putIfAbsent(client, new HashMap<>());
+          configList.forEach(
+              (config) -> {
+                if (externalConfigMap
+                    .get(client)
+                    .containsKey(TEST_DATA_TYPE_STRING_TO_CLASS.get(config.getType()))) {
+                  throw new RuntimeException("Only one config per type is allowed. ");
+                }
+                externalConfigMap
+                    .get(client)
+                    .put(TEST_DATA_TYPE_STRING_TO_CLASS.get(config.getType()), config);
+              });
+        });
+    externalConfigRepository.setExternalConfig(externalConfigMap);
     bind(ExternalConfigRepository.class).toInstance(externalConfigRepository);
   }
 }

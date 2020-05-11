@@ -18,7 +18,7 @@ package com.flipkart.gojira.external;
 
 /**
  * Exception to be thrown by {@link Managed#shutdown()} if we are not able to close connections
- * established as part of {@link Managed#setup()}
+ * established as part of {@link Managed#setup()}.
  */
 public class ShutdownException extends RuntimeException {
 
