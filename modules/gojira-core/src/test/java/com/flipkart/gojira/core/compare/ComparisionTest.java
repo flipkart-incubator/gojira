@@ -29,7 +29,7 @@ import com.flipkart.gojira.requestsampling.config.RequestSamplingConfig;
 import com.flipkart.gojira.serde.TestSerdeException;
 import com.flipkart.gojira.serde.config.SerdeConfig;
 import com.flipkart.gojira.serde.handlers.TestSerdeHandler;
-import com.flipkart.gojira.serde.handlers.json.JsonStdSerdeHandler;
+import com.flipkart.gojira.serde.handlers.json.JsonMapListSerdeHandler;
 import com.flipkart.gojira.sinkstore.config.DataStoreConfig;
 import com.flipkart.gojira.sinkstore.file.FileBasedDataStoreHandler;
 import org.junit.Test;
@@ -43,7 +43,7 @@ public class ComparisionTest {
     @Test(expected = TestCompareException.class)
     public void checkCompare() throws TestSerdeException, TestCompareException {
         TestCompareHandler testCompareHandler = new JsonTestCompareHandler();
-        TestSerdeHandler testSerdeHandler = new JsonStdSerdeHandler();
+        TestSerdeHandler testSerdeHandler = new JsonMapListSerdeHandler();
         DeserializeTest.TestClass testClass1 = new DeserializeTest.TestClass();
         Map<String, String> map1 = new HashMap<>();
         map1.put("hi", "hello");
@@ -61,7 +61,7 @@ public class ComparisionTest {
                 .setWhitelist(new ArrayList<>())
                 .build();
         SerdeConfig serdeConfig = SerdeConfig.builder()
-                .setDefaultSerdeHandler(new JsonStdSerdeHandler()).build();
+                .setDefaultSerdeHandler(new JsonMapListSerdeHandler()).build();
         GojiraComparisonConfig comparisonConfig = GojiraComparisonConfig.builder()
                 .setDiffIgnoreMap(null)
                 .setDefaultCompareHandler(new JsonTestCompareHandler())

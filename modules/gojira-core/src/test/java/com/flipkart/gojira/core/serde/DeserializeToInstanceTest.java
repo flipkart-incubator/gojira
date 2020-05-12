@@ -22,57 +22,61 @@ import com.flipkart.gojira.models.http.HttpTestRequestData;
 import com.flipkart.gojira.models.http.HttpTestResponseData;
 import com.flipkart.gojira.serde.TestSerdeException;
 import com.flipkart.gojira.serde.handlers.json.JsonDefaultTestSerdeHandler;
-import com.flipkart.gojira.serde.handlers.json.JsonStdSerdeHandler;
+import com.flipkart.gojira.serde.handlers.json.JsonMapListSerdeHandler;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class DeserializeToInstanceTest {
-  //Refer https://www.logicbig.com/tutorials/misc/jackson/reader-for-updating.html
+  // Refer https://www.logicbig.com/tutorials/misc/jackson/reader-for-updating.html
 
-  private JsonStdSerdeHandler jsonStdSerdeHandler = new JsonStdSerdeHandler();
-  private JsonDefaultTestSerdeHandler jsonDefaultTestSerdeHandler = new JsonDefaultTestSerdeHandler();
+  private JsonMapListSerdeHandler jsonMapListSerdeHandler = new JsonMapListSerdeHandler();
+  private JsonDefaultTestSerdeHandler jsonDefaultTestSerdeHandler =
+      new JsonDefaultTestSerdeHandler();
 
-  //Primitives are neither expected nor supported to be updated
+  // Primitives are neither expected nor supported to be updated
   @Test
   public void test_intJsonUpdate() throws TestSerdeException {
     int intBase = 1;
     int intToUpdate = 2;
 
-    new JsonStdSerdeHandler().deserializeToInstance(new JsonDefaultTestSerdeHandler().serialize(intBase), intToUpdate);
+    new JsonMapListSerdeHandler()
+        .deserializeToInstance(new JsonDefaultTestSerdeHandler().serialize(intBase), intToUpdate);
 
     Assert.assertNotEquals(intBase, intToUpdate);
   }
 
-  //Primitives are neither expected nor supported to be updated
+  // Primitives are neither expected nor supported to be updated
   @Test
   public void test_IntegerJsonUpdate() throws TestSerdeException {
     Integer integerBase = 1;
     Integer integerToUpdate = 2;
-    jsonStdSerdeHandler.deserializeToInstance(jsonStdSerdeHandler.serialize(integerBase), integerToUpdate);
+    jsonMapListSerdeHandler.deserializeToInstance(
+        jsonMapListSerdeHandler.serialize(integerBase), integerToUpdate);
 
     Assert.assertNotEquals(integerBase, integerToUpdate);
   }
 
-  //Primitives are neither expected nor supported to be updated
+  // Primitives are neither expected nor supported to be updated
   @Test
   public void test_StringJsonUpdate() throws TestSerdeException {
     String stringBase = "abc";
     String stringToUpdate = "def";
 
-    jsonStdSerdeHandler.deserializeToInstance(jsonStdSerdeHandler.serialize(stringBase), stringToUpdate);
+    jsonMapListSerdeHandler.deserializeToInstance(
+        jsonMapListSerdeHandler.serialize(stringBase), stringToUpdate);
 
     Assert.assertNotEquals(stringBase, stringToUpdate);
   }
 
-  //Primitives are neither expected nor supported to be updated
+  // Primitives are neither expected nor supported to be updated
   @Test
   public void test_EnumJsonUpdate() throws TestSerdeException {
     EnumTest etBase = EnumTest.TEST;
     EnumTest etToUpdate = EnumTest.CHECK;
-    jsonStdSerdeHandler.deserializeToInstance(jsonStdSerdeHandler.serialize(etBase), etToUpdate);
+    jsonMapListSerdeHandler.deserializeToInstance(
+        jsonMapListSerdeHandler.serialize(etBase), etToUpdate);
     Assert.assertNotEquals(etBase, etToUpdate);
   }
 
@@ -92,13 +96,17 @@ public class DeserializeToInstanceTest {
     stringList2.add("stopped");
     integerAndListWrapperToUpdate.setStringList(stringList2);
 
-    jsonStdSerdeHandler.deserializeToInstance(jsonStdSerdeHandler.serialize(integerAndListWrapperBase), integerAndListWrapperToUpdate);
+    jsonMapListSerdeHandler.deserializeToInstance(
+        jsonMapListSerdeHandler.serialize(integerAndListWrapperBase),
+        integerAndListWrapperToUpdate);
 
-    Assert.assertEquals(integerAndListWrapperBase.getInteger(), integerAndListWrapperToUpdate.getInteger());
-    Assert.assertEquals(integerAndListWrapperBase.getStringList(), integerAndListWrapperToUpdate.getStringList());
+    Assert.assertEquals(
+        integerAndListWrapperBase.getInteger(), integerAndListWrapperToUpdate.getInteger());
+    Assert.assertEquals(
+        integerAndListWrapperBase.getStringList(), integerAndListWrapperToUpdate.getStringList());
   }
 
-  //Lists will be replaced and not deep merged as per Gojira's use-case.
+  // Lists will be replaced and not deep merged as per Gojira's use-case.
   @Test
   public void test_ListJsonUpdate() throws TestSerdeException {
     List<Integer> listBase = new ArrayList<>();
@@ -108,20 +116,22 @@ public class DeserializeToInstanceTest {
     listToUpdate.add(2);
     listToUpdate.add(3);
 
-    jsonStdSerdeHandler.deserializeToInstance(jsonStdSerdeHandler.serialize(listBase), listToUpdate);
+    jsonMapListSerdeHandler.deserializeToInstance(
+        jsonMapListSerdeHandler.serialize(listBase), listToUpdate);
     Assert.assertEquals(listBase, listToUpdate);
   }
 
-
   @Test
   public void test_TestDataJsonUpdate() throws TestSerdeException {
-    TestData<HttpTestRequestData, HttpTestResponseData, HttpTestDataType> testDataBase = new TestData<>();
+    TestData<HttpTestRequestData, HttpTestResponseData, HttpTestDataType> testDataBase =
+        new TestData<>();
     HttpTestRequestData requestData1 = HttpTestRequestData.builder().build();
     HttpTestResponseData responseData1 = HttpTestResponseData.builder().build();
     testDataBase.setRequestData(requestData1);
     testDataBase.setResponseData(responseData1);
 
-    TestData<HttpTestRequestData, HttpTestResponseData, HttpTestDataType> testDataToUpdate = new TestData<>();
+    TestData<HttpTestRequestData, HttpTestResponseData, HttpTestDataType> testDataToUpdate =
+        new TestData<>();
     HttpTestRequestData requestData2 = HttpTestRequestData.builder().build();
     HttpTestResponseData responseData2 = HttpTestResponseData.builder().build();
     testDataBase.setRequestData(requestData2);
@@ -129,9 +139,9 @@ public class DeserializeToInstanceTest {
 
     Assert.assertNotEquals(testDataBase.getId(), testDataToUpdate.getId());
 
-    jsonDefaultTestSerdeHandler
-        .deserializeToInstance(jsonDefaultTestSerdeHandler.serialize(testDataBase),
-            testDataToUpdate); //testDataToUpdate's ID will be updated with testDataBase's ID
+    jsonDefaultTestSerdeHandler.deserializeToInstance(
+        jsonDefaultTestSerdeHandler.serialize(testDataBase),
+        testDataToUpdate); // testDataToUpdate's ID will be updated with testDataBase's ID
 
     Assert.assertEquals(testDataBase.getId(), testDataToUpdate.getId());
   }

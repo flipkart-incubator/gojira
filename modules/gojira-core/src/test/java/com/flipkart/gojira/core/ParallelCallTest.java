@@ -24,7 +24,7 @@ import com.flipkart.gojira.models.http.HttpTestResponseData;
 import com.flipkart.gojira.queuedsender.config.TestQueuedSenderConfig;
 import com.flipkart.gojira.requestsampling.config.RequestSamplingConfig;
 import com.flipkart.gojira.serde.config.SerdeConfig;
-import com.flipkart.gojira.serde.handlers.json.JsonStdSerdeHandler;
+import com.flipkart.gojira.serde.handlers.json.JsonMapListSerdeHandler;
 import com.flipkart.gojira.sinkstore.config.DataStoreConfig;
 import com.flipkart.gojira.sinkstore.file.FileBasedDataStoreHandler;
 import org.junit.BeforeClass;
@@ -66,7 +66,7 @@ public class ParallelCallTest {
         .setWhitelist(new ArrayList<>())
         .build();
     SerdeConfig serdeConfig = SerdeConfig.builder()
-        .setDefaultSerdeHandler(new JsonStdSerdeHandler()).build();
+        .setDefaultSerdeHandler(new JsonMapListSerdeHandler()).build();
     GojiraComparisonConfig comparisonConfig = GojiraComparisonConfig.builder()
         .setDiffIgnoreMap(jsonDiffIgnoreMap)
         .setDefaultCompareHandler(new JsonTestCompareHandler())

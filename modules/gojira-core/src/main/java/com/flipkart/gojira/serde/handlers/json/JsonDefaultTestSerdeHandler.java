@@ -18,9 +18,12 @@ package com.flipkart.gojira.serde.handlers.json;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.jsontype.impl.StdSubtypeResolver;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.flipkart.gojira.serde.TestSerdeException;
 import com.flipkart.gojira.serde.handlers.TestSerdeHandler;
 import java.io.IOException;
@@ -32,7 +35,8 @@ import org.slf4j.LoggerFactory;
  */
 public class JsonDefaultTestSerdeHandler implements TestSerdeHandler {
   private static final Logger LOGGER = LoggerFactory.getLogger(JsonDefaultTestSerdeHandler.class);
-  private static final ObjectMapper MAPPER =
+  private final SimpleModule simpleModule = new SimpleModule();
+  protected final ObjectMapper mapper =
       new ObjectMapper()
           .enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
           .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
@@ -42,10 +46,28 @@ public class JsonDefaultTestSerdeHandler implements TestSerdeHandler {
           .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
           .setSubtypeResolver(new StdSubtypeResolver());
 
+  /**
+   * Registers a JsonSerializer instance against a mentioned type.
+   */
+  public <T> JsonDefaultTestSerdeHandler registerSerializer(Class<T> type, JsonSerializer<T> ser) {
+    simpleModule.addSerializer(type, ser);
+    mapper.registerModule(simpleModule);
+    return this;
+  }
+
+  /**
+   * Registers a JsonDeserializer instance against a mentioned type.
+   */
+  public <T> JsonDefaultTestSerdeHandler registerDeSerializer(Class<T> type, JsonDeserializer<T> deSer) {
+    simpleModule.addDeserializer(type, deSer);
+    mapper.registerModule(simpleModule);
+    return this;
+  }
+
   @Override
   public <T> byte[] serialize(T obj) throws TestSerdeException {
     try {
-      return MAPPER.writeValueAsBytes(obj);
+      return mapper.writeValueAsBytes(obj);
     } catch (JsonProcessingException e) {
       LOGGER.error("error serializing data.", e);
       throw new TestSerdeException("error serializing data.", e);
@@ -55,7 +77,7 @@ public class JsonDefaultTestSerdeHandler implements TestSerdeHandler {
   @Override
   public <T> T deserialize(byte[] bytes, Class<T> clazz) throws TestSerdeException {
     try {
-      return MAPPER.readValue(bytes, clazz);
+      return mapper.readValue(bytes, clazz);
     } catch (IOException e) {
       LOGGER.error("error de-serializing data.", e);
       throw new TestSerdeException("error de-serializing data.", e);
@@ -65,7 +87,7 @@ public class JsonDefaultTestSerdeHandler implements TestSerdeHandler {
   @Override
   public <T> void deserializeToInstance(byte[] bytes, T obj) throws TestSerdeException {
     try {
-      MAPPER.readerForUpdating(obj).readValue(bytes);
+      mapper.readerForUpdating(obj).readValue(bytes);
     } catch (IOException e) {
       throw new TestSerdeException("error updating object.", e);
     }

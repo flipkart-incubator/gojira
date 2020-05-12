@@ -22,45 +22,45 @@ import com.flipkart.gojira.models.http.HttpTestRequestData;
 import com.flipkart.gojira.models.http.HttpTestResponseData;
 import com.flipkart.gojira.serde.TestSerdeException;
 import com.flipkart.gojira.serde.handlers.json.JsonDefaultTestSerdeHandler;
-import com.flipkart.gojira.serde.handlers.json.JsonStdSerdeHandler;
+import com.flipkart.gojira.serde.handlers.json.JsonMapListSerdeHandler;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.*;
-
-/**
- * Created by arunachalam.s on 11/10/17.
- */
 public class DeserializeTest {
 
-  private static final JsonDefaultTestSerdeHandler jsonDefaultSerdeHandler = new JsonDefaultTestSerdeHandler();
-  private static final JsonStdSerdeHandler jsonStdSerdeHandler = new JsonStdSerdeHandler();
+  private final JsonDefaultTestSerdeHandler jsonDefaultSerdeHandler =
+      new JsonDefaultTestSerdeHandler();
+  private final JsonMapListSerdeHandler jsonMapListSerdeHandler = new JsonMapListSerdeHandler();
 
   @Test
   public void test_TestDataSerDeser() throws TestSerdeException {
-    TestData<HttpTestRequestData, HttpTestResponseData, HttpTestDataType> testData = new TestData<>();
+    TestData<HttpTestRequestData, HttpTestResponseData, HttpTestDataType> testData =
+        new TestData<>();
     HttpTestRequestData requestData = HttpTestRequestData.builder().build();
     HttpTestResponseData responseData = HttpTestResponseData.builder().build();
     testData.setRequestData(requestData);
     testData.setResponseData(responseData);
-    TestData<HttpTestRequestData, HttpTestResponseData, HttpTestDataType> deserializedTestData = jsonDefaultSerdeHandler
-        .deserialize(jsonDefaultSerdeHandler.serialize(testData), TestData.class);
+    byte[] serializedTestData = jsonDefaultSerdeHandler.serialize(testData);
+    TestData<HttpTestRequestData, HttpTestResponseData, HttpTestDataType> deserializedTestData =
+        jsonDefaultSerdeHandler.deserialize(serializedTestData, TestData.class);
     Assert.assertEquals(deserializedTestData.getId(), testData.getId());
   }
 
   @Test
-  public void test_GenericSerDeser() throws TestSerdeException {
-    JsonStdSerdeHandler jsonStdSerdeHandler = new JsonStdSerdeHandler();
-
-    List<Map<List<Map<TestClass, String>>, TestClass>> list = new ArrayList<>();
-
-    Map<TestClass, String> internalMap = new HashMap<>();
-
+  public void test_MapListSerDeser() throws TestSerdeException {
     TestClass internalTestClass = new TestClass();
     Map<String, String> mapInInternalTestClass = new HashMap<>();
     mapInInternalTestClass.put("hi", "hello");
     mapInInternalTestClass.put("alpha", "beta");
     internalTestClass.map = mapInInternalTestClass;
+
+    Map<TestClass, String> internalMap = new HashMap<>();
     internalMap.put(internalTestClass, "testing");
 
     List<Map<TestClass, String>> internalList = new ArrayList<>();
@@ -74,21 +74,64 @@ public class DeserializeTest {
 
     Map<List<Map<TestClass, String>>, TestClass> externalMap = new HashMap<>();
     externalMap.put(internalList, externalTestClass);
+
+    List<Map<List<Map<TestClass, String>>, TestClass>> list = new ArrayList<>();
     list.add(externalMap);
 
     List deserializedList = null;
     Map deserializedMap = null;
     try {
-      byte[] serDataForList = jsonStdSerdeHandler.serialize(list);
-      deserializedList = jsonStdSerdeHandler.deserialize(serDataForList, List.class);
+      byte[] serDataForList = jsonMapListSerdeHandler.serialize(list);
+      deserializedList = jsonMapListSerdeHandler.deserialize(serDataForList, List.class);
 
-      byte[] serDataForMap = jsonStdSerdeHandler.serialize(externalMap);
-      deserializedMap = jsonStdSerdeHandler.deserialize(serDataForMap, Map.class);
+      byte[] serDataForMap = jsonMapListSerdeHandler.serialize(externalMap);
+      deserializedMap = jsonMapListSerdeHandler.deserialize(serDataForMap, Map.class);
     } catch (Exception e) {
       e.printStackTrace();
     }
-    Assert.assertEquals(externalMap, deserializedMap);
     Assert.assertEquals(list, deserializedList);
+    Assert.assertEquals(externalMap, deserializedMap);
+  }
+
+  @Test
+  public void test_Map() throws TestSerdeException {
+    Map<String, String> map = new HashMap<>();
+    map.put("testKey", "testValue");
+    map.put("testKeyAnother", "testValueAnother");
+    String ser = new String(jsonMapListSerdeHandler.serialize(map));
+    jsonMapListSerdeHandler.deserialize(ser.getBytes(), Map.class);
+  }
+
+  @Test
+  public void test_CustomMapInsideObjectSerDeser() throws TestSerdeException {
+    TestClass internalTestClass = new TestClass();
+    Map<String, String> mapInInternalTestClass = new HashMap<>();
+    mapInInternalTestClass.put("hi", "hello");
+    mapInInternalTestClass.put("alpha", "beta");
+    internalTestClass.map = mapInInternalTestClass;
+
+    TestClass externalTestClass = new TestClass();
+    Map<String, String> mapInExternalTestClass = new LinkedHashMap<>();
+    mapInExternalTestClass.put("jingle", "bells");
+    mapInExternalTestClass.put("gamma", "delta");
+    externalTestClass.map = mapInExternalTestClass;
+
+    TestClassWithCustomMap testClassWithCustomMap = new TestClassWithCustomMap();
+    Map<String, TestClass> map = new HashMap<>();
+    map.put("testKey", externalTestClass);
+    testClassWithCustomMap.setMap(map);
+
+    TestClassWithCustomMap deserializedTestClassWithCustomMap = null;
+    try {
+      String serDataForTestClassNew =
+          new String(jsonMapListSerdeHandler.serialize(testClassWithCustomMap));
+      deserializedTestClassWithCustomMap =
+          jsonMapListSerdeHandler.deserialize(
+              serDataForTestClassNew.getBytes(), TestClassWithCustomMap.class);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    Assert.assertEquals(testClassWithCustomMap, deserializedTestClassWithCustomMap);
   }
 
   public static class TestClass {
@@ -105,10 +148,43 @@ public class DeserializeTest {
 
     @Override
     public boolean equals(Object o) {
-      if (this == o) return true;
-      if (!(o instanceof TestClass)) return false;
+      if (this == o) {
+        return true;
+      }
+      if (!(o instanceof TestClass)) {
+        return false;
+      }
       TestClass testClass = (TestClass) o;
       return map.equals(testClass.map);
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(map);
+    }
+  }
+
+  public static class TestClassWithCustomMap {
+    Map<String, TestClass> map;
+
+    public Map<String, TestClass> getMap() {
+      return map;
+    }
+
+    public void setMap(Map<String, TestClass> map) {
+      this.map = map;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (this == o) {
+        return true;
+      }
+      if (!(o instanceof TestClassWithCustomMap)) {
+        return false;
+      }
+      TestClassWithCustomMap that = (TestClassWithCustomMap) o;
+      return Objects.equals(map, that.map);
     }
 
     @Override
