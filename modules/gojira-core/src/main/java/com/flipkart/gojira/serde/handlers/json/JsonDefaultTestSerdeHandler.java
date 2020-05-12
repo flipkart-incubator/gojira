@@ -17,6 +17,7 @@
 package com.flipkart.gojira.serde.handlers.json;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonSerializer;
@@ -79,6 +80,16 @@ public class JsonDefaultTestSerdeHandler implements TestSerdeHandler {
   public <T> T deserialize(byte[] bytes, Class<T> clazz) throws TestSerdeException {
     try {
       return mapper.readValue(bytes, clazz);
+    } catch (IOException e) {
+      LOGGER.error("error de-serializing data.", e);
+      throw new TestSerdeException("error de-serializing data.", e);
+    }
+  }
+
+  @Override
+  public <T> T deserialize(byte[] bytes, TypeReference<T> typeReference) throws TestSerdeException {
+    try {
+      return mapper.readValue(bytes, typeReference);
     } catch (IOException e) {
       LOGGER.error("error de-serializing data.", e);
       throw new TestSerdeException("error de-serializing data.", e);
