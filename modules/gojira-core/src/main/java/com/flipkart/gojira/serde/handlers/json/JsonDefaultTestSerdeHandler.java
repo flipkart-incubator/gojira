@@ -35,7 +35,6 @@ import org.slf4j.LoggerFactory;
  */
 public class JsonDefaultTestSerdeHandler implements TestSerdeHandler {
   private static final Logger LOGGER = LoggerFactory.getLogger(JsonDefaultTestSerdeHandler.class);
-  private final SimpleModule simpleModule = new SimpleModule();
   protected final ObjectMapper mapper =
       new ObjectMapper()
           .enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
@@ -45,6 +44,7 @@ public class JsonDefaultTestSerdeHandler implements TestSerdeHandler {
           .enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING)
           .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
           .setSubtypeResolver(new StdSubtypeResolver());
+  private final SimpleModule simpleModule = new SimpleModule();
 
   /**
    * Registers a JsonSerializer instance against a mentioned type.
@@ -58,7 +58,8 @@ public class JsonDefaultTestSerdeHandler implements TestSerdeHandler {
   /**
    * Registers a JsonDeserializer instance against a mentioned type.
    */
-  public <T> JsonDefaultTestSerdeHandler registerDeSerializer(Class<T> type, JsonDeserializer<T> deSer) {
+  public <T> JsonDefaultTestSerdeHandler registerDeSerializer(
+      Class<T> type, JsonDeserializer<T> deSer) {
     simpleModule.addDeserializer(type, deSer);
     mapper.registerModule(simpleModule);
     return this;

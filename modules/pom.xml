@@ -115,10 +115,11 @@
                 </executions>
                 <configuration>
                     <configLocation>google_checks.xml</configLocation>
-                    <encoding>UTF-8</encoding>
                     <consoleOutput>false</consoleOutput>
-                    <violationSeverity>warning</violationSeverity>
+                    <encoding>UTF-8</encoding>
                     <failOnViolation>true</failOnViolation>
+                    <includeTestSourceDirectory>false</includeTestSourceDirectory>
+                    <violationSeverity>warning</violationSeverity>
                 </configuration>
                 <dependencies>
                     <dependency>
