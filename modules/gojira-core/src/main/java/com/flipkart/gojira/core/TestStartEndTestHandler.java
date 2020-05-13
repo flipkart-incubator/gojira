@@ -152,7 +152,6 @@ public class TestStartEndTestHandler<T extends TestDataType> implements StartEnd
           // method data map must be empty at the end of the test.
           // if it is non empty it indicates some failure due to which we were not able to consume
           // stored method data for some annotated methods.
-//          if (ProfileRepository.getTestData().getMethodDataMap().isEmpty()) {
           if (isMethodDataMapEmpty()) {
             sinkHandler.writeResults(id, RESULT_SUCCESS);
             LOGGER.info("RESULT_SUCCESS for " + id);
