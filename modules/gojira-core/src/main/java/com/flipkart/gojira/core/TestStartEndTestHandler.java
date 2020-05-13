@@ -19,16 +19,16 @@ package com.flipkart.gojira.core;
 import com.flipkart.compare.TestCompareException;
 import com.flipkart.gojira.compare.GojiraCompareHandlerRepository;
 import com.flipkart.gojira.core.injectors.GuiceInjector;
-import com.flipkart.gojira.models.ProfileData;
-import com.flipkart.gojira.models.TestData;
-import com.flipkart.gojira.models.TestDataType;
-import com.flipkart.gojira.models.TestRequestData;
-import com.flipkart.gojira.models.TestResponseData;
+import com.flipkart.gojira.models.*;
 import com.flipkart.gojira.serde.SerdeHandlerRepository;
 import com.flipkart.gojira.sinkstore.SinkException;
 import com.flipkart.gojira.sinkstore.handlers.SinkHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
  * Implementation of {@link StartEndTestHandler} for mode {@link Mode#TEST}.
@@ -152,7 +152,8 @@ public class TestStartEndTestHandler<T extends TestDataType> implements StartEnd
           // method data map must be empty at the end of the test.
           // if it is non empty it indicates some failure due to which we were not able to consume
           // stored method data for some annotated methods.
-          if (ProfileRepository.getTestData().getMethodDataMap().isEmpty()) {
+//          if (ProfileRepository.getTestData().getMethodDataMap().isEmpty()) {
+          if (isMethodDataMapEmpty()) {
             sinkHandler.writeResults(id, RESULT_SUCCESS);
             LOGGER.info("RESULT_SUCCESS for " + id);
           } else {
@@ -181,5 +182,15 @@ public class TestStartEndTestHandler<T extends TestDataType> implements StartEnd
     } finally {
       ProfileRepository.end();
     }
+  }
+
+  public boolean isMethodDataMapEmpty() {
+    ConcurrentHashMap<
+            String, ConcurrentSkipListMap<Long, ConcurrentHashMap<MethodDataType, List<MethodData>>>> methodDataMap = ProfileRepository.getTestData().getMethodDataMap();
+    for(String methodName : methodDataMap.keySet()){
+      if(!methodDataMap.get(methodName).isEmpty())
+        return false;
+    }
+    return true;
   }
 }
