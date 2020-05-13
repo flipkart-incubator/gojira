@@ -30,9 +30,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Additional implementation of {@link TestSerdeHandler} that provides serialization and
- * deserialization support for {@link Map} and {@link List} like classes with any type of elements
- * provided that they are serializable.
+ * Implementation of {@link TestSerdeHandler} with serialization and deserialization support for
+ * {@link Map} and {@link List} like classes with any type of elements provided that they are
+ * serializable.
  */
 public class JsonMapListSerdeHandler extends JsonDefaultTestSerdeHandler {
   private static final Logger LOGGER = LoggerFactory.getLogger(JsonMapListSerdeHandler.class);

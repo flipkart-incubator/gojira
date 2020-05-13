@@ -104,21 +104,21 @@ public class DeserializeTest {
 
   @Test
   public void test_CustomMapInsideObjectSerDeser() throws TestSerdeException {
-    TestClass internalTestClass = new TestClass();
+    TestClass testClassAsKey = new TestClass();
     Map<String, String> mapInInternalTestClass = new HashMap<>();
     mapInInternalTestClass.put("hi", "hello");
     mapInInternalTestClass.put("alpha", "beta");
-    internalTestClass.map = mapInInternalTestClass;
+    testClassAsKey.map = mapInInternalTestClass;
 
-    TestClass externalTestClass = new TestClass();
+    TestClass testClassAsValue = new TestClass();
     Map<String, String> mapInExternalTestClass = new LinkedHashMap<>();
     mapInExternalTestClass.put("jingle", "bells");
     mapInExternalTestClass.put("gamma", "delta");
-    externalTestClass.map = mapInExternalTestClass;
+    testClassAsValue.map = mapInExternalTestClass;
 
     TestClassWithCustomMap testClassWithCustomMap = new TestClassWithCustomMap();
-    Map<String, TestClass> map = new HashMap<>();
-    map.put("testKey", externalTestClass);
+    Map<TestClass, TestClass> map = new HashMap<>();
+    map.put(testClassAsKey, testClassAsValue);
     testClassWithCustomMap.setMap(map);
 
     TestClassWithCustomMap deserializedTestClassWithCustomMap = null;
@@ -165,13 +165,13 @@ public class DeserializeTest {
   }
 
   public static class TestClassWithCustomMap {
-    Map<String, TestClass> map;
+    Map<TestClass, TestClass> map;
 
-    public Map<String, TestClass> getMap() {
+    public Map<TestClass, TestClass> getMap() {
       return map;
     }
 
-    public void setMap(Map<String, TestClass> map) {
+    public void setMap(Map<TestClass, TestClass> map) {
       this.map = map;
     }
 

@@ -52,8 +52,8 @@ public class DeserializeToInstanceTest {
   public void test_IntegerJsonUpdate() throws TestSerdeException {
     Integer integerBase = 1;
     Integer integerToUpdate = 2;
-    jsonMapListSerdeHandler.deserializeToInstance(
-        jsonMapListSerdeHandler.serialize(integerBase), integerToUpdate);
+    jsonDefaultTestSerdeHandler.deserializeToInstance(
+      jsonDefaultTestSerdeHandler.serialize(integerBase), integerToUpdate);
 
     Assert.assertNotEquals(integerBase, integerToUpdate);
   }
@@ -64,19 +64,19 @@ public class DeserializeToInstanceTest {
     String stringBase = "abc";
     String stringToUpdate = "def";
 
-    jsonMapListSerdeHandler.deserializeToInstance(
-        jsonMapListSerdeHandler.serialize(stringBase), stringToUpdate);
+    jsonDefaultTestSerdeHandler.deserializeToInstance(
+      jsonDefaultTestSerdeHandler.serialize(stringBase), stringToUpdate);
 
     Assert.assertNotEquals(stringBase, stringToUpdate);
   }
 
-  // Primitives are neither expected nor supported to be updated
+  // Enums are neither expected nor supported to be updated
   @Test
   public void test_EnumJsonUpdate() throws TestSerdeException {
     EnumTest etBase = EnumTest.TEST;
     EnumTest etToUpdate = EnumTest.CHECK;
-    jsonMapListSerdeHandler.deserializeToInstance(
-        jsonMapListSerdeHandler.serialize(etBase), etToUpdate);
+    jsonDefaultTestSerdeHandler.deserializeToInstance(
+      jsonDefaultTestSerdeHandler.serialize(etBase), etToUpdate);
     Assert.assertNotEquals(etBase, etToUpdate);
   }
 
@@ -96,8 +96,8 @@ public class DeserializeToInstanceTest {
     stringList2.add("stopped");
     integerAndListWrapperToUpdate.setStringList(stringList2);
 
-    jsonMapListSerdeHandler.deserializeToInstance(
-        jsonMapListSerdeHandler.serialize(integerAndListWrapperBase),
+    jsonDefaultTestSerdeHandler.deserializeToInstance(
+        jsonDefaultTestSerdeHandler.serialize(integerAndListWrapperBase),
         integerAndListWrapperToUpdate);
 
     Assert.assertEquals(
@@ -106,9 +106,27 @@ public class DeserializeToInstanceTest {
         integerAndListWrapperBase.getStringList(), integerAndListWrapperToUpdate.getStringList());
   }
 
-  // Lists will be replaced and not deep merged as per Gojira's use-case.
-  @Test
+  // Using JsonDefaultTestSerdeHandler for Lists and Maps will lead to deep merge which is not
+  // expected in Gojira's use case. See test_ListJsonUpdate_JsonMapListSerdeHandler() for more
+  // details.
+  @Test(expected = AssertionError.class)
   public void test_ListJsonUpdate() throws TestSerdeException {
+    List<Integer> listBase = new ArrayList<>();
+    listBase.add(1);
+    listBase.add(2);
+    List<Integer> listToUpdate = new ArrayList<>();
+    listToUpdate.add(2);
+    listToUpdate.add(3);
+
+    jsonDefaultTestSerdeHandler.deserializeToInstance(
+        jsonDefaultTestSerdeHandler.serialize(listBase), listToUpdate);
+    Assert.assertEquals("The list should be replaced, not deep merged.", listBase, listToUpdate);
+  }
+
+  // Lists and Maps will be replaced and not deep merged as per Gojira's use-case when
+  // JsonMapListSerdeHandler is used.
+  @Test
+  public void test_ListJsonUpdate_JsonMapListSerdeHandler() throws TestSerdeException {
     List<Integer> listBase = new ArrayList<>();
     listBase.add(1);
     listBase.add(2);
