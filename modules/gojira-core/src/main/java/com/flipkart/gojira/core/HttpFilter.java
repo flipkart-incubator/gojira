@@ -93,6 +93,7 @@ public class HttpFilter implements Filter {
     // Wrapping the ServletRequest to make the input stream N times readable
     CustomHttpServletRequestWrapper requestWrapper =
         new CustomHttpServletRequestWrapper((HttpServletRequest) request);
+    //If ProfileRepo.getMode() is DYNAMIC then read the mode from Headers and set it in ThreadLocal
     if (filterHashMap.containsKey(ProfileRepository.getMode())) {
       if (filterHashMap.get(ProfileRepository.getMode()).preFilter(requestWrapper)) {
         // Wrapping the ServletResponse to make the output stream readable

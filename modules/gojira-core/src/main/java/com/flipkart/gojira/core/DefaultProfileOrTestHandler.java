@@ -74,6 +74,7 @@ public class DefaultProfileOrTestHandler {
    * @param responseData response data at the end of execution
    */
   public static void end(TestResponseData<? extends TestDataType> responseData) {
+    //If ProfileRepo.getMode() is DYNAMIC then take the read the mode from ThreadLocal
     if (startTestHandlerHashMap.containsKey(ProfileRepository.getMode())) {
       startTestHandlerHashMap.get(ProfileRepository.getMode()).end(responseData);
       return;

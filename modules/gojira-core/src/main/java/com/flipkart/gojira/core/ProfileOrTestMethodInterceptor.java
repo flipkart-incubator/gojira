@@ -55,6 +55,7 @@ public class ProfileOrTestMethodInterceptor implements MethodInterceptor {
    */
   @Override
   public Object invoke(MethodInvocation invocation) throws Throwable {
+    //If ProfileRepo.getMode() is DYNAMIC then take the read the mode from ThreadLocal
     if (modeMethodDataInterceptorHandlerMap.containsKey(ProfileRepository.getMode())) {
       return modeMethodDataInterceptorHandlerMap
           .get(ProfileRepository.getMode())

@@ -79,8 +79,9 @@ public class KafkaFilter {
    * @param recordHeaders headers used for producing message to the topic
    */
   public void start(String topicName, byte[] key, byte[] value, Headers recordHeaders) {
+
     Map<String, byte[]> headersMap = getMapForRequestHeaders(recordHeaders);
-    filterHashMap
+    filterHashMap //If ProfileRepo.getMode() is DYNAMIC then read the mode from Headers and set it in ThreadLocal
         .getOrDefault(ProfileRepository.getMode(), new NoneKafkaFilterHandler())
         .handle(topicName, key, value, headersMap);
   }
