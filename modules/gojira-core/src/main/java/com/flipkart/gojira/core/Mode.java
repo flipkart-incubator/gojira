@@ -17,10 +17,13 @@
 package com.flipkart.gojira.core;
 
 /**
- * Different types of modes the gojira library runs in. PROFILE - when recording TEST - when
- * replaying for regression testing NONE - kind of no-op(has minor non-functional implications)
- * SERIALIZE - when replaying for de-serialization testing
+ * Different types of modes the gojira library runs in.
+ * * PROFILE - when recording
+ * * TEST - when replaying for regression testing
+ * * NONE - kind of no-op(has minor non-functional implications)
+ * * SERIALIZE - when replaying for de-serialization testing
+ * * DYNAMIC - will use above mentioned modes depending upon request MODE_HEADER
  */
 public enum Mode {
-  PROFILE, TEST, NONE, SERIALIZE
+  PROFILE, TEST, NONE, SERIALIZE, DYNAMIC
 }

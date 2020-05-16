@@ -26,6 +26,7 @@ import com.flipkart.gojira.models.TestResponseData;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,6 +57,20 @@ public class ProfileRepository<
         }
       };
   private static ProfileSetting globalProfileSetting = new ProfileSetting();
+
+  private static InheritableThreadLocal<ProfileSetting> threadLocalProfileSetting =
+      new InheritableThreadLocal<ProfileSetting>() {
+        /**
+         * {@inheritDoc}
+         *
+         * @see ThreadLocal#initialValue()
+         */
+        @Override
+        protected ProfileSetting initialValue() {
+          return new ProfileSetting();
+        }
+      };
+
   // TODO: Wrap below map in a size restricted collection for memory protection
   private static ConcurrentHashMap<String, ProfileData> globalProfiledDataMap =
       new ConcurrentHashMap<>();
@@ -98,11 +113,34 @@ public class ProfileRepository<
   }
 
   static synchronized Mode getMode() {
+    if (Mode.DYNAMIC.equals(globalProfileSetting.getMode())) {
+      return threadLocalProfileSetting.get().getMode();
+    }
     return globalProfileSetting.getMode();
   }
 
   static synchronized void setMode(Mode mode) {
     globalProfileSetting.setMode(mode);
+  }
+
+  static synchronized void setRequestMode(String modeHeader) {
+    ProfileSetting profileSetting = new ProfileSetting();
+
+    if (Mode.DYNAMIC.equals(globalProfileSetting.getMode())) {
+      try {
+        if (StringUtils.isEmpty(modeHeader) || Mode.DYNAMIC.name().equals(modeHeader)) {
+          profileSetting.setMode(Mode.NONE);
+        } else {
+          profileSetting.setMode(Mode.valueOf(modeHeader));
+        }
+      } catch (Exception e) {
+        profileSetting.setMode(Mode.NONE);
+      }
+    } else {
+      profileSetting.setMode(globalProfileSetting.getMode());
+    }
+
+    threadLocalProfileSetting.set(profileSetting);
   }
 
   static ProfileSetting getGlobalProfileSetting() {
