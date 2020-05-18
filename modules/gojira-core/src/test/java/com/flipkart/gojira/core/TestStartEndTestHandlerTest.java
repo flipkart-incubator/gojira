@@ -1,11 +1,11 @@
 package com.flipkart.gojira.core;
 
+import com.flipkart.compare.handlers.json.JsonTestCompareHandler;
 import com.flipkart.gojira.compare.GojiraComparisonModule;
 import com.flipkart.gojira.compare.config.GojiraComparisonConfig;
 import com.flipkart.gojira.core.injectors.GuiceInjector;
-import com.flipkart.gojira.models.MethodData;
-import com.flipkart.gojira.models.MethodDataType;
-import com.flipkart.gojira.models.TestData;
+import com.flipkart.gojira.models.*;
+import com.flipkart.gojira.serde.SerdeHandlerRepository;
 import com.flipkart.gojira.serde.SerdeModule;
 import com.flipkart.gojira.serde.config.SerdeConfig;
 import com.flipkart.gojira.serde.handlers.json.JsonTestSerdeHandler;
@@ -14,6 +14,7 @@ import com.flipkart.gojira.sinkstore.config.DataStoreModule;
 import com.flipkart.gojira.sinkstore.file.FileBasedDataStoreHandler;
 import com.google.inject.Guice;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
