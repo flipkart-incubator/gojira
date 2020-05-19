@@ -96,6 +96,10 @@ public class ProfileRepository<
     GLOBAL_PER_REQUEST_ID.remove();
   }
 
+  public static void clearThreadLocalProfileSetting() {
+    threadLocalProfileSetting.remove();
+  }
+
   /**
    * Set testId for TestData in current thread local.
    *
@@ -171,6 +175,8 @@ public class ProfileRepository<
       globalProfiledDataMap.remove(GLOBAL_PER_REQUEST_ID.get());
       clearGlobalPerRequestID();
     }
+
+    clearThreadLocalProfileSetting();
   }
 
   static <T extends TestDataType>
