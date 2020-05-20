@@ -26,7 +26,6 @@ import com.flipkart.gojira.models.TestResponseData;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -132,7 +131,7 @@ public class ProfileRepository<
 
     if (Mode.DYNAMIC.equals(globalProfileSetting.getMode())) {
       try {
-        if (StringUtils.isEmpty(modeHeader) || Mode.DYNAMIC.name().equals(modeHeader)) {
+        if (null == modeHeader || modeHeader.isEmpty() || Mode.DYNAMIC.name().equals(modeHeader)) {
           profileSetting.setMode(Mode.NONE);
         } else {
           profileSetting.setMode(Mode.valueOf(modeHeader));
