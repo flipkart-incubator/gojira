@@ -16,14 +16,10 @@
 
 package com.flipkart.gojira.core;
 
-import com.flipkart.gojira.core.injectors.GuiceInjector;
-import com.flipkart.gojira.models.ProfileData;
-import com.flipkart.gojira.models.TestData;
-import com.flipkart.gojira.models.TestDataType;
-import com.flipkart.gojira.models.TestRequestData;
-import com.flipkart.gojira.models.TestResponseData;
+import com.flipkart.gojira.models.*;
 import com.flipkart.gojira.queuedsender.TestQueuedSender;
 import com.flipkart.gojira.requestsampling.RequestSamplingRepository;
+import com.google.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +31,15 @@ import org.slf4j.LoggerFactory;
 public class ProfileStartEndTestHandler<T extends TestDataType> implements StartEndTestHandler<T> {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ProfileStartEndTestHandler.class);
+  private TestQueuedSender testQueuedSender;
+  private RequestSamplingRepository requestSamplingRepository;
+
+  @Inject
+  public ProfileStartEndTestHandler(TestQueuedSender testQueuedSender, RequestSamplingRepository
+          requestSamplingRepository) {
+    this.testQueuedSender = testQueuedSender;
+    this.requestSamplingRepository = requestSamplingRepository;
+  }
 
   /**
    * Checks if the request falls in the sampling bucket. If yes, it calls {@link
@@ -80,8 +85,6 @@ public class ProfileStartEndTestHandler<T extends TestDataType> implements Start
   @Override
   public void end(TestResponseData<T> responseData) {
     try {
-      TestQueuedSender testQueuedSender =
-          GuiceInjector.getInjector().getInstance(TestQueuedSender.class);
       if (ProfileState.INITIATED.equals(ProfileRepository.getProfileState())
           && testQueuedSender != null) {
         try {
@@ -118,9 +121,8 @@ public class ProfileStartEndTestHandler<T extends TestDataType> implements Start
    */
   private boolean fallsInSamplingBucket() {
     return ((System.nanoTime() % 10000)
-        < (GuiceInjector.getInjector()
-                .getInstance(RequestSamplingRepository.class)
-                .getSamplingPercentage()
+        < (requestSamplingRepository
+            .getSamplingPercentage()
             * 100));
   }
 }

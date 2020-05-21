@@ -24,7 +24,9 @@ import java.util.Map;
  */
 public class TestKafkaFilterHandler extends KafkaFilterHandler {
 
-  /**
+    public TestKafkaFilterHandler() {super(requestSamplingRepository);}
+
+    /**
    * Gets test-id from headers and throws {@link RuntimeException} if it is null.
    *
    * <p>Initiates execution by calling {@link DefaultProfileOrTestHandler#start(String,

@@ -41,10 +41,11 @@ public class DefaultProfileOrTestHandler {
       Collections.unmodifiableMap(
           new HashMap<Mode, StartEndTestHandler>() {
             {
-              put(Mode.PROFILE, new ProfileStartEndTestHandler());
-              put(Mode.TEST, new TestStartEndTestHandler());
+              put(Mode.PROFILE, new ProfileStartEndTestHandler(testQueuedSender, requestSamplingRepository));
+              put(Mode.TEST, new TestStartEndTestHandler(gojiraCompareHandlerRepository, serdeHandlerRepository,
+                      sinkHandler));
               put(Mode.NONE, new NoneStartEndTestHandler());
-              put(Mode.SERIALIZE, new SerializeStartEndTestHandler());
+              put(Mode.SERIALIZE, new SerializeStartEndTestHandler(sinkHandler, serdeHandlerRepository));
             }
           });
 

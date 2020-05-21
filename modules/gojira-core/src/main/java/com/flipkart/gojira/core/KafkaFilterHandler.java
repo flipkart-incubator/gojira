@@ -24,6 +24,8 @@ import com.flipkart.gojira.requestsampling.RequestSamplingRepository;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
+
+import com.google.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,6 +36,13 @@ import org.slf4j.LoggerFactory;
 public abstract class KafkaFilterHandler {
 
   protected static final Logger LOGGER = LoggerFactory.getLogger(KafkaFilterHandler.class);
+
+  private RequestSamplingRepository requestSamplingRepository;
+
+  @Inject
+  protected KafkaFilterHandler(RequestSamplingRepository requestSamplingRepository) {
+    this.requestSamplingRepository = requestSamplingRepository;
+  }
 
   /**
    * Implementation of this is expected to call {@link DefaultProfileOrTestHandler#start(String,
@@ -56,8 +65,7 @@ public abstract class KafkaFilterHandler {
    * @return true if whitelisted, else false.
    */
   protected final boolean isWhitelistedTopic(String topic) {
-    List<Pattern> whitelistedTopics =
-        GuiceInjector.getInjector().getInstance(RequestSamplingRepository.class).getWhitelist();
+    List<Pattern> whitelistedTopics = requestSamplingRepository.getWhitelist();
     for (Pattern whitelistedTopic : whitelistedTopics) {
       if (whitelistedTopic.matcher(topic).matches()) {
         return true;

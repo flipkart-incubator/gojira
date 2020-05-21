@@ -35,7 +35,7 @@ public class TestQueuedSenderModule extends AbstractModule {
 
   @Override
   protected void configure() {
-    TestQueuedSender testQueuedSender = new TestQueuedSenderImpl();
+    TestQueuedSender testQueuedSender = new TestQueuedSenderImpl(serdeHandlerRepository, sinkHandler);
     testQueuedSender.setTestQueuedSenderConfig(testQueuedSenderConfig);
     bind(TestQueuedSender.class).toInstance(testQueuedSender);
     try {

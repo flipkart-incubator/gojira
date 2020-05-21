@@ -18,7 +18,6 @@ package com.flipkart.gojira.core;
 
 import com.flipkart.compare.TestCompareException;
 import com.flipkart.gojira.compare.GojiraCompareHandlerRepository;
-import com.flipkart.gojira.core.injectors.GuiceInjector;
 import com.flipkart.gojira.models.MethodData;
 import com.flipkart.gojira.models.MethodDataType;
 import com.flipkart.gojira.models.ProfileData;
@@ -32,6 +31,8 @@ import com.flipkart.gojira.sinkstore.handlers.SinkHandler;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
+
+import com.google.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,18 +56,24 @@ public class TestStartEndTestHandler<T extends TestDataType> implements StartEnd
   /**
    * compareHandlerRepository for comparing {@link TestResponseData}.
    */
-  private GojiraCompareHandlerRepository gojiraCompareHandlerRepository =
-      GuiceInjector.getInjector().getInstance(GojiraCompareHandlerRepository.class);
+  private GojiraCompareHandlerRepository gojiraCompareHandlerRepository;
   /**
    * serdeHandlerRepository for de-serializing {@link TestData} and serializing {@link
    * TestResponseData}.
    */
-  private SerdeHandlerRepository serdeHandlerRepository =
-      GuiceInjector.getInjector().getInstance(SerdeHandlerRepository.class);
+  private SerdeHandlerRepository serdeHandlerRepository;
   /**
    * sinkHandler for reading {@link TestData} and storing results of test execution.
    */
-  private SinkHandler sinkHandler = GuiceInjector.getInjector().getInstance(SinkHandler.class);
+  private SinkHandler sinkHandler;
+
+  @Inject
+  public TestStartEndTestHandler(GojiraCompareHandlerRepository gojiraCompareHandlerRepository,
+                                 SerdeHandlerRepository serdeHandlerRepository, SinkHandler sinkHandler) {
+    this.gojiraCompareHandlerRepository = gojiraCompareHandlerRepository;
+    this.serdeHandlerRepository = serdeHandlerRepository;
+    this.sinkHandler = sinkHandler;
+  }
 
   /**
    * If id is null or empty, throws a {@link RuntimeException}

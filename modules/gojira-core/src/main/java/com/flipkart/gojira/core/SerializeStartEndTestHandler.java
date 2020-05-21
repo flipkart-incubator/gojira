@@ -16,13 +16,13 @@
 
 package com.flipkart.gojira.core;
 
-import com.flipkart.gojira.core.injectors.GuiceInjector;
 import com.flipkart.gojira.models.TestData;
 import com.flipkart.gojira.models.TestDataType;
 import com.flipkart.gojira.models.TestRequestData;
 import com.flipkart.gojira.models.TestResponseData;
 import com.flipkart.gojira.serde.SerdeHandlerRepository;
 import com.flipkart.gojira.sinkstore.handlers.SinkHandler;
+import com.google.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,14 +39,17 @@ public class SerializeStartEndTestHandler<T extends TestDataType>
   /**
    * sinkHandler for persisting test-data.
    */
-  private SinkHandler sinkHandler = GuiceInjector.getInjector().getInstance(SinkHandler.class);
+  private SinkHandler sinkHandler;
   /**
    * serdeHandlerRepository to get serializer for test-data.
    */
-  private SerdeHandlerRepository serdeHandlerRepository =
-      GuiceInjector.getInjector().getInstance(SerdeHandlerRepository.class);
+  private SerdeHandlerRepository serdeHandlerRepository;
 
-  public SerializeStartEndTestHandler() {}
+  @Inject
+  public SerializeStartEndTestHandler(SinkHandler sinkHandler, SerdeHandlerRepository serdeHandlerRepository) {
+    this.sinkHandler = sinkHandler;
+    this.serdeHandlerRepository = serdeHandlerRepository;
+  }
 
   /**
    * If is is null or empty, throws a {@link RuntimeException}.

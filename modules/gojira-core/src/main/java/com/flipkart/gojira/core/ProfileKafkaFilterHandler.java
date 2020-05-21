@@ -25,7 +25,9 @@ import java.util.Map;
  */
 public class ProfileKafkaFilterHandler extends KafkaFilterHandler {
 
-  /**
+    public ProfileKafkaFilterHandler() {super(requestSamplingRepository);}
+
+    /**
    * Gets test-id from headers for validation. If not null throws {@link RuntimeException}
    *
    * <p>Checks if whitelisted. If not return else capture the parameters required for making a kafka

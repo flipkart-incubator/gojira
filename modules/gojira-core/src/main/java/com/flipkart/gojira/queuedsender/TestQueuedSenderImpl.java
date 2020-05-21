@@ -16,13 +16,13 @@
 
 package com.flipkart.gojira.queuedsender;
 
-import com.flipkart.gojira.core.injectors.GuiceInjector;
 import com.flipkart.gojira.models.TestData;
 import com.flipkart.gojira.models.TestDataType;
 import com.flipkart.gojira.models.TestRequestData;
 import com.flipkart.gojira.models.TestResponseData;
 import com.flipkart.gojira.serde.SerdeHandlerRepository;
 import com.flipkart.gojira.sinkstore.handlers.SinkHandler;
+import com.google.inject.Inject;
 import com.leansoft.bigqueue.BigQueueImpl;
 import com.leansoft.bigqueue.IBigQueue;
 import java.io.IOException;
@@ -47,6 +47,14 @@ public class TestQueuedSenderImpl extends TestQueuedSender {
       LoggerFactory.getLogger(TestQueuedSenderImpl.class.getSimpleName());
   private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(2);
   private IBigQueue messageQueue;
+  private SerdeHandlerRepository serdeHandlerRepository;
+  private SinkHandler sinkHandler;
+
+  @Inject
+  public TestQueuedSenderImpl(SerdeHandlerRepository serdeHandlerRepository, SinkHandler sinkHandler) {
+    this.serdeHandlerRepository = serdeHandlerRepository;
+    this.sinkHandler = sinkHandler;
+  }
 
   @Override
   public void setup() throws Exception {
@@ -55,7 +63,7 @@ public class TestQueuedSenderImpl extends TestQueuedSender {
     Files.createDirectories(Paths.get(testQueuedSenderConfig.getPath()), attr);
     this.messageQueue = new BigQueueImpl(testQueuedSenderConfig.getPath(), "gojira-messages");
 
-    MessageSenderThread messageSenderThread = new MessageSenderThread(messageQueue);
+    MessageSenderThread messageSenderThread = new MessageSenderThread(messageQueue, serdeHandlerRepository, sinkHandler);
     scheduler.scheduleWithFixedDelay(
         messageSenderThread, 20, testQueuedSenderConfig.getQueuePurgeInterval(), TimeUnit.SECONDS);
     scheduler.scheduleAtFixedRate(
@@ -78,9 +86,7 @@ public class TestQueuedSenderImpl extends TestQueuedSender {
       TestData<TestRequestData<T>, TestResponseData<T>, T> testData) throws Exception {
     if (messageQueue.size() < testQueuedSenderConfig.getQueueSize()) {
       LOGGER.info("TestData with id: " + testData.getId() + " enqueued.");
-      messageQueue.enqueue(
-          GuiceInjector.getInjector()
-              .getInstance(SerdeHandlerRepository.class)
+      messageQueue.enqueue(serdeHandlerRepository
               .getTestDataSerdeHandler()
               .serialize(testData));
     } else {
@@ -95,9 +101,14 @@ public class TestQueuedSenderImpl extends TestQueuedSender {
   private static final class MessageSenderThread implements Runnable {
 
     private IBigQueue messageQueue;
+    private SerdeHandlerRepository serdeHandlerRepository;
+    private SinkHandler sinkHandler;
 
-    public MessageSenderThread(IBigQueue messageQueue) {
+    public MessageSenderThread(IBigQueue messageQueue, SerdeHandlerRepository serdeHandlerRepository, SinkHandler
+            sinkHandler) {
       this.messageQueue = messageQueue;
+      this.serdeHandlerRepository = serdeHandlerRepository;
+      this.sinkHandler = sinkHandler;
     }
 
     @Override
@@ -110,13 +121,10 @@ public class TestQueuedSenderImpl extends TestQueuedSender {
             break;
           }
           TestData<TestRequestData<TestDataType>, TestResponseData<TestDataType>, TestDataType>
-              testData =
-                  GuiceInjector.getInjector()
-                      .getInstance(SerdeHandlerRepository.class)
-                      .getTestDataSerdeHandler()
+              testData = serdeHandlerRepository.getTestDataSerdeHandler()
                       .deserialize(data, TestData.class);
           LOGGER.info("TestData with id: " + testData.getId() + " send for DataStore write.");
-          GuiceInjector.getInjector().getInstance(SinkHandler.class).write(testData.getId(), data);
+          sinkHandler.write(testData.getId(), data);
         }
       } catch (Exception e) {
         LOGGER.error("Could not send message: ", e);

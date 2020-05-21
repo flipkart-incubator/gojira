@@ -23,7 +23,9 @@ import com.rabbitmq.client.AMQP;
  */
 public class TestRmqFilterHandler extends RmqFilterHandler {
 
-  @Override
+    public TestRmqFilterHandler() {super(requestSamplingRepository);}
+
+    @Override
   protected void handle(
       String exchangeName,
       byte[] key,

@@ -24,7 +24,9 @@ import java.util.Map;
  */
 public class SerializeKafkaFilterHandler extends KafkaFilterHandler {
 
-  /**
+    public SerializeKafkaFilterHandler() {super(requestSamplingRepository);}
+
+    /**
    * Validates that test-id is present. If not throws a {@link RuntimeException}
    *
    * <p>Starts execution by calling {@link DefaultProfileOrTestHandler#start(String,

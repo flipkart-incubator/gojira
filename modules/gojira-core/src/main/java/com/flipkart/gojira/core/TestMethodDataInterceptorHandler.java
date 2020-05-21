@@ -19,7 +19,6 @@ package com.flipkart.gojira.core;
 import com.flipkart.compare.TestCompareException;
 import com.flipkart.compare.handlers.TestCompareHandler;
 import com.flipkart.gojira.compare.GojiraCompareHandlerRepository;
-import com.flipkart.gojira.core.injectors.GuiceInjector;
 import com.flipkart.gojira.execute.TestExecutionException;
 import com.flipkart.gojira.hash.HashHandlerUtil;
 import com.flipkart.gojira.hash.TestHashHandler;
@@ -33,6 +32,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
+
+import com.google.inject.Inject;
 import org.aopalliance.intercept.MethodInvocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,12 +46,15 @@ public class TestMethodDataInterceptorHandler implements MethodDataInterceptorHa
   private static final Logger LOGGER =
       LoggerFactory.getLogger(TestMethodDataInterceptorHandler.class);
 
-  private GojiraCompareHandlerRepository gojiraCompareHandlerRepository =
-      GuiceInjector.getInjector().getInstance(GojiraCompareHandlerRepository.class);
-  private SerdeHandlerRepository serdeHandlerRepository =
-      GuiceInjector.getInjector().getInstance(SerdeHandlerRepository.class);
+  private GojiraCompareHandlerRepository gojiraCompareHandlerRepository;
+  private SerdeHandlerRepository serdeHandlerRepository;
 
-  public TestMethodDataInterceptorHandler() {}
+  @Inject
+  public TestMethodDataInterceptorHandler(GojiraCompareHandlerRepository gojiraCompareHandlerRepository,
+                                          SerdeHandlerRepository serdeHandlerRepository) {
+    this.gojiraCompareHandlerRepository = gojiraCompareHandlerRepository;
+    this.serdeHandlerRepository = serdeHandlerRepository;
+  }
 
   /**
    * Gets {@link ProfileData#profileState}, throws exception if not {@link ProfileState#INITIATED}.

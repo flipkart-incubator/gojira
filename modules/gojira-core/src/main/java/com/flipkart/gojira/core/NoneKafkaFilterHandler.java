@@ -23,7 +23,9 @@ import java.util.Map;
  */
 public class NoneKafkaFilterHandler extends KafkaFilterHandler {
 
-  /**
+    public NoneKafkaFilterHandler() {super(requestSamplingRepository);}
+
+    /**
    * Get's the test-id and throws an exception if test-header is present.
    *
    * @param topicName kafka topic name

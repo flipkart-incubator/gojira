@@ -39,9 +39,9 @@ public class ProfileOrTestMethodInterceptor implements MethodInterceptor {
           new HashMap<Mode, MethodDataInterceptorHandler>() {
             {
               put(Mode.NONE, new NoneMethodDataInterceptorHandler());
-              put(Mode.PROFILE, new ProfileMethodDataInterceptorHandler());
-              put(Mode.TEST, new TestMethodDataInterceptorHandler());
-              put(Mode.SERIALIZE, new SerializeMethodDataInterceptorHandler());
+              put(Mode.PROFILE, new ProfileMethodDataInterceptorHandler(serdeHandlerRepository));
+              put(Mode.TEST, new TestMethodDataInterceptorHandler(gojiraCompareHandlerRepository, serdeHandlerRepository));
+              put(Mode.SERIALIZE, new SerializeMethodDataInterceptorHandler(serdeHandlerRepository));
             }
           });
 

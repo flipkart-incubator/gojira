@@ -26,6 +26,7 @@ import com.flipkart.gojira.serde.TestSerdeException;
 import com.flipkart.gojira.serde.handlers.TestSerdeHandler;
 import com.flipkart.gojira.sinkstore.SinkException;
 import com.flipkart.gojira.sinkstore.handlers.SinkHandler;
+import com.google.inject.Inject;
 import com.google.inject.Key;
 import com.google.inject.name.Names;
 import org.slf4j.Logger;
@@ -34,13 +35,17 @@ import org.slf4j.LoggerFactory;
 /** This class is used as the interface for executing id based tests. */
 public class IdBasedTestExecutor<T extends TestDataType> {
 
+  private SinkHandler sinkHandler;
+
   private static final Logger LOGGER = LoggerFactory.getLogger(IdBasedTestExecutor.class);
 
-  private SinkHandler sinkHandler = GuiceInjector.getInjector().getInstance(SinkHandler.class);
-  private TestSerdeHandler testDataSerdeHandler =
-      GuiceInjector.getInjector()
-          .getInstance(SerdeHandlerRepository.class)
-          .getTestDataSerdeHandler();
+  private TestSerdeHandler testDataSerdeHandler;
+
+  @Inject
+  public IdBasedTestExecutor(SinkHandler sinkHandler, SerdeHandlerRepository serdeHandlerRepository) {
+    this.sinkHandler = sinkHandler;
+    this.testDataSerdeHandler = serdeHandlerRepository.getTestDataSerdeHandler();
+  }
 
   /**
    * This method, given a testId, reads data by calling {@link SinkHandler#read(String)},

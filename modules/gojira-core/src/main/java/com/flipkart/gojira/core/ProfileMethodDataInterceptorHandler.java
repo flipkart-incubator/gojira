@@ -16,7 +16,6 @@
 
 package com.flipkart.gojira.core;
 
-import com.flipkart.gojira.core.injectors.GuiceInjector;
 import com.flipkart.gojira.hash.HashHandlerUtil;
 import com.flipkart.gojira.hash.TestHashHandler;
 import com.flipkart.gojira.models.MethodData;
@@ -28,6 +27,8 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+
+import com.google.inject.Inject;
 import org.aopalliance.intercept.MethodInvocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,10 +43,12 @@ public class ProfileMethodDataInterceptorHandler implements MethodDataIntercepto
   private static final Logger LOGGER =
       LoggerFactory.getLogger(ProfileOrTestMethodInterceptor.class);
 
-  private SerdeHandlerRepository serdeHandlerRepository =
-      GuiceInjector.getInjector().getInstance(SerdeHandlerRepository.class);
+  private SerdeHandlerRepository serdeHandlerRepository;
 
-  public ProfileMethodDataInterceptorHandler() {}
+  @Inject
+  public ProfileMethodDataInterceptorHandler(SerdeHandlerRepository serdeHandlerRepository) {
+    this.serdeHandlerRepository = serdeHandlerRepository;
+  }
 
   /**
    * Checks {@link ProfileData#profileState}, if not {@link ProfileState#INITIATED} calls {@link

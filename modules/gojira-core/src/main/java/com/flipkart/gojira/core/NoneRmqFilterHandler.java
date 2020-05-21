@@ -23,7 +23,9 @@ import com.rabbitmq.client.AMQP;
  */
 public class NoneRmqFilterHandler extends RmqFilterHandler {
 
-  /**
+    public NoneRmqFilterHandler() {super(requestSamplingRepository);}
+
+    /**
    * Get's the test-id and throws an exception if test-header is present.
    *
    * <p>{@inheritDoc}
