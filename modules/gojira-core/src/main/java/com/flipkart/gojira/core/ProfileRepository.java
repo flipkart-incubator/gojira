@@ -56,20 +56,6 @@ public class ProfileRepository<
         }
       };
   private static ProfileSetting globalProfileSetting = new ProfileSetting();
-
-  private static InheritableThreadLocal<ProfileSetting> requestProfileSetting =
-      new InheritableThreadLocal<ProfileSetting>() {
-        /**
-         * {@inheritDoc}
-         *
-         * @see ThreadLocal#initialValue()
-         */
-        @Override
-        protected ProfileSetting initialValue() {
-          return new ProfileSetting();
-        }
-      };
-
   // TODO: Wrap below map in a size restricted collection for memory protection
   private static ConcurrentHashMap<String, ProfileData> globalProfiledDataMap =
       new ConcurrentHashMap<>();
@@ -95,10 +81,6 @@ public class ProfileRepository<
     GLOBAL_PER_REQUEST_ID.remove();
   }
 
-  public static void clearRequestProfileSetting() {
-    requestProfileSetting.remove();
-  }
-
   /**
    * Set testId for TestData in current thread local.
    *
@@ -116,34 +98,11 @@ public class ProfileRepository<
   }
 
   static synchronized Mode getMode() {
-    if (Mode.DYNAMIC.equals(globalProfileSetting.getMode())) {
-      return requestProfileSetting.get().getMode();
-    }
     return globalProfileSetting.getMode();
   }
 
   static synchronized void setMode(Mode mode) {
     globalProfileSetting.setMode(mode);
-  }
-
-  static synchronized void setRequestMode(String modeHeader) {
-    ProfileSetting profileSetting = new ProfileSetting();
-
-    if (Mode.DYNAMIC.equals(globalProfileSetting.getMode())) {
-      try {
-        if (null == modeHeader || modeHeader.isEmpty() || Mode.DYNAMIC.name().equals(modeHeader)) {
-          profileSetting.setMode(Mode.NONE);
-        } else {
-          profileSetting.setMode(Mode.valueOf(modeHeader));
-        }
-      } catch (Exception e) {
-        profileSetting.setMode(Mode.NONE);
-      }
-    } else {
-      profileSetting.setMode(globalProfileSetting.getMode());
-    }
-
-    requestProfileSetting.set(profileSetting);
   }
 
   static ProfileSetting getGlobalProfileSetting() {
@@ -174,8 +133,6 @@ public class ProfileRepository<
       globalProfiledDataMap.remove(GLOBAL_PER_REQUEST_ID.get());
       clearGlobalPerRequestID();
     }
-
-    clearRequestProfileSetting();
   }
 
   static <T extends TestDataType>

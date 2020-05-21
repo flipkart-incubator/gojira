@@ -26,7 +26,6 @@ import java.util.Map;
 
 public class GojiraConstants {
   public static final String TEST_HEADER = "X-GOJIRA-ID";
-  public static final String MODE_HEADER = "X-GOJIRA-MODE";
   public static final String HTTP_TEST_DATA_TYPE = "HTTP";
   public static final String KAFKA_TEST_DATA_TYPE = "KAFKA";
   public static final String RMQ_TEST_DATA_TYPE = "RMQ";
