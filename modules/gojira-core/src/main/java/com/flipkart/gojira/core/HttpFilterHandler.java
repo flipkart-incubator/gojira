@@ -18,7 +18,6 @@ package com.flipkart.gojira.core;
 
 import static com.flipkart.gojira.core.GojiraConstants.TEST_HEADER;
 
-import com.flipkart.gojira.core.injectors.GuiceInjector;
 import com.flipkart.gojira.models.TestRequestData;
 import com.flipkart.gojira.models.TestResponseData;
 import com.flipkart.gojira.requestsampling.RequestSamplingRepository;
@@ -32,6 +31,8 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+
+import com.google.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,6 +41,13 @@ import org.slf4j.LoggerFactory;
  * {@link Mode} during request and response capture.
  */
 public abstract class HttpFilterHandler {
+
+  private RequestSamplingRepository requestSamplingRepository;
+
+  @Inject
+  HttpFilterHandler(RequestSamplingRepository requestSamplingRepository) {
+    this.requestSamplingRepository = requestSamplingRepository;
+  }
 
   private static final Logger LOGGER = LoggerFactory.getLogger(HttpFilterHandler.class);
 
@@ -137,8 +145,7 @@ public abstract class HttpFilterHandler {
    * @return true if url is among whitelisted url list else false.
    */
   protected final boolean isWhitelistedUrl(String uri, String method) {
-    List<Pattern> whitelistedUris =
-        GuiceInjector.getInjector().getInstance(RequestSamplingRepository.class).getWhitelist();
+    List<Pattern> whitelistedUris = requestSamplingRepository.getWhitelist();
     for (Pattern whitelistedUri : whitelistedUris) {
       if (whitelistedUri.matcher(method + " " + uri).matches()) {
         return true;

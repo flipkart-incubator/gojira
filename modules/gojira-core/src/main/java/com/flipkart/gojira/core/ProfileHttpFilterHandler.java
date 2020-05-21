@@ -40,7 +40,9 @@ public class ProfileHttpFilterHandler extends HttpFilterHandler {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ProfileHttpFilterHandler.class);
 
-  /**
+    public ProfileHttpFilterHandler() {super(requestSamplingRepository);}
+
+    /**
    * Helper method to get request headers.
    *
    * @param request request wrapped original http request as a {@link

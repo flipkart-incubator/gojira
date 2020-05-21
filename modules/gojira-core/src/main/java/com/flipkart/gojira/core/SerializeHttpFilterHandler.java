@@ -30,7 +30,9 @@ public class SerializeHttpFilterHandler extends HttpFilterHandler {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SerializeHttpFilterHandler.class);
 
-  /**
+    public SerializeHttpFilterHandler() {super(requestSamplingRepository);}
+
+    /**
    * Gets the test id and validates that it is not null.
    *
    * <p>If the URL is whitelisted, begins execution by calling {@link

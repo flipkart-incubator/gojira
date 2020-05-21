@@ -31,7 +31,9 @@ public class TestHttpFilterHandler extends HttpFilterHandler {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(TestHttpFilterHandler.class);
 
-  @Override
+    public TestHttpFilterHandler() {super(requestSamplingRepository);}
+
+    @Override
   public boolean preFilter(HttpFilter.CustomHttpServletRequestWrapper request) {
     String id = super.getTestId(request);
     if (id == null) {
