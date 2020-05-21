@@ -16,8 +16,6 @@
 
 package com.flipkart.gojira.core;
 
-import static com.flipkart.gojira.core.GojiraConstants.MODE_HEADER;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -95,9 +93,6 @@ public class HttpFilter implements Filter {
     // Wrapping the ServletRequest to make the input stream N times readable
     CustomHttpServletRequestWrapper requestWrapper =
         new CustomHttpServletRequestWrapper((HttpServletRequest) request);
-
-    ProfileRepository.setRequestMode(requestWrapper.getHeader(MODE_HEADER));
-
     if (filterHashMap.containsKey(ProfileRepository.getMode())) {
       if (filterHashMap.get(ProfileRepository.getMode()).preFilter(requestWrapper)) {
         // Wrapping the ServletResponse to make the output stream readable

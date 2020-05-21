@@ -16,12 +16,9 @@
 
 package com.flipkart.gojira.core;
 
-import static com.flipkart.gojira.core.GojiraConstants.MODE_HEADER;
-
 import com.flipkart.gojira.models.TestResponseData;
 import com.flipkart.gojira.models.rmq.RmqTestResponseData;
 import com.rabbitmq.client.AMQP;
-import com.rabbitmq.client.LongString;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -72,7 +69,6 @@ public class RmqFilter {
       AMQP.BasicProperties basicProperties,
       boolean mandatory) {
 
-    ProfileRepository.setRequestMode(getModeHeader(basicProperties));
     filterHashMap
         .getOrDefault(ProfileRepository.getMode(), new NoneRmqFilterHandler())
         .handle(exchangeName, routingKey, data, basicProperties, mandatory);
@@ -91,35 +87,5 @@ public class RmqFilter {
     RmqTestResponseData rmqTestResponseData =
         RmqTestResponseData.builder().setRespondData(bytes).build();
     DefaultProfileOrTestHandler.end(rmqTestResponseData);
-  }
-
-  /**
-   * Extracts the mode from gojira request header.
-   *
-   * @param basicProperties rmq basic properties which contains headers
-   * @return gojira request mode
-   */
-  private final String getModeHeader(AMQP.BasicProperties basicProperties) {
-
-    if (basicProperties == null
-            || basicProperties.getHeaders() == null
-            || basicProperties.getHeaders().isEmpty()) {
-      LOGGER.error("Headers not present for RMQ");
-      return null;
-    }
-    Map<String, Object> headersMap = basicProperties.getHeaders();
-    try {
-      for (Map.Entry<String, Object> header : headersMap.entrySet()) {
-        if (MODE_HEADER.equals(header.getKey())) {
-          if (header.getValue() instanceof LongString) {
-            byte[] correlationIdAsByteArray = ((LongString) header.getValue()).getBytes();
-            return new String(correlationIdAsByteArray, "UTF-8");
-          }
-        }
-      }
-    } catch (Exception e) {
-      LOGGER.error("Unable to encode mode headers", e);
-    }
-    return null;
   }
 }
