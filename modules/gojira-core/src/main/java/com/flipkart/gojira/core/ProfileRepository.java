@@ -57,7 +57,7 @@ public class ProfileRepository<
       };
   private static ProfileSetting globalProfileSetting = new ProfileSetting();
 
-  private static InheritableThreadLocal<ProfileSetting> threadLocalProfileSetting =
+  private static InheritableThreadLocal<ProfileSetting> requestProfileSetting =
       new InheritableThreadLocal<ProfileSetting>() {
         /**
          * {@inheritDoc}
@@ -95,8 +95,8 @@ public class ProfileRepository<
     GLOBAL_PER_REQUEST_ID.remove();
   }
 
-  public static void clearThreadLocalProfileSetting() {
-    threadLocalProfileSetting.remove();
+  public static void clearRequestProfileSetting() {
+    requestProfileSetting.remove();
   }
 
   /**
@@ -117,7 +117,7 @@ public class ProfileRepository<
 
   static synchronized Mode getMode() {
     if (Mode.DYNAMIC.equals(globalProfileSetting.getMode())) {
-      return threadLocalProfileSetting.get().getMode();
+      return requestProfileSetting.get().getMode();
     }
     return globalProfileSetting.getMode();
   }
@@ -143,7 +143,7 @@ public class ProfileRepository<
       profileSetting.setMode(globalProfileSetting.getMode());
     }
 
-    threadLocalProfileSetting.set(profileSetting);
+    requestProfileSetting.set(profileSetting);
   }
 
   static ProfileSetting getGlobalProfileSetting() {
@@ -175,7 +175,7 @@ public class ProfileRepository<
       clearGlobalPerRequestID();
     }
 
-    clearThreadLocalProfileSetting();
+    clearRequestProfileSetting();
   }
 
   static <T extends TestDataType>
