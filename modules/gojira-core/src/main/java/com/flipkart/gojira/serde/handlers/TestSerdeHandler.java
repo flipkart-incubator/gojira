@@ -20,6 +20,8 @@ import com.flipkart.gojira.serde.TestSerdeException;
 
 /**
  * Interface for defining serialization and deserialization handlers.
+ *
+ * <p>//TODO: Add a method to do generics type safe deserialization.
  */
 public interface TestSerdeHandler {
 

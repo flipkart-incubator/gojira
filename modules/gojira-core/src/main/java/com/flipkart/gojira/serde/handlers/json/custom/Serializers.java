@@ -17,7 +17,6 @@
 package com.flipkart.gojira.serde.handlers.json.custom;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import java.io.IOException;
@@ -51,7 +50,7 @@ public class Serializers {
 
     @Override
     public void serialize(Map value, JsonGenerator gen, SerializerProvider serializers)
-        throws IOException, JsonProcessingException {
+        throws IOException {
       String mapType = value.getClass().getName();
       gen.writeStartArray();
       gen.writeStartObject();

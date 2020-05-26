@@ -17,7 +17,6 @@
 package com.flipkart.gojira.serde.handlers.json;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonSerializer;
@@ -32,7 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Basic Implementation of {@link TestSerdeHandler}.
+ * Basic Implementation of {@link TestSerdeHandler} with serialization and deserialization features enabled. Support to register custom serializer and deserializer against a Class type.
  */
 public class JsonDefaultTestSerdeHandler implements TestSerdeHandler {
   private static final Logger LOGGER = LoggerFactory.getLogger(JsonDefaultTestSerdeHandler.class);

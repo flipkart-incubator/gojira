@@ -17,7 +17,6 @@
 package com.flipkart.gojira.serde.handlers.json.custom;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
@@ -30,14 +29,17 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Deserializers {
+  private static final Logger LOGGER = LoggerFactory.getLogger(Deserializers.class);
+
   /** Custom Deserializer for List. */
   public static class TestListDeserializer extends JsonDeserializer<List> {
 
     @Override
-    public List deserialize(JsonParser p, DeserializationContext ctxt)
-        throws IOException, JsonProcessingException {
+    public List deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
       ObjectCodec oc = p.getCodec();
       JsonNode jsonNode = oc.readTree(p);
       ArrayNode arrayNode = (ArrayNode) jsonNode;
@@ -46,6 +48,7 @@ public class Deserializers {
       try {
         list = (List) Class.forName((arrayNode.get(0)).asText()).newInstance();
       } catch (Exception e) {
+        LOGGER.error("Error creating new list of type " + listType + " in JsonMapListSerdeHandler. ", e);
         throw new IOException(
             "Error creating new list of type " + listType + " in JsonMapListSerdeHandler. ", e);
       }
@@ -74,6 +77,7 @@ public class Deserializers {
         }
         return list;
       } catch (ClassNotFoundException e) {
+        LOGGER.error("ClassNotFoundException exception", e);
         throw new IOException("ClassNotFoundException exception", e);
       }
     }
@@ -83,8 +87,7 @@ public class Deserializers {
   public static class TestMapDeserializer extends JsonDeserializer<Map> {
 
     @Override
-    public Map deserialize(JsonParser p, DeserializationContext ctxt)
-        throws IOException, JsonProcessingException {
+    public Map deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
       // maps get serialized as ArrayNode of ObjectNodes.
       ObjectCodec oc = p.getCodec();
       ArrayNode arrayNode = oc.readTree(p);
@@ -100,6 +103,7 @@ public class Deserializers {
       try {
         map = (Map) Class.forName(mapType).newInstance();
       } catch (Exception e) {
+        LOGGER.error("Error creating new map of type " + mapType + " in JsonMapListSerdeHandler. ", e);
         throw new IOException(
             "Error creating new map of type " + mapType + " in JsonMapListSerdeHandler. ", e);
       }
@@ -152,6 +156,7 @@ public class Deserializers {
         }
         return map;
       } catch (ClassNotFoundException e) {
+        LOGGER.error("class cast exception", e);
         throw new IOException("class cast exception", e);
       }
     }

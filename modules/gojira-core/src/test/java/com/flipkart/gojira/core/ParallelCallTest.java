@@ -16,6 +16,8 @@
 
 package com.flipkart.gojira.core;
 
+import static com.flipkart.gojira.core.DI.di;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flipkart.compare.handlers.json.JsonTestCompareHandler;
 import com.flipkart.gojira.compare.config.GojiraComparisonConfig;
@@ -27,8 +29,6 @@ import com.flipkart.gojira.serde.config.SerdeConfig;
 import com.flipkart.gojira.serde.handlers.json.JsonMapListSerdeHandler;
 import com.flipkart.gojira.sinkstore.config.DataStoreConfig;
 import com.flipkart.gojira.sinkstore.file.FileBasedDataStoreHandler;
-import org.junit.BeforeClass;
-
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -39,8 +39,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-
-import static com.flipkart.gojira.core.DI.di;
+import org.junit.BeforeClass;
 
 /**
  * Created by arunachalam.s on 10/10/17.

@@ -67,7 +67,9 @@ public class JsonTestSerdeHandler implements TestSerdeHandler {
     mapper.registerModule(module);
   }
 
-  /** Registers a JsonSerializer instance against a mentioned type. */
+  /**
+   * Registers a JsonSerializer instance against a mentioned type.
+   */
   public static synchronized <T> void registerSerializer(Class<T> type, JsonSerializer<T> ser) {
     module.addSerializer(type, ser);
     mapper.registerModule(module);
@@ -78,7 +80,9 @@ public class JsonTestSerdeHandler implements TestSerdeHandler {
     TestMapDeserializer.registerSerializer(type, ser);
   }
 
-  /** Registers a JsonDeserializer instance against a mentioned type. */
+  /**
+   * Registers a JsonDeserializer instance against a mentioned type.
+   */
   public static synchronized <T> void registerDeSerializer(
       Class<T> type, JsonDeserializer<T> deser) {
     module.addDeserializer(type, deser);

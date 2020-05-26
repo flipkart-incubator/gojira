@@ -90,7 +90,8 @@ public class JsonMapListSerdeHandler extends JsonDefaultTestSerdeHandler {
         mapper.readerForUpdating(obj).readValue(bytes);
       }
     } catch (IOException e) {
-      throw new TestSerdeException("error updating object.", e);
+      LOGGER.error("error updating object. class: " + obj.getClass(), e);
+      throw new TestSerdeException("error updating object. class: " + obj.getClass(), e);
     }
   }
 }
