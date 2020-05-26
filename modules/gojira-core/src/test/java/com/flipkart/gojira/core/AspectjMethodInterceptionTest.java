@@ -18,6 +18,9 @@
 
 package com.flipkart.gojira.core;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
+
 import com.flipkart.gojira.core.annotations.ProfileOrTest;
 import com.flipkart.gojira.core.aspect.test.AspectJConfig;
 import com.flipkart.gojira.core.aspect.test.AspectJUnit4Runner;
@@ -25,41 +28,37 @@ import com.flipkart.gojira.execute.TestExecutionException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThrows;
-
 @AspectJConfig(classpathAdditions = "src/test/java/com/flipkart/gojira/core/aspect/test")
 @RunWith(AspectJUnit4Runner.class)
 public class AspectjMethodInterceptionTest {
 
-    @ProfileOrTest
-    private int testPrivateMethod (int i) {
-        return i;
-    }
+  @ProfileOrTest
+  private int testPrivateMethod(int i) {
+    return i;
+  }
 
-    private int testNonAnnotated (int i) {
-        return i;
-    }
+  private int testNonAnnotated(int i) {
+    return i;
+  }
 
-    private int testException (int... i) throws TestExecutionException {
-        throw new TestExecutionException("test");
-    }
+  private int testException(int... i) throws TestExecutionException {
+    throw new TestExecutionException("test");
+  }
 
-    @Test
-    public void testMethodInterception () throws Throwable {
-        assertEquals(11, testPrivateMethod(10));
-    }
+  @Test
+  public void testMethodInterception() throws Throwable {
+    assertEquals(11, testPrivateMethod(10));
+  }
 
-    @Test
-    public void testMethodInterceptionNonAnnotated () throws Throwable {
-        assertEquals(11, testNonAnnotated(10));
-    }
+  @Test
+  public void testMethodInterceptionNonAnnotated() throws Throwable {
+    assertEquals(11, testNonAnnotated(10));
+  }
 
-    @Test
-    public void testMethodInterceptionException () throws Throwable {
-        int [] arr = new int[] { 10 };
-        assertThrows("test", TestExecutionException.class, () -> testException(arr));
-        assertEquals(11, arr[0]);
-    }
-
+  @Test
+  public void testMethodInterceptionException() throws Throwable {
+    int[] arr = new int[] {10};
+    assertThrows("test", TestExecutionException.class, () -> testException(arr));
+    assertEquals(11, arr[0]);
+  }
 }
