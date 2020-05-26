@@ -48,7 +48,8 @@ public class Deserializers {
       try {
         list = (List) Class.forName((arrayNode.get(0)).asText()).newInstance();
       } catch (Exception e) {
-        LOGGER.error("Error creating new list of type " + listType + " in JsonMapListSerdeHandler. ", e);
+        LOGGER.error(
+            "Error creating new list of type " + listType + " in JsonMapListSerdeHandler. ", e);
         throw new IOException(
             "Error creating new list of type " + listType + " in JsonMapListSerdeHandler. ", e);
       }
@@ -103,7 +104,8 @@ public class Deserializers {
       try {
         map = (Map) Class.forName(mapType).newInstance();
       } catch (Exception e) {
-        LOGGER.error("Error creating new map of type " + mapType + " in JsonMapListSerdeHandler. ", e);
+        LOGGER.error(
+            "Error creating new map of type " + mapType + " in JsonMapListSerdeHandler. ", e);
         throw new IOException(
             "Error creating new map of type " + mapType + " in JsonMapListSerdeHandler. ", e);
       }

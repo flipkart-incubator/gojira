@@ -31,7 +31,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Basic Implementation of {@link TestSerdeHandler} with serialization and deserialization features enabled. Support to register custom serializer and deserializer against a Class type.
+ * Basic Implementation of {@link TestSerdeHandler} with serialization and deserialization features
+ * enabled. Support to register custom serializer and deserializer against a Class type.
  */
 public class JsonDefaultTestSerdeHandler implements TestSerdeHandler {
   private static final Logger LOGGER = LoggerFactory.getLogger(JsonDefaultTestSerdeHandler.class);
@@ -46,18 +47,14 @@ public class JsonDefaultTestSerdeHandler implements TestSerdeHandler {
           .setSubtypeResolver(new StdSubtypeResolver());
   private final SimpleModule simpleModule = new SimpleModule();
 
-  /**
-   * Registers a JsonSerializer instance against a mentioned type.
-   */
+  /** Registers a JsonSerializer instance against a mentioned type. */
   public <T> JsonDefaultTestSerdeHandler registerSerializer(Class<T> type, JsonSerializer<T> ser) {
     simpleModule.addSerializer(type, ser);
     mapper.registerModule(simpleModule);
     return this;
   }
 
-  /**
-   * Registers a JsonDeserializer instance against a mentioned type.
-   */
+  /** Registers a JsonDeserializer instance against a mentioned type. */
   public <T> JsonDefaultTestSerdeHandler registerDeSerializer(
       Class<T> type, JsonDeserializer<T> deSer) {
     simpleModule.addDeserializer(type, deSer);

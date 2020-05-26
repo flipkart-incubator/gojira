@@ -53,7 +53,7 @@ public class DeserializeToInstanceTest {
     Integer integerBase = 1;
     Integer integerToUpdate = 2;
     jsonDefaultTestSerdeHandler.deserializeToInstance(
-      jsonDefaultTestSerdeHandler.serialize(integerBase), integerToUpdate);
+        jsonDefaultTestSerdeHandler.serialize(integerBase), integerToUpdate);
 
     Assert.assertNotEquals(integerBase, integerToUpdate);
   }
@@ -65,7 +65,7 @@ public class DeserializeToInstanceTest {
     String stringToUpdate = "def";
 
     jsonDefaultTestSerdeHandler.deserializeToInstance(
-      jsonDefaultTestSerdeHandler.serialize(stringBase), stringToUpdate);
+        jsonDefaultTestSerdeHandler.serialize(stringBase), stringToUpdate);
 
     Assert.assertNotEquals(stringBase, stringToUpdate);
   }
@@ -76,7 +76,7 @@ public class DeserializeToInstanceTest {
     EnumTest etBase = EnumTest.TEST;
     EnumTest etToUpdate = EnumTest.CHECK;
     jsonDefaultTestSerdeHandler.deserializeToInstance(
-      jsonDefaultTestSerdeHandler.serialize(etBase), etToUpdate);
+        jsonDefaultTestSerdeHandler.serialize(etBase), etToUpdate);
     Assert.assertNotEquals(etBase, etToUpdate);
   }
 
