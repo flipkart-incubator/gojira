@@ -32,6 +32,12 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Custom deserializers are added to this class and re-used wherever required.
+ * The following custom deserializers are implemented in this class:
+ * @see List
+ * @see Map
+ */
 public class Deserializers {
   private static final Logger LOGGER = LoggerFactory.getLogger(Deserializers.class);
 

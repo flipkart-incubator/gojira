@@ -23,6 +23,12 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Custom serializers are added to this class and re-used wherever required.
+ * The following custom serializers are implemented in this class:
+ * @see List
+ * @see Map
+ */
 public class Serializers {
   /** Custom Serializer for List. */
   public static class TestListSerializer extends JsonSerializer<List> {
