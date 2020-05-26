@@ -16,7 +16,6 @@
 
 package com.flipkart.gojira.serde.handlers;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.flipkart.gojira.serde.TestSerdeException;
 
 /**
@@ -42,16 +41,6 @@ public interface TestSerdeHandler {
    * @throws TestSerdeException if de-serialization fails
    */
   <T> T deserialize(byte[] bytes, Class<T> clazz) throws TestSerdeException;
-
-  /**
-   * This method will be used to deserialize byte[] to Java Object of given class type.
-   *
-   * @param bytes serialized byte[] to be de-serialized.
-   * @param typeReference instance to be used to de-serialize
-   * @return de-serialized object
-   * @throws TestSerdeException if de-serialization fails
-   */
-  <T> T deserialize(byte[] bytes, TypeReference<T> typeReference) throws TestSerdeException;
 
   /**
    * This method will be used to update a Java Object from byte[].

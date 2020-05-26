@@ -87,16 +87,6 @@ public class JsonDefaultTestSerdeHandler implements TestSerdeHandler {
   }
 
   @Override
-  public <T> T deserialize(byte[] bytes, TypeReference<T> typeReference) throws TestSerdeException {
-    try {
-      return mapper.readValue(bytes, typeReference);
-    } catch (IOException e) {
-      LOGGER.error("error de-serializing data.", e);
-      throw new TestSerdeException("error de-serializing data.", e);
-    }
-  }
-
-  @Override
   public <T> void deserializeToInstance(byte[] bytes, T obj) throws TestSerdeException {
     try {
       mapper.readerForUpdating(obj).readValue(bytes);
