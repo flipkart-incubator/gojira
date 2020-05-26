@@ -7,7 +7,7 @@
     <parent>
         <artifactId>gojira-parent</artifactId>
         <groupId>com.flipkart</groupId>
-        <version>1.9.3</version>
+        <version>1.9.4</version>
     </parent>
 
     <artifactId>gojira-compare</artifactId>

@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.flipkart</groupId>
         <artifactId>gojira-parent</artifactId>
-        <version>1.9.3</version>
+        <version>1.9.4</version>
     </parent>
 
     <artifactId>gojira-core</artifactId>
@@ -92,7 +92,7 @@
         <dependency>
             <groupId>com.flipkart</groupId>
             <artifactId>gojira-compare</artifactId>
-            <version>1.9.3</version>
+            <version>1.9.4</version>
             <exclusions>
                 <exclusion>
                     <groupId>com.fasterxml.jackson.core</groupId>
