@@ -79,24 +79,6 @@ public class SerializeMethodDataInterceptorHandler implements MethodDataIntercep
         perMethodAllEntries.entrySet()) {
       Map<MethodDataType, List<MethodData>> methodDataMap = perMethodEntry.getValue();
 
-      if (methodDataMap.containsKey(MethodDataType.ARGUMENT_BEFORE)
-          && !methodDataMap.get(MethodDataType.ARGUMENT_BEFORE).isEmpty()) {
-        int index = -1;
-        for (MethodData methodData : methodDataMap.get(MethodDataType.ARGUMENT_BEFORE)) {
-          index++;
-          if (methodData.getData() == null) {
-            try {
-              LOGGER.info("deserialization starting for ");
-              serdeHandlerRepository
-                  .getOrUpdateAndGetOrDefaultMethodArgumentDataSerdeHandler(invocation, index)
-                  .deserializeToInstance(methodData.getData(), invocation.getArguments()[index]);
-            } catch (Exception e) {
-              LOGGER.error("deserialization failed");
-            }
-          }
-        }
-      }
-
       if (methodDataMap.containsKey(MethodDataType.ARGUMENT_AFTER)
           && !methodDataMap.get(MethodDataType.ARGUMENT_AFTER).isEmpty()) {
         int index = -1;
@@ -104,12 +86,18 @@ public class SerializeMethodDataInterceptorHandler implements MethodDataIntercep
           index++;
           if (methodData.getData() != null) {
             try {
-              LOGGER.info("deserialization starting for ");
+              LOGGER.info(
+                  "deserializeToInstance starting for "
+                      + Class.forName(
+                          methodDataMap.get(MethodDataType.ARGUMENT_AFTER).get(0).getClassName()));
               serdeHandlerRepository
                   .getOrUpdateAndGetOrDefaultMethodArgumentDataSerdeHandler(invocation, index)
                   .deserializeToInstance(methodData.getData(), invocation.getArguments()[index]);
             } catch (Exception e) {
-              LOGGER.error("deserialization failed");
+              LOGGER.error(
+                  "deserializeToInstance failed for "
+                      + Class.forName(
+                          methodDataMap.get(MethodDataType.ARGUMENT_AFTER).get(0).getClassName()));
             }
           }
         }
