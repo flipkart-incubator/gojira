@@ -18,9 +18,12 @@ package com.flipkart.gojira.serde.handlers.json;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.jsontype.impl.StdSubtypeResolver;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.flipkart.gojira.serde.TestSerdeException;
 import com.flipkart.gojira.serde.handlers.TestSerdeHandler;
 import java.io.IOException;
@@ -28,22 +31,35 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Implementation of {@link TestSerdeHandler}.
+ * Basic Implementation of {@link TestSerdeHandler} with serialization and deserialization features
+ * enabled. Support to register custom serializer and deserializer against a Class type.
  */
 public class JsonDefaultTestSerdeHandler implements TestSerdeHandler {
-
   private static final Logger LOGGER = LoggerFactory.getLogger(JsonDefaultTestSerdeHandler.class);
-  private static final ObjectMapper mapper = new ObjectMapper();
+  protected final ObjectMapper mapper =
+      new ObjectMapper()
+          .enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
+          .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+          .enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT)
+          .enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING)
+          .enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING)
+          .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
+          .setSubtypeResolver(new StdSubtypeResolver());
+  private final SimpleModule simpleModule = new SimpleModule();
 
-  // TODO: Remove static block. Remove these properties as well if feasible.
-  static {
-    mapper.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
-    mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-    mapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
-    mapper.enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING);
-    mapper.enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING);
-    mapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
-    mapper.setSubtypeResolver(new StdSubtypeResolver());
+  /** Registers a JsonSerializer instance against a mentioned type. */
+  public <T> JsonDefaultTestSerdeHandler registerSerializer(Class<T> type, JsonSerializer<T> ser) {
+    simpleModule.addSerializer(type, ser);
+    mapper.registerModule(simpleModule);
+    return this;
+  }
+
+  /** Registers a JsonDeserializer instance against a mentioned type. */
+  public <T> JsonDefaultTestSerdeHandler registerDeSerializer(
+      Class<T> type, JsonDeserializer<T> deSer) {
+    simpleModule.addDeserializer(type, deSer);
+    mapper.registerModule(simpleModule);
+    return this;
   }
 
   @Override
