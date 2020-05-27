@@ -51,7 +51,8 @@ public class TestQueuedSenderImpl extends TestQueuedSender {
   private SinkHandler sinkHandler;
 
   @Inject
-  public TestQueuedSenderImpl(SerdeHandlerRepository serdeHandlerRepository, SinkHandler sinkHandler) {
+  public TestQueuedSenderImpl(
+      SerdeHandlerRepository serdeHandlerRepository, SinkHandler sinkHandler) {
     this.serdeHandlerRepository = serdeHandlerRepository;
     this.sinkHandler = sinkHandler;
   }
@@ -63,7 +64,8 @@ public class TestQueuedSenderImpl extends TestQueuedSender {
     Files.createDirectories(Paths.get(testQueuedSenderConfig.getPath()), attr);
     this.messageQueue = new BigQueueImpl(testQueuedSenderConfig.getPath(), "gojira-messages");
 
-    MessageSenderThread messageSenderThread = new MessageSenderThread(messageQueue, serdeHandlerRepository, sinkHandler);
+    MessageSenderThread messageSenderThread =
+        new MessageSenderThread(messageQueue, serdeHandlerRepository, sinkHandler);
     scheduler.scheduleWithFixedDelay(
         messageSenderThread, 20, testQueuedSenderConfig.getQueuePurgeInterval(), TimeUnit.SECONDS);
     scheduler.scheduleAtFixedRate(
@@ -86,9 +88,7 @@ public class TestQueuedSenderImpl extends TestQueuedSender {
       TestData<TestRequestData<T>, TestResponseData<T>, T> testData) throws Exception {
     if (messageQueue.size() < testQueuedSenderConfig.getQueueSize()) {
       LOGGER.info("TestData with id: " + testData.getId() + " enqueued.");
-      messageQueue.enqueue(serdeHandlerRepository
-              .getTestDataSerdeHandler()
-              .serialize(testData));
+      messageQueue.enqueue(serdeHandlerRepository.getTestDataSerdeHandler().serialize(testData));
     } else {
       LOGGER.error(
           "messageQueue size greater than "
@@ -104,8 +104,10 @@ public class TestQueuedSenderImpl extends TestQueuedSender {
     private SerdeHandlerRepository serdeHandlerRepository;
     private SinkHandler sinkHandler;
 
-    public MessageSenderThread(IBigQueue messageQueue, SerdeHandlerRepository serdeHandlerRepository, SinkHandler
-            sinkHandler) {
+    public MessageSenderThread(
+        IBigQueue messageQueue,
+        SerdeHandlerRepository serdeHandlerRepository,
+        SinkHandler sinkHandler) {
       this.messageQueue = messageQueue;
       this.serdeHandlerRepository = serdeHandlerRepository;
       this.sinkHandler = sinkHandler;
@@ -121,7 +123,9 @@ public class TestQueuedSenderImpl extends TestQueuedSender {
             break;
           }
           TestData<TestRequestData<TestDataType>, TestResponseData<TestDataType>, TestDataType>
-              testData = serdeHandlerRepository.getTestDataSerdeHandler()
+              testData =
+                  serdeHandlerRepository
+                      .getTestDataSerdeHandler()
                       .deserialize(data, TestData.class);
           LOGGER.info("TestData with id: " + testData.getId() + " send for DataStore write.");
           sinkHandler.write(testData.getId(), data);

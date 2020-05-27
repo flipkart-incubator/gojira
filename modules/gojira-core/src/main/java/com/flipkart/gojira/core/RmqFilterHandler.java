@@ -16,19 +16,18 @@
 
 package com.flipkart.gojira.core;
 
+import static com.flipkart.gojira.core.GojiraConstants.TEST_HEADER;
+
 import com.flipkart.gojira.models.TestRequestData;
 import com.flipkart.gojira.requestsampling.RequestSamplingRepository;
 import com.google.inject.Inject;
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.LongString;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
-
-import static com.flipkart.gojira.core.GojiraConstants.TEST_HEADER;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class is expected to provide an interface for implementing different logic for different
@@ -39,7 +38,6 @@ public abstract class RmqFilterHandler {
   protected static final Logger LOGGER = LoggerFactory.getLogger(RmqFilterHandler.class);
   private RequestSamplingRepository requestSamplingRepository;
 
-  @Inject
   protected RmqFilterHandler(RequestSamplingRepository requestSamplingRepository) {
     this.requestSamplingRepository = requestSamplingRepository;
   }

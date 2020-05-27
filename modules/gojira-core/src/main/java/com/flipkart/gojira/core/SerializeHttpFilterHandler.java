@@ -18,6 +18,8 @@ package com.flipkart.gojira.core;
 
 import com.flipkart.gojira.models.TestRequestData;
 import com.flipkart.gojira.models.TestResponseData;
+import com.flipkart.gojira.requestsampling.RequestSamplingRepository;
+import com.google.inject.Inject;
 import java.io.IOException;
 import javax.servlet.ServletResponse;
 import org.slf4j.Logger;
@@ -30,9 +32,12 @@ public class SerializeHttpFilterHandler extends HttpFilterHandler {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SerializeHttpFilterHandler.class);
 
-    public SerializeHttpFilterHandler() {super(requestSamplingRepository);}
+  @Inject
+  public SerializeHttpFilterHandler(RequestSamplingRepository requestSamplingRepository) {
+    super(requestSamplingRepository);
+  }
 
-    /**
+  /**
    * Gets the test id and validates that it is not null.
    *
    * <p>If the URL is whitelisted, begins execution by calling {@link

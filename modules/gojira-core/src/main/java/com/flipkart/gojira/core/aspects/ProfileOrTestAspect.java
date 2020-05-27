@@ -29,7 +29,8 @@ public class ProfileOrTestAspect extends AopAllianceAdapter {
 
   @Override
   protected MethodInterceptor getMethodInterceptor() {
-    return new ProfileOrTestMethodInterceptor();
+    return new ProfileOrTestMethodInterceptor(serdeHandlerRepository,
+        gojiraCompareHandlerRepository);
   }
 
   @Override

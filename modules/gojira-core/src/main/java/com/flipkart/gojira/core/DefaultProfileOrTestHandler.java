@@ -27,8 +27,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * This handler is responsible for invoking {@link Mode} specific implementation of {@link
- * StartEndTestHandler}.
- * // TODO: Refactor this class.
+ * StartEndTestHandler}. // TODO: Refactor this class.
  */
 public class DefaultProfileOrTestHandler {
 
@@ -41,11 +40,17 @@ public class DefaultProfileOrTestHandler {
       Collections.unmodifiableMap(
           new HashMap<Mode, StartEndTestHandler>() {
             {
-              put(Mode.PROFILE, new ProfileStartEndTestHandler(testQueuedSender, requestSamplingRepository));
-              put(Mode.TEST, new TestStartEndTestHandler(gojiraCompareHandlerRepository, serdeHandlerRepository,
-                      sinkHandler));
+              put(
+                  Mode.PROFILE,
+                  new ProfileStartEndTestHandler(testQueuedSender, requestSamplingRepository));
+              put(
+                  Mode.TEST,
+                  new TestStartEndTestHandler(
+                      gojiraCompareHandlerRepository, serdeHandlerRepository, sinkHandler));
               put(Mode.NONE, new NoneStartEndTestHandler());
-              put(Mode.SERIALIZE, new SerializeStartEndTestHandler(sinkHandler, serdeHandlerRepository));
+              put(
+                  Mode.SERIALIZE,
+                  new SerializeStartEndTestHandler(sinkHandler, serdeHandlerRepository));
             }
           });
 

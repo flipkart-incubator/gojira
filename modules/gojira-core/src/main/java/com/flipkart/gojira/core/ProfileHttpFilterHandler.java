@@ -22,6 +22,8 @@ import com.flipkart.gojira.models.ProfileData;
 import com.flipkart.gojira.models.TestResponseData;
 import com.flipkart.gojira.models.http.HttpTestRequestData;
 import com.flipkart.gojira.models.http.HttpTestResponseData;
+import com.flipkart.gojira.requestsampling.RequestSamplingRepository;
+import com.google.inject.Inject;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -40,9 +42,12 @@ public class ProfileHttpFilterHandler extends HttpFilterHandler {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ProfileHttpFilterHandler.class);
 
-    public ProfileHttpFilterHandler() {super(requestSamplingRepository);}
+  @Inject
+  public ProfileHttpFilterHandler(RequestSamplingRepository requestSamplingRepository) {
+    super(requestSamplingRepository);
+  }
 
-    /**
+  /**
    * Helper method to get request headers.
    *
    * @param request request wrapped original http request as a {@link
@@ -79,8 +84,8 @@ public class ProfileHttpFilterHandler extends HttpFilterHandler {
    *
    * @param request wrapped original http request as a {@link
    *     HttpFilter.CustomHttpServletRequestWrapper} object
-   * @return true if {@link FilterChain#doFilter(ServletRequest, ServletResponse)} should be
-   *     called, else false.
+   * @return true if {@link FilterChain#doFilter(ServletRequest, ServletResponse)} should be called,
+   *     else false.
    */
   @Override
   public boolean preFilter(HttpFilter.CustomHttpServletRequestWrapper request) {

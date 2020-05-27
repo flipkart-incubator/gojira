@@ -22,12 +22,11 @@ import com.flipkart.gojira.models.MethodDataType;
 import com.flipkart.gojira.models.ProfileData;
 import com.flipkart.gojira.serde.SerdeHandlerRepository;
 import com.flipkart.gojira.serde.handlers.TestSerdeHandler;
+import com.google.inject.Inject;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
-
-import com.google.inject.Inject;
 import org.aopalliance.intercept.MethodInvocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

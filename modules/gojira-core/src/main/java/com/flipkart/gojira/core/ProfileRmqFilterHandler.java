@@ -17,6 +17,8 @@
 package com.flipkart.gojira.core;
 
 import com.flipkart.gojira.models.rmq.RmqTestRequestData;
+import com.flipkart.gojira.requestsampling.RequestSamplingRepository;
+import com.google.inject.Inject;
 import com.rabbitmq.client.AMQP;
 
 /**
@@ -24,9 +26,12 @@ import com.rabbitmq.client.AMQP;
  */
 public class ProfileRmqFilterHandler extends RmqFilterHandler {
 
-    public ProfileRmqFilterHandler() {super(requestSamplingRepository);}
+  @Inject
+  public ProfileRmqFilterHandler(RequestSamplingRepository requestSamplingRepository) {
+    super(requestSamplingRepository);
+  }
 
-    @Override
+  @Override
   protected void handle(
       String exchangeName,
       byte[] key,

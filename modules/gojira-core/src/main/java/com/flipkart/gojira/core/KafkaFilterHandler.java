@@ -18,14 +18,12 @@ package com.flipkart.gojira.core;
 
 import static com.flipkart.gojira.core.GojiraConstants.TEST_HEADER;
 
-import com.flipkart.gojira.core.injectors.GuiceInjector;
 import com.flipkart.gojira.models.TestRequestData;
 import com.flipkart.gojira.requestsampling.RequestSamplingRepository;
+import com.google.inject.Inject;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
-
-import com.google.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +37,6 @@ public abstract class KafkaFilterHandler {
 
   private RequestSamplingRepository requestSamplingRepository;
 
-  @Inject
   protected KafkaFilterHandler(RequestSamplingRepository requestSamplingRepository) {
     this.requestSamplingRepository = requestSamplingRepository;
   }

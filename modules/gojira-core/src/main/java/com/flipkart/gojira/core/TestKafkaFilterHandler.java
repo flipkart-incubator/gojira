@@ -17,16 +17,21 @@
 package com.flipkart.gojira.core;
 
 import com.flipkart.gojira.models.TestRequestData;
+import com.flipkart.gojira.requestsampling.RequestSamplingRepository;
+import com.google.inject.Inject;
 import java.util.Map;
 
 /**
- * Implementation of  {@link KafkaFilterHandler} in {@link Mode#TEST}.
+ * Implementation of {@link KafkaFilterHandler} in {@link Mode#TEST}.
  */
 public class TestKafkaFilterHandler extends KafkaFilterHandler {
 
-    public TestKafkaFilterHandler() {super(requestSamplingRepository);}
+  @Inject
+  public TestKafkaFilterHandler(RequestSamplingRepository requestSamplingRepository) {
+    super(requestSamplingRepository);
+  }
 
-    /**
+  /**
    * Gets test-id from headers and throws {@link RuntimeException} if it is null.
    *
    * <p>Initiates execution by calling {@link DefaultProfileOrTestHandler#start(String,

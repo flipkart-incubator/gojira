@@ -28,11 +28,10 @@ import com.flipkart.gojira.models.TestResponseData;
 import com.flipkart.gojira.serde.SerdeHandlerRepository;
 import com.flipkart.gojira.sinkstore.SinkException;
 import com.flipkart.gojira.sinkstore.handlers.SinkHandler;
+import com.google.inject.Inject;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
-
-import com.google.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,9 +66,18 @@ public class TestStartEndTestHandler<T extends TestDataType> implements StartEnd
    */
   private SinkHandler sinkHandler;
 
+  /**
+   * Constructs a <tt>TestStartEndTestHandler</tt> and initializes it's fields.
+   *
+   * @param gojiraCompareHandlerRepository compare handler for comparing test data
+   * @param serdeHandlerRepository serialisation and deserialisation handler
+   * @param sinkHandler read and write handler for result of test execution
+   */
   @Inject
-  public TestStartEndTestHandler(GojiraCompareHandlerRepository gojiraCompareHandlerRepository,
-                                 SerdeHandlerRepository serdeHandlerRepository, SinkHandler sinkHandler) {
+  public TestStartEndTestHandler(
+      GojiraCompareHandlerRepository gojiraCompareHandlerRepository,
+      SerdeHandlerRepository serdeHandlerRepository,
+      SinkHandler sinkHandler) {
     this.gojiraCompareHandlerRepository = gojiraCompareHandlerRepository;
     this.serdeHandlerRepository = serdeHandlerRepository;
     this.sinkHandler = sinkHandler;
@@ -195,15 +203,12 @@ public class TestStartEndTestHandler<T extends TestDataType> implements StartEnd
     }
   }
 
-  /**
-   * Method for checking MethodDataMap empty after test execution.
-   */
+  /** Method for checking MethodDataMap empty after test execution. */
   public boolean isMethodDataMapEmpty() {
     ConcurrentHashMap<
-            String, ConcurrentSkipListMap<Long,
-            ConcurrentHashMap<MethodDataType,
-                    List<MethodData>>>> methodDataMap =
-            ProfileRepository.getTestData().getMethodDataMap();
+            String,
+            ConcurrentSkipListMap<Long, ConcurrentHashMap<MethodDataType, List<MethodData>>>>
+        methodDataMap = ProfileRepository.getTestData().getMethodDataMap();
     for (String methodName : methodDataMap.keySet()) {
       if (!methodDataMap.get(methodName).isEmpty()) {
         return false;

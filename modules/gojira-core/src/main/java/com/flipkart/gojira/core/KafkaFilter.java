@@ -18,6 +18,8 @@ package com.flipkart.gojira.core;
 
 import com.flipkart.gojira.models.TestResponseData;
 import com.flipkart.gojira.models.kafka.KafkaTestResponseData;
+import com.flipkart.gojira.requestsampling.RequestSamplingRepository;
+import com.google.inject.Inject;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,18 +38,30 @@ public class KafkaFilter {
   /**
    * Initializes a map of {@link Mode} specific filter handlers.
    */
-  private static final Map<Mode, KafkaFilterHandler> filterHashMap =
-      Collections.unmodifiableMap(
-          new HashMap<Mode, KafkaFilterHandler>() {
-            {
-              put(Mode.NONE, new NoneKafkaFilterHandler());
-              put(Mode.PROFILE, new ProfileKafkaFilterHandler());
-              put(Mode.TEST, new TestKafkaFilterHandler());
-              put(Mode.SERIALIZE, new SerializeKafkaFilterHandler());
-            }
-          });
+  // TODO: converted static field to non-static
+  private final Map<Mode, KafkaFilterHandler> filterHashMap;
 
-  public KafkaFilter() {}
+  private final RequestSamplingRepository requestSamplingRepository;
+
+  /**
+   * Constructs KafkaFilter object by initializing filterHashMap with sampling configuration.
+   *
+   * @param requestSamplingRepository Sampling configuration
+   */
+  @Inject
+  public KafkaFilter(RequestSamplingRepository requestSamplingRepository) {
+    this.requestSamplingRepository = requestSamplingRepository;
+    filterHashMap =
+        Collections.unmodifiableMap(
+            new HashMap<Mode, KafkaFilterHandler>() {
+              {
+                put(Mode.NONE, new NoneKafkaFilterHandler(requestSamplingRepository));
+                put(Mode.PROFILE, new ProfileKafkaFilterHandler(requestSamplingRepository));
+                put(Mode.TEST, new TestKafkaFilterHandler(requestSamplingRepository));
+                put(Mode.SERIALIZE, new SerializeKafkaFilterHandler(requestSamplingRepository));
+              }
+            });
+  }
 
   /**
    * Helper method to get headers.
@@ -81,7 +95,8 @@ public class KafkaFilter {
   public void start(String topicName, byte[] key, byte[] value, Headers recordHeaders) {
     Map<String, byte[]> headersMap = getMapForRequestHeaders(recordHeaders);
     filterHashMap
-        .getOrDefault(ProfileRepository.getMode(), new NoneKafkaFilterHandler())
+        .getOrDefault(
+            ProfileRepository.getMode(), new NoneKafkaFilterHandler(requestSamplingRepository))
         .handle(topicName, key, value, headersMap);
   }
 

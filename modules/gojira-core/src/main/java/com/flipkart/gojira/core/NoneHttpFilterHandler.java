@@ -19,6 +19,8 @@ package com.flipkart.gojira.core;
 import static com.flipkart.gojira.core.GojiraConstants.TEST_HEADER;
 
 import com.flipkart.gojira.models.TestResponseData;
+import com.flipkart.gojira.requestsampling.RequestSamplingRepository;
+import com.google.inject.Inject;
 import java.io.IOException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -32,9 +34,13 @@ public class NoneHttpFilterHandler extends HttpFilterHandler {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(NoneHttpFilterHandler.class);
 
-    public NoneHttpFilterHandler() {super(requestSamplingRepository);}
+  // todo: assisted inject?
+  @Inject
+  public NoneHttpFilterHandler(RequestSamplingRepository requestSamplingRepository) {
+    super(requestSamplingRepository);
+  }
 
-    /**
+  /**
    * Get's the test-id and throws an exception if test-header is present.
    *
    * @param request wrapped original http request as a {@link

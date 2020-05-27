@@ -32,7 +32,9 @@ import com.google.inject.name.Names;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/** This class is used as the interface for executing id based tests. */
+/**
+ * This class is used as the interface for executing id based tests.
+ */
 public class IdBasedTestExecutor<T extends TestDataType> {
 
   private SinkHandler sinkHandler;
@@ -42,7 +44,8 @@ public class IdBasedTestExecutor<T extends TestDataType> {
   private TestSerdeHandler testDataSerdeHandler;
 
   @Inject
-  public IdBasedTestExecutor(SinkHandler sinkHandler, SerdeHandlerRepository serdeHandlerRepository) {
+  public IdBasedTestExecutor(
+      SinkHandler sinkHandler, SerdeHandlerRepository serdeHandlerRepository) {
     this.sinkHandler = sinkHandler;
     this.testDataSerdeHandler = serdeHandlerRepository.getTestDataSerdeHandler();
   }
@@ -58,8 +61,7 @@ public class IdBasedTestExecutor<T extends TestDataType> {
    * @param clientId clientId is the identifier which can be used to know which system to hit.
    * @throws TestExecutionException if we are not able to initiate the execution
    * @throws SinkException if we are not able to read data from {@link SinkHandler} implementation
-   * @throws TestSerdeException if we are not able to deserialize read data to
-   *     {@link TestData}
+   * @throws TestSerdeException if we are not able to deserialize read data to {@link TestData}
    */
   public void execute(String testId, String clientId)
       throws TestExecutionException, SinkException, TestSerdeException {

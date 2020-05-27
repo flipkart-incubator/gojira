@@ -17,6 +17,8 @@
 package com.flipkart.gojira.core;
 
 import com.flipkart.gojira.models.TestRequestData;
+import com.flipkart.gojira.requestsampling.RequestSamplingRepository;
+import com.google.inject.Inject;
 import java.util.Map;
 
 /**
@@ -24,9 +26,12 @@ import java.util.Map;
  */
 public class SerializeKafkaFilterHandler extends KafkaFilterHandler {
 
-    public SerializeKafkaFilterHandler() {super(requestSamplingRepository);}
+  @Inject
+  public SerializeKafkaFilterHandler(RequestSamplingRepository requestSamplingRepository) {
+    super(requestSamplingRepository);
+  }
 
-    /**
+  /**
    * Validates that test-id is present. If not throws a {@link RuntimeException}
    *
    * <p>Starts execution by calling {@link DefaultProfileOrTestHandler#start(String,

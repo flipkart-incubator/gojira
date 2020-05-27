@@ -18,6 +18,8 @@ package com.flipkart.gojira.core;
 
 import com.flipkart.gojira.models.TestResponseData;
 import com.flipkart.gojira.models.rmq.RmqTestResponseData;
+import com.flipkart.gojira.requestsampling.RequestSamplingRepository;
+import com.google.inject.Inject;
 import com.rabbitmq.client.AMQP;
 import java.util.Collections;
 import java.util.HashMap;
@@ -33,21 +35,32 @@ public class RmqFilter {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(RmqFilter.class);
 
-  public RmqFilter() {}
-
   /**
    * Initializes a map of {@link Mode} specific filter handlers for RMQ.
    */
-  private static final Map<Mode, RmqFilterHandler> filterHashMap =
-      Collections.unmodifiableMap(
-          new HashMap<Mode, RmqFilterHandler>() {
-            {
-              put(Mode.NONE, new NoneRmqFilterHandler());
-              put(Mode.PROFILE, new ProfileRmqFilterHandler());
-              put(Mode.TEST, new TestRmqFilterHandler());
-              put(Mode.SERIALIZE, new SerializeRmqFilterHandler());
-            }
-          });
+  private final Map<Mode, RmqFilterHandler> filterHashMap;
+
+  private RequestSamplingRepository requestSamplingRepository;
+
+  /**
+   * Constructs RmqFilter object by initializing filterHashMap with sampling configuration.
+   *
+   * @param requestSamplingRepository Sampling configuration
+   */
+  @Inject
+  public RmqFilter(RequestSamplingRepository requestSamplingRepository) {
+    filterHashMap =
+        Collections.unmodifiableMap(
+            new HashMap<Mode, RmqFilterHandler>() {
+              {
+                put(Mode.NONE, new NoneRmqFilterHandler(requestSamplingRepository));
+                put(Mode.PROFILE, new ProfileRmqFilterHandler(requestSamplingRepository));
+                put(Mode.TEST, new TestRmqFilterHandler(requestSamplingRepository));
+                put(Mode.SERIALIZE, new SerializeRmqFilterHandler(requestSamplingRepository));
+              }
+            });
+    this.requestSamplingRepository = requestSamplingRepository;
+  }
 
   /**
    * Integrating application is required to call this method during the start of request-response
@@ -70,7 +83,8 @@ public class RmqFilter {
       boolean mandatory) {
 
     filterHashMap
-        .getOrDefault(ProfileRepository.getMode(), new NoneRmqFilterHandler())
+        .getOrDefault(
+            ProfileRepository.getMode(), new NoneRmqFilterHandler(requestSamplingRepository))
         .handle(exchangeName, routingKey, data, basicProperties, mandatory);
   }
 

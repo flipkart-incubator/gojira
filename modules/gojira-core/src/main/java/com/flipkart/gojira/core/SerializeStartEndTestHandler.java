@@ -36,17 +36,14 @@ public class SerializeStartEndTestHandler<T extends TestDataType>
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SerializeStartEndTestHandler.class);
 
-  /**
-   * sinkHandler for persisting test-data.
-   */
+  /** sinkHandler for persisting test-data. */
   private SinkHandler sinkHandler;
-  /**
-   * serdeHandlerRepository to get serializer for test-data.
-   */
+  /** serdeHandlerRepository to get serializer for test-data. */
   private SerdeHandlerRepository serdeHandlerRepository;
 
   @Inject
-  public SerializeStartEndTestHandler(SinkHandler sinkHandler, SerdeHandlerRepository serdeHandlerRepository) {
+  public SerializeStartEndTestHandler(
+      SinkHandler sinkHandler, SerdeHandlerRepository serdeHandlerRepository) {
     this.sinkHandler = sinkHandler;
     this.serdeHandlerRepository = serdeHandlerRepository;
   }

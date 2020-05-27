@@ -16,7 +16,11 @@
 
 package com.flipkart.gojira.core;
 
-import com.flipkart.gojira.models.*;
+import com.flipkart.gojira.models.ProfileData;
+import com.flipkart.gojira.models.TestData;
+import com.flipkart.gojira.models.TestDataType;
+import com.flipkart.gojira.models.TestRequestData;
+import com.flipkart.gojira.models.TestResponseData;
 import com.flipkart.gojira.queuedsender.TestQueuedSender;
 import com.flipkart.gojira.requestsampling.RequestSamplingRepository;
 import com.google.inject.Inject;
@@ -35,8 +39,8 @@ public class ProfileStartEndTestHandler<T extends TestDataType> implements Start
   private RequestSamplingRepository requestSamplingRepository;
 
   @Inject
-  public ProfileStartEndTestHandler(TestQueuedSender testQueuedSender, RequestSamplingRepository
-          requestSamplingRepository) {
+  public ProfileStartEndTestHandler(
+      TestQueuedSender testQueuedSender, RequestSamplingRepository requestSamplingRepository) {
     this.testQueuedSender = testQueuedSender;
     this.requestSamplingRepository = requestSamplingRepository;
   }
@@ -121,8 +125,6 @@ public class ProfileStartEndTestHandler<T extends TestDataType> implements Start
    */
   private boolean fallsInSamplingBucket() {
     return ((System.nanoTime() % 10000)
-        < (requestSamplingRepository
-            .getSamplingPercentage()
-            * 100));
+        < (requestSamplingRepository.getSamplingPercentage() * 100));
   }
 }

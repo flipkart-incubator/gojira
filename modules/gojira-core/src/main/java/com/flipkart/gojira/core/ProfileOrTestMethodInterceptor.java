@@ -16,6 +16,9 @@
 
 package com.flipkart.gojira.core;
 
+import com.flipkart.gojira.compare.GojiraCompareHandlerRepository;
+import com.flipkart.gojira.serde.SerdeHandlerRepository;
+import com.google.inject.Inject;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,16 +37,34 @@ public class ProfileOrTestMethodInterceptor implements MethodInterceptor {
   private static final Logger LOGGER =
       LoggerFactory.getLogger(ProfileOrTestMethodInterceptor.class);
 
-  private Map<Mode, MethodDataInterceptorHandler> modeMethodDataInterceptorHandlerMap =
-      Collections.unmodifiableMap(
-          new HashMap<Mode, MethodDataInterceptorHandler>() {
-            {
-              put(Mode.NONE, new NoneMethodDataInterceptorHandler());
-              put(Mode.PROFILE, new ProfileMethodDataInterceptorHandler(serdeHandlerRepository));
-              put(Mode.TEST, new TestMethodDataInterceptorHandler(gojiraCompareHandlerRepository, serdeHandlerRepository));
-              put(Mode.SERIALIZE, new SerializeMethodDataInterceptorHandler(serdeHandlerRepository));
-            }
-          });
+  private Map<Mode, MethodDataInterceptorHandler> modeMethodDataInterceptorHandlerMap;
+
+  /**
+   * Constructs the interceptor object and initializes handler map based on {@link Mode}.
+   *
+   * @param serdeHandlerRepository serialisation and deserialization handler
+   * @param gojiraCompareHandlerRepository compare handler
+   */
+  @Inject
+  public ProfileOrTestMethodInterceptor(
+      SerdeHandlerRepository serdeHandlerRepository,
+      GojiraCompareHandlerRepository gojiraCompareHandlerRepository) {
+    modeMethodDataInterceptorHandlerMap =
+        Collections.unmodifiableMap(
+            new HashMap<Mode, MethodDataInterceptorHandler>() {
+              {
+                put(Mode.NONE, new NoneMethodDataInterceptorHandler());
+                put(Mode.PROFILE, new ProfileMethodDataInterceptorHandler(serdeHandlerRepository));
+                put(
+                    Mode.TEST,
+                    new TestMethodDataInterceptorHandler(
+                        gojiraCompareHandlerRepository, serdeHandlerRepository));
+                put(
+                    Mode.SERIALIZE,
+                    new SerializeMethodDataInterceptorHandler(serdeHandlerRepository));
+              }
+            });
+  }
 
   /**
    * Calls the {@link Mode} specific handler if available or calls {@link

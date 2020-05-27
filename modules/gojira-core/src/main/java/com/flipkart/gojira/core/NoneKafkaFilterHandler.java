@@ -16,6 +16,8 @@
 
 package com.flipkart.gojira.core;
 
+import com.flipkart.gojira.requestsampling.RequestSamplingRepository;
+import com.google.inject.Inject;
 import java.util.Map;
 
 /**
@@ -23,9 +25,12 @@ import java.util.Map;
  */
 public class NoneKafkaFilterHandler extends KafkaFilterHandler {
 
-    public NoneKafkaFilterHandler() {super(requestSamplingRepository);}
+  @Inject
+  public NoneKafkaFilterHandler(RequestSamplingRepository requestSamplingRepository) {
+    super(requestSamplingRepository);
+  }
 
-    /**
+  /**
    * Get's the test-id and throws an exception if test-header is present.
    *
    * @param topicName kafka topic name

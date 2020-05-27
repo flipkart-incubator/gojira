@@ -17,7 +17,10 @@
 package com.flipkart.gojira.queuedsender;
 
 import com.flipkart.gojira.queuedsender.config.TestQueuedSenderConfig;
+import com.flipkart.gojira.serde.SerdeHandlerRepository;
+import com.flipkart.gojira.sinkstore.handlers.SinkHandler;
 import com.google.inject.AbstractModule;
+import com.google.inject.Provides;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,13 +38,19 @@ public class TestQueuedSenderModule extends AbstractModule {
 
   @Override
   protected void configure() {
-    TestQueuedSender testQueuedSender = new TestQueuedSenderImpl(serdeHandlerRepository, sinkHandler);
+  }
+
+  @Provides
+  TestQueuedSender provideTestQueueSender(
+      SerdeHandlerRepository serdeHandlerRepository, SinkHandler sinkHandler) {
+    TestQueuedSender testQueuedSender =
+        new TestQueuedSenderImpl(serdeHandlerRepository, sinkHandler);
     testQueuedSender.setTestQueuedSenderConfig(testQueuedSenderConfig);
-    bind(TestQueuedSender.class).toInstance(testQueuedSender);
     try {
       testQueuedSender.setup();
     } catch (Exception e) {
       LOGGER.error("error initializing queued sender", e);
     }
+    return testQueuedSender;
   }
 }

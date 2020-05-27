@@ -16,6 +16,8 @@
 
 package com.flipkart.gojira.core;
 
+import com.flipkart.gojira.requestsampling.RequestSamplingRepository;
+import com.google.inject.Inject;
 import com.rabbitmq.client.AMQP;
 
 /**
@@ -23,9 +25,12 @@ import com.rabbitmq.client.AMQP;
  */
 public class NoneRmqFilterHandler extends RmqFilterHandler {
 
-    public NoneRmqFilterHandler() {super(requestSamplingRepository);}
+  @Inject
+  public NoneRmqFilterHandler(RequestSamplingRepository requestSamplingRepository) {
+    super(requestSamplingRepository);
+  }
 
-    /**
+  /**
    * Get's the test-id and throws an exception if test-header is present.
    *
    * <p>{@inheritDoc}

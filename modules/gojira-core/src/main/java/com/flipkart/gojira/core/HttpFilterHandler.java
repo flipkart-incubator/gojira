@@ -21,6 +21,7 @@ import static com.flipkart.gojira.core.GojiraConstants.TEST_HEADER;
 import com.flipkart.gojira.models.TestRequestData;
 import com.flipkart.gojira.models.TestResponseData;
 import com.flipkart.gojira.requestsampling.RequestSamplingRepository;
+import com.google.inject.Inject;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
@@ -31,8 +32,6 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-
-import com.google.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,7 +43,6 @@ public abstract class HttpFilterHandler {
 
   private RequestSamplingRepository requestSamplingRepository;
 
-  @Inject
   HttpFilterHandler(RequestSamplingRepository requestSamplingRepository) {
     this.requestSamplingRepository = requestSamplingRepository;
   }
@@ -60,8 +58,8 @@ public abstract class HttpFilterHandler {
    *
    * @param request wrapped original http request as a {@link
    *     HttpFilter.CustomHttpServletRequestWrapper} object
-   * @return true if {@link FilterChain#doFilter(ServletRequest, ServletResponse)} should be
-   *     called, else false.
+   * @return true if {@link FilterChain#doFilter(ServletRequest, ServletResponse)} should be called,
+   *     else false.
    */
   protected abstract boolean preFilter(HttpFilter.CustomHttpServletRequestWrapper request);
 
@@ -90,8 +88,7 @@ public abstract class HttpFilterHandler {
    * {@link DefaultProfileOrTestHandler#end(TestResponseData)} as per {@link Mode} needs and call
    * {@link javax.servlet.ServletOutputStream#write(byte[])} of {@link
    * javax.servlet.http.HttpServletResponse} by getting byte[] from {@link
-   * HttpFilter.TestServletResponseWrapper}
-   * TODO: Can the below two be taken care of here itself?
+   * HttpFilter.TestServletResponseWrapper} TODO: Can the below two be taken care of here itself?
    *
    * @param request wrapped original http request as a {@link
    *     HttpFilter.CustomHttpServletRequestWrapper} object

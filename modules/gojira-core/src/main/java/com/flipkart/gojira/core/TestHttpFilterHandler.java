@@ -19,6 +19,8 @@ package com.flipkart.gojira.core;
 import com.flipkart.gojira.models.ProfileData;
 import com.flipkart.gojira.models.TestResponseData;
 import com.flipkart.gojira.models.http.HttpTestResponseData;
+import com.flipkart.gojira.requestsampling.RequestSamplingRepository;
+import com.google.inject.Inject;
 import java.io.IOException;
 import javax.servlet.ServletResponse;
 import org.slf4j.Logger;
@@ -31,9 +33,12 @@ public class TestHttpFilterHandler extends HttpFilterHandler {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(TestHttpFilterHandler.class);
 
-    public TestHttpFilterHandler() {super(requestSamplingRepository);}
+  @Inject
+  public TestHttpFilterHandler(RequestSamplingRepository requestSamplingRepository) {
+    super(requestSamplingRepository);
+  }
 
-    @Override
+  @Override
   public boolean preFilter(HttpFilter.CustomHttpServletRequestWrapper request) {
     String id = super.getTestId(request);
     if (id == null) {

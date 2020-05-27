@@ -18,6 +18,8 @@ package com.flipkart.gojira.core;
 
 import com.flipkart.gojira.models.TestRequestData;
 import com.flipkart.gojira.models.kafka.KafkaTestRequestData;
+import com.flipkart.gojira.requestsampling.RequestSamplingRepository;
+import com.google.inject.Inject;
 import java.util.Map;
 
 /**
@@ -25,9 +27,12 @@ import java.util.Map;
  */
 public class ProfileKafkaFilterHandler extends KafkaFilterHandler {
 
-    public ProfileKafkaFilterHandler() {super(requestSamplingRepository);}
+  @Inject
+  public ProfileKafkaFilterHandler(RequestSamplingRepository requestSamplingRepository) {
+    super(requestSamplingRepository);
+  }
 
-    /**
+  /**
    * Gets test-id from headers for validation. If not null throws {@link RuntimeException}
    *
    * <p>Checks if whitelisted. If not return else capture the parameters required for making a kafka

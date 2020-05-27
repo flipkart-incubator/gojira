@@ -27,13 +27,12 @@ import com.flipkart.gojira.models.MethodDataType;
 import com.flipkart.gojira.models.ProfileData;
 import com.flipkart.gojira.serde.SerdeHandlerRepository;
 import com.flipkart.gojira.serde.handlers.TestSerdeHandler;
+import com.google.inject.Inject;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
-
-import com.google.inject.Inject;
 import org.aopalliance.intercept.MethodInvocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,8 +49,9 @@ public class TestMethodDataInterceptorHandler implements MethodDataInterceptorHa
   private SerdeHandlerRepository serdeHandlerRepository;
 
   @Inject
-  public TestMethodDataInterceptorHandler(GojiraCompareHandlerRepository gojiraCompareHandlerRepository,
-                                          SerdeHandlerRepository serdeHandlerRepository) {
+  public TestMethodDataInterceptorHandler(
+      GojiraCompareHandlerRepository gojiraCompareHandlerRepository,
+      SerdeHandlerRepository serdeHandlerRepository) {
     this.gojiraCompareHandlerRepository = gojiraCompareHandlerRepository;
     this.serdeHandlerRepository = serdeHandlerRepository;
   }
@@ -108,8 +108,8 @@ public class TestMethodDataInterceptorHandler implements MethodDataInterceptorHa
    *
    * @param invocation intercepted method invocation
    * @return object passed along by the called method to the calling method
-   * @throws Throwable for any exception by the called method or {@link TestExecutionException}
-   *     or {@link TestCompareException}
+   * @throws Throwable for any exception by the called method or {@link TestExecutionException} or
+   *     {@link TestCompareException}
    */
   @Override
   public Object handle(MethodInvocation invocation) throws Throwable {
