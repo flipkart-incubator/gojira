@@ -5,7 +5,7 @@
   <parent>
     <artifactId>gojira-parent</artifactId>
     <groupId>com.flipkart</groupId>
-    <version>${revision}</version>
+    <version>1.9.5</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -17,7 +17,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <java.version>1.8</java.version>
     <maven.version>3.2</maven.version>
-    <gojira.core.model.version>${revision}</gojira.core.model.version>
+    <gojira.core.model.version>1.9.5</gojira.core.model.version>
   </properties>
 
   <dependencies>

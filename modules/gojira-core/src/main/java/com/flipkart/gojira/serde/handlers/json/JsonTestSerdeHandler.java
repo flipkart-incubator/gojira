@@ -45,7 +45,8 @@ import org.slf4j.LoggerFactory;
 /**
  * Implementation of {@link TestSerdeHandler}.
  *
- * <p>Please use {@link JsonDefaultTestSerdeHandler} if required.
+ * <p>Please use {@link JsonMapListSerdeHandler} if required. This class will be deprecated in the
+ * next release.
  */
 @Deprecated
 public class JsonTestSerdeHandler implements TestSerdeHandler {
@@ -67,9 +68,7 @@ public class JsonTestSerdeHandler implements TestSerdeHandler {
     mapper.registerModule(module);
   }
 
-  /**
-   * Registers a JsonSerializer instance against a mentioned type.
-   */
+  /** Registers a JsonSerializer instance against a mentioned type. */
   public static synchronized <T> void registerSerializer(Class<T> type, JsonSerializer<T> ser) {
     module.addSerializer(type, ser);
     mapper.registerModule(module);
@@ -80,9 +79,7 @@ public class JsonTestSerdeHandler implements TestSerdeHandler {
     TestMapDeserializer.registerSerializer(type, ser);
   }
 
-  /**
-   * Registers a JsonDeserializer instance against a mentioned type.
-   */
+  /** Registers a JsonDeserializer instance against a mentioned type. */
   public static synchronized <T> void registerDeSerializer(
       Class<T> type, JsonDeserializer<T> deser) {
     module.addDeserializer(type, deser);
@@ -194,8 +191,7 @@ public class JsonTestSerdeHandler implements TestSerdeHandler {
       mapper.registerModule(recursiveModule);
     }
 
-    static synchronized <T> void registerDeserializer(
-        Class<T> type, JsonDeserializer<T> deser) {
+    static synchronized <T> void registerDeserializer(Class<T> type, JsonDeserializer<T> deser) {
       module.addDeserializer(type, deser);
       mapper.registerModule(module);
 
@@ -341,8 +337,7 @@ public class JsonTestSerdeHandler implements TestSerdeHandler {
       mapper.registerModule(recursiveModule);
     }
 
-    static synchronized <T> void registerDeserializer(
-        Class<T> type, JsonDeserializer<T> deser) {
+    static synchronized <T> void registerDeserializer(Class<T> type, JsonDeserializer<T> deser) {
       module.addDeserializer(type, deser);
       mapper.registerModule(module);
 
