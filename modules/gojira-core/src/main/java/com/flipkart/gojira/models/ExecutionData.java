@@ -93,6 +93,13 @@ public class ExecutionData<T extends TestDataType> {
 
   @Override
   public String toString() {
-    return "ExecutionData{" + "profileState=" + profileState + ", testData=" + testData + '}';
+    return "ExecutionData{"
+            + "profileState="
+            + profileState
+            + ", testData="
+            + testData
+            + ", executionMode="
+            + executionMode
+            + '}';
   }
 }
