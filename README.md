@@ -3,7 +3,7 @@ Gojira is a record and replay based regression testing tool.
 
 ## Features
 1. Record and Replay framework for single request-response scope executions, that goes beyond just recording http request and response data, by additionally enabling recording of any call, external to the jvm, and storing them against a single test-id.
-2. Start your JVM in 4 modes: PROFILE(for recording), TEST(when replaying), NONE and SERIALIZE(test de-serialization of recorded data).
+2. Start your JVM in 5 modes: PROFILE(for recording), TEST(when replaying), NONE and SERIALIZE(test de-serialization of recorded data), DYNAMIC(for request level mode setting).
 3. javax.servlet based Filter for capturing HTTP request(uri, headers, method, body, queryparams) and response(status code, headers, body) data.
 4. Request sampling capabilities based on URI signature and time-based sampling.
 5. Annotation based method interception support with Guice to capture method data - arguments before and after method execution, and return or exception data.
