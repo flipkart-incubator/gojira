@@ -50,16 +50,20 @@ public class DefaultProfileOrTestHandler {
 
   /**
    * Simply gets the respective handler for {@link Mode} and calls {@link
-   * StartEndTestHandler#start(String, TestRequestData)} method.
+   * StartEndTestHandler#start(String, TestRequestData, Mode)} method.
    *
    * <p>If mode is not registered, logs an error.
    *
    * @param id id for co-ordinating execution
    * @param requestData request data at the start of execution
+   * @param requestMode this is the mode of execution of gojira at a request level
    */
-  public static void start(String id, TestRequestData<? extends TestDataType> requestData) {
-    if (startTestHandlerHashMap.containsKey(ProfileRepository.getMode())) {
-      startTestHandlerHashMap.get(ProfileRepository.getMode()).start(id, requestData);
+  public static void start(
+          String id,
+          TestRequestData<? extends TestDataType> requestData,
+          Mode requestMode) {
+    if (startTestHandlerHashMap.containsKey(requestMode)) {
+      startTestHandlerHashMap.get(requestMode).start(id, requestData, requestMode);
       return;
     }
     LOGGER.error("Processing logic not implemented for this mode: " + ProfileRepository.getMode());

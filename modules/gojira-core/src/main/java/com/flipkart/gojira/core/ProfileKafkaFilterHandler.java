@@ -32,20 +32,25 @@ public class ProfileKafkaFilterHandler extends KafkaFilterHandler {
    * request in other {@link Mode}.
    *
    * <p>Then begins recording session by calling {@link DefaultProfileOrTestHandler#start(String,
-   * TestRequestData)}
+   * TestRequestData, Mode)}
    *
    * <p>Implementation of this is expected to call {@link DefaultProfileOrTestHandler#start(String,
-   * TestRequestData)}
+   * TestRequestData, Mode)}
    *
    * @param topicName kafka topic name
    * @param key key used for producing message to the topic
    * @param value body used for producing message to the topic
    * @param headersMap headers used for producing message to the topic with key as string and value
    *     as map
+   * @param requestMode this is the mode of execution of gojira at a request level
    */
   @Override
   protected void handle(
-      String topicName, byte[] key, byte[] value, Map<String, byte[]> headersMap) {
+      String topicName,
+      byte[] key,
+      byte[] value,
+      Map<String, byte[]> headersMap,
+      Mode requestMode) {
     String id = getTestId(headersMap);
     if (id != null) {
       LOGGER.error(
@@ -71,7 +76,7 @@ public class ProfileKafkaFilterHandler extends KafkaFilterHandler {
             .setHeaders(headersMap)
             .build();
     try {
-      DefaultProfileOrTestHandler.start(id, kafkaTestRequestData);
+      DefaultProfileOrTestHandler.start(id, kafkaTestRequestData, requestMode);
     } catch (Exception e) {
       LOGGER.error("Exception trying to construct KafkaTestRequest. ", e);
     }

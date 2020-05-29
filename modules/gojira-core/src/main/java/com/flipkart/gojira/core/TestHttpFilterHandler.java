@@ -16,7 +16,7 @@
 
 package com.flipkart.gojira.core;
 
-import com.flipkart.gojira.models.ProfileData;
+import com.flipkart.gojira.models.ExecutionData;
 import com.flipkart.gojira.models.TestResponseData;
 import com.flipkart.gojira.models.http.HttpTestResponseData;
 import java.io.IOException;
@@ -32,7 +32,7 @@ public class TestHttpFilterHandler extends HttpFilterHandler {
   private static final Logger LOGGER = LoggerFactory.getLogger(TestHttpFilterHandler.class);
 
   @Override
-  public boolean preFilter(HttpFilter.CustomHttpServletRequestWrapper request) {
+  public boolean preFilter(HttpFilter.CustomHttpServletRequestWrapper request, Mode requestMode) {
     String id = super.getTestId(request);
     if (id == null) {
       LOGGER.error("X-GOJIRA-ID header not present but the service is running in TEST mode.");
@@ -41,7 +41,7 @@ public class TestHttpFilterHandler extends HttpFilterHandler {
     }
     boolean whitelisted = isWhitelistedUrl(request.getRequestURI(), request.getMethod());
     if (whitelisted) {
-      DefaultProfileOrTestHandler.start(id, null);
+      DefaultProfileOrTestHandler.start(id, null, requestMode);
     }
     return whitelisted;
   }
@@ -53,7 +53,7 @@ public class TestHttpFilterHandler extends HttpFilterHandler {
    * HttpFilter.TestServletResponseWrapper}.
    *
    * <p>If whitelisted, adds HTTP response data required for comparing to {@link
-   * HttpTestResponseData}. On error, marks {@link ProfileData#profileState} as {@link
+   * HttpTestResponseData}. On error, marks {@link ExecutionData#profileState} as {@link
    * ProfileState#FAILED} and throws {@link RuntimeException}
    *
    * <p>In finally block {@link DefaultProfileOrTestHandler#end(TestResponseData)} is called to

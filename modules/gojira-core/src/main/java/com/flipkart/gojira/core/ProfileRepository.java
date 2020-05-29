@@ -16,9 +16,9 @@
 
 package com.flipkart.gojira.core;
 
+import com.flipkart.gojira.models.ExecutionData;
 import com.flipkart.gojira.models.MethodData;
 import com.flipkart.gojira.models.MethodDataType;
-import com.flipkart.gojira.models.ProfileData;
 import com.flipkart.gojira.models.TestData;
 import com.flipkart.gojira.models.TestDataType;
 import com.flipkart.gojira.models.TestRequestData;
@@ -57,21 +57,8 @@ public class ProfileRepository<
       };
   private static ProfileSetting globalProfileSetting = new ProfileSetting();
 
-  private static InheritableThreadLocal<ProfileSetting> requestProfileSetting =
-      new InheritableThreadLocal<ProfileSetting>() {
-        /**
-         * {@inheritDoc}
-         *
-         * @see ThreadLocal#initialValue()
-         */
-        @Override
-        protected ProfileSetting initialValue() {
-          return new ProfileSetting();
-        }
-      };
-
   // TODO: Wrap below map in a size restricted collection for memory protection
-  private static ConcurrentHashMap<String, ProfileData> globalProfiledDataMap =
+  private static ConcurrentHashMap<String, ExecutionData> globalProfiledDataMap =
       new ConcurrentHashMap<>();
 
   public static String getGlobalPerRequestID() {
@@ -95,10 +82,6 @@ public class ProfileRepository<
     GLOBAL_PER_REQUEST_ID.remove();
   }
 
-  public static void clearRequestProfileSetting() {
-    requestProfileSetting.remove();
-  }
-
   /**
    * Set testId for TestData in current thread local.
    *
@@ -116,34 +99,33 @@ public class ProfileRepository<
   }
 
   static synchronized Mode getMode() {
-    if (Mode.DYNAMIC.equals(globalProfileSetting.getMode())) {
-      return requestProfileSetting.get().getMode();
+    if (globalProfiledDataMap.containsKey(GLOBAL_PER_REQUEST_ID.get())) {
+      return globalProfiledDataMap.get(GLOBAL_PER_REQUEST_ID.get()).getExecutionMode();
+    } else {
+      return Mode.NONE;
     }
-    return globalProfileSetting.getMode();
+  }
+
+  static synchronized Mode getRequestMode(String requestMode) {
+    if (Mode.DYNAMIC.equals(globalProfileSetting.getMode())) {
+      try {
+        if (null == requestMode
+                || requestMode.isEmpty()
+                || Mode.DYNAMIC.name().equals(requestMode)) {
+          return Mode.NONE;
+        } else {
+          return Mode.valueOf(requestMode);
+        }
+      } catch (Exception e) {
+        return Mode.NONE;
+      }
+    } else {
+      return globalProfileSetting.getMode();
+    }
   }
 
   static synchronized void setMode(Mode mode) {
     globalProfileSetting.setMode(mode);
-  }
-
-  static synchronized void setRequestMode(String modeHeader) {
-    ProfileSetting profileSetting = new ProfileSetting();
-
-    if (Mode.DYNAMIC.equals(globalProfileSetting.getMode())) {
-      try {
-        if (null == modeHeader || modeHeader.isEmpty() || Mode.DYNAMIC.name().equals(modeHeader)) {
-          profileSetting.setMode(Mode.NONE);
-        } else {
-          profileSetting.setMode(Mode.valueOf(modeHeader));
-        }
-      } catch (Exception e) {
-        profileSetting.setMode(Mode.NONE);
-      }
-    } else {
-      profileSetting.setMode(globalProfileSetting.getMode());
-    }
-
-    requestProfileSetting.set(profileSetting);
   }
 
   static ProfileSetting getGlobalProfileSetting() {
@@ -153,7 +135,7 @@ public class ProfileRepository<
   static void begin(String globalPerRequestId) {
     if (globalPerRequestId != null) {
       GLOBAL_PER_REQUEST_ID.set(globalPerRequestId);
-      if (globalProfiledDataMap.putIfAbsent(globalPerRequestId, new ProfileData()) != null) {
+      if (globalProfiledDataMap.putIfAbsent(globalPerRequestId, new ExecutionData()) != null) {
         LOGGER.error(
             "Error beginning profiling/testing since"
                 + globalPerRequestId
@@ -174,8 +156,6 @@ public class ProfileRepository<
       globalProfiledDataMap.remove(GLOBAL_PER_REQUEST_ID.get());
       clearGlobalPerRequestID();
     }
-
-    clearRequestProfileSetting();
   }
 
   static <T extends TestDataType>
@@ -237,6 +217,19 @@ public class ProfileRepository<
           "Trying to set request data against global request id: "
               + GLOBAL_PER_REQUEST_ID.get()
               + " which is not found.");
+    }
+  }
+
+  static void setRequestMode(Mode requestMode) {
+    if (globalProfiledDataMap.containsKey(GLOBAL_PER_REQUEST_ID.get())) {
+      globalProfiledDataMap
+              .get(GLOBAL_PER_REQUEST_ID.get())
+              .setExecutionMode(requestMode);
+    } else {
+      LOGGER.error(
+              "Trying to set request execution mode against global request id: "
+                      + GLOBAL_PER_REQUEST_ID.get()
+                      + " which is not found.");
     }
   }
 

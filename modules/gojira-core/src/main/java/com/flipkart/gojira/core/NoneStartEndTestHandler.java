@@ -16,7 +16,7 @@
 
 package com.flipkart.gojira.core;
 
-import com.flipkart.gojira.models.ProfileData;
+import com.flipkart.gojira.models.ExecutionData;
 import com.flipkart.gojira.models.TestDataType;
 import com.flipkart.gojira.models.TestRequestData;
 import com.flipkart.gojira.models.TestResponseData;
@@ -29,14 +29,15 @@ import com.flipkart.gojira.models.TestResponseData;
 public class NoneStartEndTestHandler<T extends TestDataType> implements StartEndTestHandler<T> {
 
   /**
-   * Sets the value of {@link ProfileData#profileState} to {@link ProfileState#NONE}.
+   * Sets the value of {@link ExecutionData#profileState} to {@link ProfileState#NONE}.
    *
    * @param id this is the id, which will be used for synchronizing testing across multiple threads
    *     within a single request-response scope.
    * @param requestData this is the request-data with which test is initiated
+   * @param requestMode this is the mode of execution of gojira at a request level
    */
   @Override
-  public void start(String id, TestRequestData<T> requestData) {}
+  public void start(String id, TestRequestData<T> requestData, Mode requestMode) {}
 
   /**
    * Calls {@link ProfileRepository#end()} to remove any thread-local associated with this

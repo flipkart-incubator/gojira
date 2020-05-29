@@ -31,10 +31,15 @@ public class NoneKafkaFilterHandler extends KafkaFilterHandler {
    * @param value body used for producing message to the topic
    * @param headersMap headers used for producing message to the topic with key as string and value
    *     as map
+   * @param requestMode this is the mode of execution of gojira at a request level
    */
   @Override
   protected void handle(
-      String topicName, byte[] key, byte[] value, Map<String, byte[]> headersMap) {
+      String topicName,
+      byte[] key,
+      byte[] value,
+      Map<String, byte[]> headersMap,
+      Mode requestMode) {
     String id = getTestId(headersMap);
     if (id != null) {
       LOGGER.error(

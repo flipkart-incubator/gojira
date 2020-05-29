@@ -34,16 +34,17 @@ public class SerializeHttpFilterHandler extends HttpFilterHandler {
    * Gets the test id and validates that it is not null.
    *
    * <p>If the URL is whitelisted, begins execution by calling {@link
-   * DefaultProfileOrTestHandler#start(String, TestRequestData)}
+   * DefaultProfileOrTestHandler#start(String, TestRequestData, Mode)}
    *
    * <p>returns true if whitelisted else false.
    *
    * @param request wrapped original http request as a {@link
    *     HttpFilter.CustomHttpServletRequestWrapper} object
+   * @param requestMode this is the mode of execution of gojira at a request level
    * @return true if whitelisted else false
    */
   @Override
-  public boolean preFilter(HttpFilter.CustomHttpServletRequestWrapper request) {
+  public boolean preFilter(HttpFilter.CustomHttpServletRequestWrapper request, Mode requestMode) {
     String id = super.getTestId(request);
     if (id == null) {
       LOGGER.error("X-GOJIRA-ID header not present but the service is running in SERIALIZE mode.");
@@ -52,7 +53,7 @@ public class SerializeHttpFilterHandler extends HttpFilterHandler {
     }
     boolean whitelisted = isWhitelistedUrl(request.getRequestURI(), request.getMethod());
     if (whitelisted) {
-      DefaultProfileOrTestHandler.start(id, null);
+      DefaultProfileOrTestHandler.start(id, null, requestMode);
     }
     return whitelisted;
   }

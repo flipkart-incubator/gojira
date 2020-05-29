@@ -77,7 +77,7 @@ public class HttpFilter implements Filter {
    * <p>TODO: Add check for {@link HttpServletRequest}
    * @param request incoming request into a {@link CustomHttpServletRequestWrapper} and calls mode
    *     specific preFilter implementation. If {@link
-   *     HttpFilterHandler#preFilter(CustomHttpServletRequestWrapper)} returns true, wraps the
+   *     HttpFilterHandler#preFilter(CustomHttpServletRequestWrapper, Mode)} returns true, wraps the
    *     response object into a {@link TestServletResponseWrapper} before calling {@link
    *     HttpFilterHandler#filter(CustomHttpServletRequestWrapper, TestServletResponseWrapper,
    *     FilterChain)} in a try/finally block where {@link
@@ -96,10 +96,10 @@ public class HttpFilter implements Filter {
     CustomHttpServletRequestWrapper requestWrapper =
         new CustomHttpServletRequestWrapper((HttpServletRequest) request);
 
-    ProfileRepository.setRequestMode(requestWrapper.getHeader(MODE_HEADER));
+    Mode requestMode = ProfileRepository.getRequestMode(requestWrapper.getHeader(MODE_HEADER));
 
-    if (filterHashMap.containsKey(ProfileRepository.getMode())) {
-      if (filterHashMap.get(ProfileRepository.getMode()).preFilter(requestWrapper)) {
+    if (filterHashMap.containsKey(requestMode)) {
+      if (filterHashMap.get(requestMode).preFilter(requestWrapper, requestMode)) {
         // Wrapping the ServletResponse to make the output stream readable
         TestServletResponseWrapper testServletResponseWrapper =
             new TestServletResponseWrapper((HttpServletResponse) response);

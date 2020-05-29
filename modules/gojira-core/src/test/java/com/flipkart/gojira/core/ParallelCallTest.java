@@ -94,7 +94,7 @@ public class ParallelCallTest {
     System.out.println("ThreadID: " + Thread.currentThread().getId() + " main: before setting: "
         + ProfileRepository.getGlobalPerRequestID());
     ParallelCallTest parallelCallTestPool = new ParallelCallTest();
-    DefaultProfileOrTestHandler.start("1", HttpTestRequestData.builder().build());
+    DefaultProfileOrTestHandler.start("1", HttpTestRequestData.builder().build(), Mode.PROFILE);
     ProfileRepository.setTestDataId("1");
     List<Long> usedList1 = new ArrayList<>();
     while (true) {

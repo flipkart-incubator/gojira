@@ -17,7 +17,7 @@
 package com.flipkart.gojira.core;
 
 import com.flipkart.gojira.core.injectors.GuiceInjector;
-import com.flipkart.gojira.models.ProfileData;
+import com.flipkart.gojira.models.ExecutionData;
 import com.flipkart.gojira.models.TestData;
 import com.flipkart.gojira.models.TestDataType;
 import com.flipkart.gojira.models.TestRequestData;
@@ -38,22 +38,26 @@ public class ProfileStartEndTestHandler<T extends TestDataType> implements Start
 
   /**
    * Checks if the request falls in the sampling bucket. If yes, it calls {@link
-   * ProfileRepository#begin(String)} to start profiling and adds the {@link TestRequestData} to
-   * {@link TestData} by calling {@link ProfileRepository#setRequestData(TestRequestData)} In case
-   * of any failure, marks the {@link ProfileData#profileState} as {@link ProfileState#FAILED} to
-   * avoid further recording of data.
+   * ProfileRepository#begin(String)} to start profiling, adds the {@link TestRequestData} to
+   * {@link TestData} by calling {@link ProfileRepository#setRequestData(TestRequestData)}
+   * and adds the {@link Mode} to {@link ExecutionData#executionMode} by
+   * calling the {@link ProfileRepository#setRequestMode(Mode)}
+   * In case of any failure, marks the {@link ExecutionData#profileState} as
+   * {@link ProfileState#FAILED} to avoid further recording of data.
    *
    * @param id this is the id, which will be used for synchronizing testing across multiple threads
    *     within a single request-response scope.
    * @param requestData this is the request-data with which test is initiated
+   * @param requestMode this is the mode of execution of gojira at a request level
    */
   @Override
-  public void start(String id, TestRequestData<T> requestData) {
+  public void start(String id, TestRequestData<T> requestData, Mode requestMode) {
     try {
       if (fallsInSamplingBucket()) {
         // add request data to thread-local.
         ProfileRepository.begin(id);
         ProfileRepository.setRequestData(requestData);
+        ProfileRepository.setRequestMode(requestMode);
         LOGGER.info("Profiling initiated for id: " + ProfileRepository.getTestData().getId());
       } else {
         LOGGER.info("doesn't fall into this sampling bucket, ignoring profiling for this request");
@@ -65,7 +69,7 @@ public class ProfileStartEndTestHandler<T extends TestDataType> implements Start
   }
 
   /**
-   * If {@link ProfileData#profileState} is {@link ProfileState#INITIATED}, and we get an instance
+   * If {@link ExecutionData#profileState} is {@link ProfileState#INITIATED}, and we get an instance
    * of {@link TestQueuedSender}, we add {@link TestResponseData} to {@link TestData} by calling
    * {@link ProfileRepository#setResponseData(TestResponseData)} and sends it to {@link
    * TestQueuedSender}.

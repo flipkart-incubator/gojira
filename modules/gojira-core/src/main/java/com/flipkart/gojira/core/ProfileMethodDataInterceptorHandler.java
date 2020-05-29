@@ -19,9 +19,9 @@ package com.flipkart.gojira.core;
 import com.flipkart.gojira.core.injectors.GuiceInjector;
 import com.flipkart.gojira.hash.HashHandlerUtil;
 import com.flipkart.gojira.hash.TestHashHandler;
+import com.flipkart.gojira.models.ExecutionData;
 import com.flipkart.gojira.models.MethodData;
 import com.flipkart.gojira.models.MethodDataType;
-import com.flipkart.gojira.models.ProfileData;
 import com.flipkart.gojira.serde.SerdeHandlerRepository;
 import com.flipkart.gojira.serde.handlers.TestSerdeHandler;
 import java.lang.reflect.Method;
@@ -48,11 +48,11 @@ public class ProfileMethodDataInterceptorHandler implements MethodDataIntercepto
   public ProfileMethodDataInterceptorHandler() {}
 
   /**
-   * Checks {@link ProfileData#profileState}, if not {@link ProfileState#INITIATED} calls {@link
+   * Checks {@link ExecutionData#profileState}, if not {@link ProfileState#INITIATED} calls {@link
    * MethodInvocation#proceed()} and returns the object returned by the invocation
    *
-   * <p>On error checking for {@link ProfileData#profileState} or when performing any of the below
-   * operations, marks {@link ProfileData#profileState} as {@link ProfileState#FAILED} and calls
+   * <p>On error checking for {@link ExecutionData#profileState} or when performing any of the below
+   * operations, marks {@link ExecutionData#profileState} as {@link ProfileState#FAILED} and calls
    * {@link MethodInvocation#proceed()} if not already done and returns the object returned by the
    * invocation.
    *

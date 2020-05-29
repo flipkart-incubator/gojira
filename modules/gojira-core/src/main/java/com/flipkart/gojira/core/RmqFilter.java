@@ -72,10 +72,10 @@ public class RmqFilter {
       AMQP.BasicProperties basicProperties,
       boolean mandatory) {
 
-    ProfileRepository.setRequestMode(getModeHeader(basicProperties));
+    Mode requestMode = ProfileRepository.getRequestMode(getModeHeader(basicProperties));
     filterHashMap
         .getOrDefault(ProfileRepository.getMode(), new NoneRmqFilterHandler())
-        .handle(exchangeName, routingKey, data, basicProperties, mandatory);
+        .handle(exchangeName, routingKey, data, basicProperties, mandatory, requestMode);
   }
 
   /**

@@ -37,11 +37,12 @@ public class NoneHttpFilterHandler extends HttpFilterHandler {
    *
    * @param request wrapped original http request as a {@link
    *     HttpFilter.CustomHttpServletRequestWrapper} object
+   * @param requestMode this is the mode of execution of gojira at a request level
    * @return true if {@link javax.servlet.FilterChain#doFilter(ServletRequest, ServletResponse)}
    *     needs to be called, else false.
    */
   @Override
-  public boolean preFilter(HttpFilter.CustomHttpServletRequestWrapper request) {
+  public boolean preFilter(HttpFilter.CustomHttpServletRequestWrapper request, Mode requestMode) {
     String id = super.getTestId(request);
     if (id != null) {
       LOGGER.error(
@@ -58,7 +59,7 @@ public class NoneHttpFilterHandler extends HttpFilterHandler {
               + " mode.");
     }
     // TODO: Check if this needs to be done.
-    DefaultProfileOrTestHandler.start(null, null);
+    DefaultProfileOrTestHandler.start(null, null, requestMode);
     return true;
   }
 

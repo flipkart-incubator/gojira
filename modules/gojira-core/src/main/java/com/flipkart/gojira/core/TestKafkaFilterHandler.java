@@ -28,24 +28,29 @@ public class TestKafkaFilterHandler extends KafkaFilterHandler {
    * Gets test-id from headers and throws {@link RuntimeException} if it is null.
    *
    * <p>Initiates execution by calling {@link DefaultProfileOrTestHandler#start(String,
-   * TestRequestData)}
+   * TestRequestData, Mode)}
    *
    * <p>Implementation of this is expected to call {@link DefaultProfileOrTestHandler#start(String,
-   * TestRequestData)}
+   * TestRequestData, Mode)}
    *
    * @param topicName kafka topic name
    * @param key key used for producing message to the topic
    * @param value body used for producing message to the topic
    * @param headersMap headers used for producing message to the topic with key as string and value
    *     as map
+   * @param requestMode this is the mode of execution of gojira at a request level
    */
   @Override
   protected void handle(
-      String topicName, byte[] key, byte[] value, Map<String, byte[]> headersMap) {
+      String topicName,
+      byte[] key,
+      byte[] value,
+      Map<String, byte[]> headersMap,
+      Mode requestMode) {
     String id = getTestId(headersMap);
     if (id == null) {
       throw new RuntimeException("X-GOJIRA-ID header not present");
     }
-    DefaultProfileOrTestHandler.start(id, null);
+    DefaultProfileOrTestHandler.start(id, null, requestMode);
   }
 }

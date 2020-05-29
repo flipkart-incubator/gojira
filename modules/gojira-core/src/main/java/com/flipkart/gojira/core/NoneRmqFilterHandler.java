@@ -34,7 +34,8 @@ public class NoneRmqFilterHandler extends RmqFilterHandler {
       byte[] key,
       byte[] value,
       AMQP.BasicProperties basicProperties,
-      boolean mandatory) {
+      boolean mandatory,
+      Mode requestMode) {
     String id = getTestId(basicProperties);
     if (id != null) {
       LOGGER.error(

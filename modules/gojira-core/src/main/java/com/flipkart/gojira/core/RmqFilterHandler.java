@@ -39,7 +39,7 @@ public abstract class RmqFilterHandler {
 
   /**
    * Implementation of this is expected to call {@link DefaultProfileOrTestHandler#start(String,
-   * TestRequestData)} (String, TestRequestData)} as per {@link Mode} specific needs.
+   * TestRequestData, Mode)} (String, TestRequestData)} as per {@link Mode} specific needs.
    *
    * @param exchangeName rmq exchange name
    * @param key key used for producing message to the exchange
@@ -47,13 +47,15 @@ public abstract class RmqFilterHandler {
    * @param basicProperties contains headers, transactional reply-to id and meta data for successful
    *     RMQ operation
    * @param mandatory mandatory flag tells RabbitMq that the message must be routable.
+   * @param requestMode this is the mode of execution of gojira at a request level
    */
   protected abstract void handle(
       String exchangeName,
       byte[] key,
       byte[] value,
       AMQP.BasicProperties basicProperties,
-      boolean mandatory);
+      boolean mandatory,
+      Mode requestMode);
 
   /**
    * Helper method which tells whether the exchange being published to is whitelisted.

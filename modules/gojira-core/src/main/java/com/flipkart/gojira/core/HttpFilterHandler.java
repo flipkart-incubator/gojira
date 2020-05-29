@@ -44,18 +44,21 @@ public abstract class HttpFilterHandler {
   private static final Logger LOGGER = LoggerFactory.getLogger(HttpFilterHandler.class);
 
   /**
-   * Expected to call {@link DefaultProfileOrTestHandler#start(String, TestRequestData)} as per
-   * {@link Mode} needs.
+   * Expected to call {@link DefaultProfileOrTestHandler#start(String, TestRequestData, Mode)}
+   * as per {@link Mode} needs.
    *
-   * <p>TODO: Can the call to {@link DefaultProfileOrTestHandler#start(String, TestRequestData)} be
+   * <p>TODO: call to {@link DefaultProfileOrTestHandler#start(String, TestRequestData, Mode)} be
    * made here itself?
    *
    * @param request wrapped original http request as a {@link
    *     HttpFilter.CustomHttpServletRequestWrapper} object
+   * @param requestMode this is the mode of execution of gojira at a request level
    * @return true if {@link FilterChain#doFilter(ServletRequest, ServletResponse)} should be
    *     called, else false.
    */
-  protected abstract boolean preFilter(HttpFilter.CustomHttpServletRequestWrapper request);
+  protected abstract boolean preFilter(
+          HttpFilter.CustomHttpServletRequestWrapper request,
+          Mode requestMode);
 
   /**
    * Wrapper method for {@link FilterChain#doFilter(ServletRequest, ServletResponse)} internally.

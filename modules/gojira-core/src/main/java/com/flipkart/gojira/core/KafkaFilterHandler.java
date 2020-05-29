@@ -44,9 +44,10 @@ public abstract class KafkaFilterHandler {
    * @param value body used for producing message to the topic
    * @param headersMap headers used for producing message to the topic with key as string and value
    *     as map
+   * @param requestMode this is the mode of execution of gojira at a request level
    */
   protected abstract void handle(
-      String topicName, byte[] key, byte[] value, Map<String, byte[]> headersMap);
+      String topicName, byte[] key, byte[] value, Map<String, byte[]> headersMap, Mode requestMode);
 
   /**
    * Uses the sampling configuration to determine if the TOPIC is whitelisted or not for running in
