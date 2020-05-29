@@ -32,31 +32,43 @@ import org.slf4j.LoggerFactory;
 /**
  * This class currently acts as coordinator of execution in various {@link Mode}. It also holds a
  * reference to the thread local variable which specific request-response scope data and state.
- * <p>
- * TODO: Refactor this class. Split responsibility for temp data storage during execution,
+ *
+ * <p>TODO: Refactor this class. Split responsibility for temp data storage during execution,
  * co-ordination etc...
  */
-public class ProfileRepository<InputData extends TestRequestData<T>, OutputData extends TestResponseData<T>, T extends TestDataType> {
+public class ProfileRepository<
+    InputDataT extends TestRequestData<T>,
+    OutputDataT extends TestResponseData<T>,
+    T extends TestDataType> {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ProfileRepository.class);
   private static final String defaultGlobalPerRequestID = "GLOBAL_PER_REQUEST_ID";
-  private final static InheritableThreadLocal<String> GLOBAL_PER_REQUEST_ID = new InheritableThreadLocal<String>() {
-    /**
-     * @see ThreadLocal#initialValue()
-     */
-    @Override
-    protected String initialValue() {
-      return defaultGlobalPerRequestID;
-    }
-  };
+  private static final InheritableThreadLocal<String> GLOBAL_PER_REQUEST_ID =
+      new InheritableThreadLocal<String>() {
+        /**
+         * {@inheritDoc}
+         *
+         * @see ThreadLocal#initialValue()
+         */
+        @Override
+        protected String initialValue() {
+          return defaultGlobalPerRequestID;
+        }
+      };
   private static ProfileSetting globalProfileSetting = new ProfileSetting();
-  //TODO: Wrap below map in a size restricted collection for memory protection
-  private static ConcurrentHashMap<String, ProfileData> globalProfiledDataMap = new ConcurrentHashMap<>();
+  // TODO: Wrap below map in a size restricted collection for memory protection
+  private static ConcurrentHashMap<String, ProfileData> globalProfiledDataMap =
+      new ConcurrentHashMap<>();
 
   public static String getGlobalPerRequestID() {
     return GLOBAL_PER_REQUEST_ID.get();
   }
 
+  /**
+   * Sets {@link #GLOBAL_PER_REQUEST_ID}.
+   *
+   * @param globalPerRequestID to set as thread local.
+   */
   public static void setGlobalPerRequestID(String globalPerRequestID) {
     if (globalPerRequestID != null) {
       GLOBAL_PER_REQUEST_ID.set(globalPerRequestID);
@@ -69,12 +81,18 @@ public class ProfileRepository<InputData extends TestRequestData<T>, OutputData 
     GLOBAL_PER_REQUEST_ID.remove();
   }
 
+  /**
+   * Set testId for TestData in current thread local.
+   *
+   * @param testDataId numeric string to be set as testId
+   */
   public static void setTestDataId(String testDataId) {
     if (globalProfiledDataMap.containsKey(GLOBAL_PER_REQUEST_ID.get())) {
       globalProfiledDataMap.get(GLOBAL_PER_REQUEST_ID.get()).getTestData().setId(testDataId);
     } else {
       LOGGER.error(
-          "Trying to set test data id against global request id: " + GLOBAL_PER_REQUEST_ID.get()
+          "Trying to set test data id against global request id: "
+              + GLOBAL_PER_REQUEST_ID.get()
               + " which is either null or the default value.");
     }
   }
@@ -96,9 +114,13 @@ public class ProfileRepository<InputData extends TestRequestData<T>, OutputData 
       GLOBAL_PER_REQUEST_ID.set(globalPerRequestId);
       if (globalProfiledDataMap.putIfAbsent(globalPerRequestId, new ProfileData()) != null) {
         LOGGER.error(
-            "Error beginning profiling/testing since current global_per_request_id is already present in the map.");
+            "Error beginning profiling/testing since"
+                + globalPerRequestId
+                + " is already present in the map.");
         throw new RuntimeException(
-            "Error beginning profiling/testing since current global_per_request_id is already present in the map.");
+            "Error beginning profiling/testing since"
+                + globalPerRequestId
+                + " is already present in the map.");
       }
       ProfileRepository.setProfileState(ProfileState.INITIATED);
     } else {
@@ -113,12 +135,14 @@ public class ProfileRepository<InputData extends TestRequestData<T>, OutputData 
     }
   }
 
-  static <T extends TestDataType> TestData<TestRequestData<T>, TestResponseData<T>, T> getTestData() {
+  static <T extends TestDataType>
+      TestData<TestRequestData<T>, TestResponseData<T>, T> getTestData() {
     if (globalProfiledDataMap.containsKey(GLOBAL_PER_REQUEST_ID.get())) {
       return globalProfiledDataMap.get(GLOBAL_PER_REQUEST_ID.get()).getTestData();
     } else {
       LOGGER.error(
-          "Trying to get test data against global request id: " + GLOBAL_PER_REQUEST_ID.get()
+          "Trying to get test data against global request id: "
+              + GLOBAL_PER_REQUEST_ID.get()
               + " which is not found.");
     }
     return null;
@@ -130,7 +154,8 @@ public class ProfileRepository<InputData extends TestRequestData<T>, OutputData 
       globalProfiledDataMap.get(GLOBAL_PER_REQUEST_ID.get()).setTestData(testData);
     } else {
       LOGGER.error(
-          "Trying to set test data against global request id: " + GLOBAL_PER_REQUEST_ID.get()
+          "Trying to set test data against global request id: "
+              + GLOBAL_PER_REQUEST_ID.get()
               + " which is either null or the default value.");
     }
   }
@@ -140,8 +165,9 @@ public class ProfileRepository<InputData extends TestRequestData<T>, OutputData 
       return globalProfiledDataMap.get(GLOBAL_PER_REQUEST_ID.get()).getProfileState();
     } else {
       LOGGER.error(
-          "Trying to get request profile state against global request id: " + GLOBAL_PER_REQUEST_ID
-              .get() + " which is not found.");
+          "Trying to get request profile state against global request id: "
+              + GLOBAL_PER_REQUEST_ID.get()
+              + " which is not found.");
     }
     return ProfileState.NONE;
   }
@@ -151,46 +177,60 @@ public class ProfileRepository<InputData extends TestRequestData<T>, OutputData 
       globalProfiledDataMap.get(GLOBAL_PER_REQUEST_ID.get()).setProfileState(profileState);
     } else {
       LOGGER.error(
-          "Trying to set profile state against global request id: " + GLOBAL_PER_REQUEST_ID.get()
+          "Trying to set profile state against global request id: "
+              + GLOBAL_PER_REQUEST_ID.get()
               + " which is not found.");
     }
   }
 
   static void setRequestData(TestRequestData<? extends TestDataType> requestData) {
     if (globalProfiledDataMap.containsKey(GLOBAL_PER_REQUEST_ID.get())) {
-      globalProfiledDataMap.get(GLOBAL_PER_REQUEST_ID.get()).getTestData()
+      globalProfiledDataMap
+          .get(GLOBAL_PER_REQUEST_ID.get())
+          .getTestData()
           .setRequestData(requestData);
     } else {
       LOGGER.error(
-          "Trying to set request data against global request id: " + GLOBAL_PER_REQUEST_ID.get()
+          "Trying to set request data against global request id: "
+              + GLOBAL_PER_REQUEST_ID.get()
               + " which is not found.");
     }
   }
 
   static void setResponseData(TestResponseData<? extends TestDataType> responseData) {
     if (globalProfiledDataMap.containsKey(GLOBAL_PER_REQUEST_ID.get())) {
-      globalProfiledDataMap.get(GLOBAL_PER_REQUEST_ID.get()).getTestData()
+      globalProfiledDataMap
+          .get(GLOBAL_PER_REQUEST_ID.get())
+          .getTestData()
           .setResponseData(responseData);
     } else {
       LOGGER.error(
-          "Trying to set response data against global request id: " + GLOBAL_PER_REQUEST_ID.get()
+          "Trying to set response data against global request id: "
+              + GLOBAL_PER_REQUEST_ID.get()
               + " which is not found.");
     }
   }
 
-  static void addInterceptedData(String uniqueMethodIdentifier,
+  static void addInterceptedData(
+      String uniqueMethodIdentifier,
       ConcurrentHashMap<MethodDataType, List<MethodData>> methodDataMap) {
     if (globalProfiledDataMap.containsKey(GLOBAL_PER_REQUEST_ID.get())) {
-      ConcurrentHashMap<String, ConcurrentSkipListMap<Long, ConcurrentHashMap<MethodDataType, List<MethodData>>>> recordedMethodDataMap = globalProfiledDataMap
-          .get(GLOBAL_PER_REQUEST_ID.get()).getTestData().getMethodDataMap();
-      ConcurrentSkipListMap<Long, ConcurrentHashMap<MethodDataType, List<MethodData>>> data = recordedMethodDataMap
-          .get(uniqueMethodIdentifier);
+      ConcurrentHashMap<
+              String,
+              ConcurrentSkipListMap<Long, ConcurrentHashMap<MethodDataType, List<MethodData>>>>
+          recordedMethodDataMap =
+              globalProfiledDataMap
+                  .get(GLOBAL_PER_REQUEST_ID.get())
+                  .getTestData()
+                  .getMethodDataMap();
+      ConcurrentSkipListMap<Long, ConcurrentHashMap<MethodDataType, List<MethodData>>> data =
+          recordedMethodDataMap.get(uniqueMethodIdentifier);
       if (data == null) {
         data = new ConcurrentSkipListMap<>();
         // concurrent skip list map has entries sorted in ascending order.
         data.put(System.nanoTime(), methodDataMap);
-        ConcurrentSkipListMap<Long, ConcurrentHashMap<MethodDataType, List<MethodData>>> concurrentCheckData = recordedMethodDataMap
-            .putIfAbsent(uniqueMethodIdentifier, data);
+        ConcurrentSkipListMap<Long, ConcurrentHashMap<MethodDataType, List<MethodData>>>
+            concurrentCheckData = recordedMethodDataMap.putIfAbsent(uniqueMethodIdentifier, data);
         if (concurrentCheckData != null) {
           data = recordedMethodDataMap.get(uniqueMethodIdentifier);
           // try 3 times to ensure that concurrency is handled fine.
@@ -203,8 +243,10 @@ public class ProfileRepository<InputData extends TestRequestData<T>, OutputData 
           }
           // if it fails even after 3 times, fail the request.
           if (prevData != null) {
-            LOGGER.error("Trying to add method intercepted data against global request id: "
-                + GLOBAL_PER_REQUEST_ID.get() + " failed.");
+            LOGGER.error(
+                "Trying to add method intercepted data against global request id: "
+                    + GLOBAL_PER_REQUEST_ID.get()
+                    + " failed.");
             ProfileRepository.setProfileState(ProfileState.FAILED);
             return;
           }
@@ -222,16 +264,20 @@ public class ProfileRepository<InputData extends TestRequestData<T>, OutputData 
         }
         // if it fails even after 3 times, fail the request.
         if (prevData != null) {
-          LOGGER.error("Trying to add method intercepted data against global request id: "
-              + GLOBAL_PER_REQUEST_ID.get() + " failed.");
+          LOGGER.error(
+              "Trying to add method intercepted data against global request id: "
+                  + GLOBAL_PER_REQUEST_ID.get()
+                  + " failed.");
           ProfileRepository.setProfileState(ProfileState.FAILED);
           return;
         }
         recordedMethodDataMap.put(uniqueMethodIdentifier, data);
       }
     } else {
-      LOGGER.error("Trying to add method intercepted data against global request id: "
-          + GLOBAL_PER_REQUEST_ID.get() + " which is not found.");
+      LOGGER.error(
+          "Trying to add method intercepted data against global request id: "
+              + GLOBAL_PER_REQUEST_ID.get()
+              + " which is not found.");
     }
   }
 }

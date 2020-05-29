@@ -23,39 +23,38 @@ import org.slf4j.LoggerFactory;
 
 /**
  * DiffDetail is used to store generated diffs.
- * <p>
- * TODO: Check if we can use RFC 6902 JSON Patch
+ *
+ * <p>TODO: Check if we can use RFC 6902 JSON Patch
  */
 public class DiffDetail {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(DiffDetail.class);
   private static final ObjectMapper objectMapper = new ObjectMapper();
   /**
-   * diffType to store type of diff
+   * diffType to store type of diff.
    */
   private DiffType diffType;
   /**
    * diffPath represents the path to the object being compared Class A { int a, int b} Class C { int
-   * d, A e} Class F { int g, C[] h} Class I { String k, Map<String, F> l, List<C> m}
-   * <p>
-   * A : [{/, a, /}, {/, b, /}] C : [{/, d, /}, {/, e, a, /}, {/, e, b, /}] F : [{/, g, /}, {/, h,
-   * (.*), d, /}, {/, h, (.*), e, a, /}, {/, h, (.*), e, b, /} I : [{/, k, /}, {/, l, (.*), g, /},
-   * {/, l, (.*), h, (.*), e, a, /}, {/, l, (.*), h, (.*), e, b, /}, {/, m, (.*), d, /}, {/, m,
-   * (.*), e, a, /},  {/, m, (.*), e, b, /}
+   * d, A e} Class F { int g, C[] h} Class I { String k, Map{@literal <}String, F{@literal >} l,
+   * List{@literal <}C{@literal >} m}.
+   *
+   * <p>A : [{/, a, /}, {/, b, /}] C : [{/, d, /}, {/, e, a, /}, {/, e, b, /}] F : [{/, g, /}, {/,
+   * h, (.*), d, /}, {/, h, (.*), e, a, /}, {/, h, (.*), e, b, /} I : [{/, k, /}, {/, l, (.*), g,
+   * /}, {/, l, (.*), h, (.*), e, a, /}, {/, l, (.*), h, (.*), e, b, /}, {/, m, (.*), d, /}, {/, m,
+   * (.*), e, a, /}, {/, m, (.*), e, b, /}
    */
   private String diffPath = "";
   /**
-   * value to be expected
+   * value to be expected.
    */
   private Object expectedValue;
   /**
-   * actual value
+   * actual value.
    */
   private Object actualValue;
 
-  private DiffDetail() {
-
-  }
+  private DiffDetail() {}
 
   public static Builder builder() {
     return new Builder();
@@ -120,6 +119,5 @@ public class DiffDetail {
       this.diffDetailToBuild.actualValue = actualValue;
       return this;
     }
-
   }
 }

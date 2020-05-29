@@ -28,11 +28,11 @@ import java.util.Map;
 public class ComparisonConfig {
 
   /**
-   * Map of DiffType vs DiffPatterns for diffIgnorePatterns in {@link DiffIgnoreRepository}
+   * Map of DiffType vs DiffPatterns for diffIgnorePatterns in {@link DiffIgnoreRepository}.
    */
   private Map<String, List<String>> diffIgnoreMap = null;
   /**
-   * Default compare handler that can be used for comparing two byte[]
+   * Default compare handler that can be used for comparing two byte[].
    */
   private TestCompareHandler defaultCompareHandler;
 

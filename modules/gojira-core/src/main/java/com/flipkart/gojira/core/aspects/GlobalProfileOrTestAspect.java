@@ -23,13 +23,14 @@ import org.aopalliance.intercept.MethodInterceptor;
 import org.aspectj.lang.annotation.Aspect;
 
 /**
- * Use this class in aop.xml to extend to while defining concrete-aspects for defining custom pointcuts.
+ * Use this class in aop.xml to extend to while defining concrete-aspects for defining custom
+ * pointcuts.
  */
 @Aspect
-public abstract class GlobalProfileOrTestAspect extends AOPAllianceAdapter {
+public abstract class GlobalProfileOrTestAspect extends AopAllianceAdapter {
 
-    @Override
-    protected MethodInterceptor getMethodInterceptor() {
-        return new ProfileOrTestMethodInterceptor();
-    }
+  @Override
+  protected MethodInterceptor getMethodInterceptor() {
+    return new ProfileOrTestMethodInterceptor();
+  }
 }

@@ -23,12 +23,12 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Extension of {@link ComparisonConfig} with additional handlers for comparing response object
+ * Extension of {@link ComparisonConfig} with additional handlers for comparing response object.
  */
 public class GojiraComparisonConfig extends ComparisonConfig {
 
   /**
-   * Implementation for comparing response data
+   * Implementation for comparing response data.
    */
   private TestCompareHandler responseDataCompareHandler = new JsonTestCompareHandler();
 

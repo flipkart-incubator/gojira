@@ -27,12 +27,20 @@ public class DI {
   private static final Logger LOGGER = LoggerFactory.getLogger(DI.class);
   public static Injector INJECTOR = Guice.createInjector();
 
-  public static void install(Module module) {
+  /**
+   * Creates guice injector.
+   *
+   * @param modules for which guice injector is to be created.
+   */
+  public static void install(Module... modules) {
     synchronized (DI.class) {
-      INJECTOR = Guice.createInjector(module);
+      INJECTOR = Guice.createInjector(modules);
     }
   }
 
+  /**
+   * Returns latest guice injector instance.
+   */
   public static Injector di() {
     return INJECTOR;
   }

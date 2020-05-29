@@ -36,19 +36,18 @@ public class SerdeConfig {
 
   /**
    * Implementation for serializing/de-serializing {@link TestRequestData} and {@link
-   * TestResponseData}
+   * TestResponseData}.
    */
   private TestSerdeHandler reqRespDataSerdeHandler = new JsonDefaultTestSerdeHandler();
 
   /**
-   * Implementation for serializing/de-serializing {@link TestData}
-   * <p>
-   * //TODO: This should not be exposed to client.
+   * Implementation for serializing/de-serializing {@link TestData}.
+   *
+   * <p>//TODO: This should not be exposed to client.
    */
   private TestSerdeHandler testDataSerdeHandler = new JsonDefaultTestSerdeHandler();
 
-  private SerdeConfig() {
-  }
+  private SerdeConfig() {}
 
   public static Builder builder() {
     return new Builder();
@@ -83,13 +82,13 @@ public class SerdeConfig {
       return this;
     }
 
-    //external implementation not required for the time being
+    // external implementation not required for the time being
     private Builder setReqRespDataSerdeHandler(TestSerdeHandler testSerdeHandler) {
       this.serdeConfigToBuild.reqRespDataSerdeHandler = testSerdeHandler;
       return this;
     }
 
-    //external implementation not required for the time being
+    // external implementation not required for the time being
     private Builder setTestDataSerdeHandler(TestSerdeHandler testSerdeHandler) {
       this.serdeConfigToBuild.testDataSerdeHandler = testSerdeHandler;
       return this;

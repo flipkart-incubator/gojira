@@ -19,22 +19,24 @@ package com.flipkart.gojira.core;
 import com.flipkart.gojira.models.TestDataType;
 import com.flipkart.gojira.models.TestRequestData;
 import com.flipkart.gojira.models.TestResponseData;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This handler is responsible for invoking {@link Mode} specific implementation of {@link
- * StartEndTestHandler} TODO: Refactor this class.
+ * StartEndTestHandler}.
+ * // TODO: Refactor this class.
  */
 public class DefaultProfileOrTestHandler {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(DefaultProfileOrTestHandler.class);
 
-  /** Is an {@link java.util.Collections.UnmodifiableMap} of all handlers per {@link Mode} */
+  /**
+   * Is an {@link java.util.Collections#unmodifiableMap(Map)} of all handlers per {@link Mode}.
+   */
   private static final Map<Mode, StartEndTestHandler> startTestHandlerHashMap =
       Collections.unmodifiableMap(
           new HashMap<Mode, StartEndTestHandler>() {

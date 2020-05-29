@@ -19,41 +19,35 @@
 package com.flipkart.gojira.core.aspects;
 
 import java.lang.reflect.AccessibleObject;
-
 import org.aopalliance.intercept.Joinpoint;
 import org.aspectj.lang.JoinPoint;
 
 public abstract class JoinPointClosure implements Joinpoint {
 
-    protected JoinPoint jp;
+  protected JoinPoint jp;
 
-    public JoinPointClosure(JoinPoint joinPoint) {
-        this.jp = joinPoint;
-    }
+  public JoinPointClosure(JoinPoint joinPoint) {
+    this.jp = joinPoint;
+  }
 
-    /**
-     * @see org.aopalliance.intercept.Joinpoint#proceed()
-     */
-    public Object proceed() throws Throwable {
-        return execute();
-    }
+  @Override
+  public Object proceed() throws Throwable {
+    return execute();
+  }
 
-    // for subclasses, renamed from proceed to avoid confusion in
-    // AspectJ around advice.
-    public abstract Object execute() throws Throwable;
+  // for subclasses, renamed from proceed to avoid confusion in
+  // AspectJ around advice.
+  public abstract Object execute() throws Throwable;
 
-    /**
-     * @see org.aopalliance.intercept.Joinpoint#getThis()
-     */
-    public Object getThis() {
-        return jp.getThis();
-    }
+  @Override
+  public Object getThis() {
+    return jp.getThis();
+  }
 
-    /**
-     * @see org.aopalliance.intercept.Joinpoint#getStaticPart()
-     * Must return either a Field, Method or Constructor representing the entity
-     * at the joinpoint.
-     */
-    public abstract AccessibleObject getStaticPart();
-
+  /**
+   * Must return either a Field, Method or Constructor representing the entity at the joinPoint.
+   *
+   * @see org.aopalliance.intercept.Joinpoint#getStaticPart()
+   */
+  public abstract AccessibleObject getStaticPart();
 }

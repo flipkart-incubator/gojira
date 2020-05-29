@@ -20,9 +20,6 @@ import com.flipkart.gojira.compare.annotations.CompareHandler;
 import com.flipkart.gojira.core.annotations.ProfileOrTest;
 import com.flipkart.gojira.hash.annotations.HashHandler;
 
-/**
- * Created by arunachalam.s on 05/10/17.
- */
 public class MethodInterceptionTest {
 
   @ProfileOrTest

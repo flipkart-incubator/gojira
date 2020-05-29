@@ -16,38 +16,40 @@
 
 package com.flipkart.gojira.serde.handlers;
 
-
 import com.flipkart.gojira.serde.TestSerdeException;
 
 /**
  * Interface for defining serialization and deserialization handlers.
- * <p>
- * //TODO: Add a method to do generics type safe deserialization.
+ *
+ * <p>//TODO: Add a method to do generics type safe deserialization.
  */
 public interface TestSerdeHandler {
 
   /**
+   * This method will be used to serialize Java Object to byte[].
+   *
    * @param obj object to be serialized
-   * @param <T>
    * @return serialized byte[]
-   * @throws TestSerdeException exception thrown if serialization fails
+   * @throws TestSerdeException if serialization fails
    */
   <T> byte[] serialize(T obj) throws TestSerdeException;
 
   /**
+   * This method will be used to deserialize byte[] to Java Object of given class type.
+   *
    * @param bytes serialized byte[] to be de-serialized.
    * @param clazz class to de-serialize
-   * @param <T>
    * @return de-serialized object
-   * @throws TestSerdeException exception thrown if de-serialization fails
+   * @throws TestSerdeException if de-serialization fails
    */
   <T> T deserialize(byte[] bytes, Class<T> clazz) throws TestSerdeException;
 
   /**
+   * This method will be used to update a Java Object from byte[].
+   *
    * @param bytes serialized byte[] to be de-serialized
-   * @param obj   object which needs to be updated with the above byte[]
-   * @param <T>
-   * @throws TestSerdeException exception if we are not able to update
+   * @param obj object which needs to be updated with the above byte[]
+   * @throws TestSerdeException if it is unable to update
    */
   <T> void deserializeToInstance(byte[] bytes, T obj) throws TestSerdeException;
 }

@@ -18,18 +18,18 @@ package com.flipkart.gojira.external;
 
 import com.flipkart.gojira.external.config.ExternalConfig;
 import com.flipkart.gojira.models.TestDataType;
+import java.util.HashMap;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.Map;
-
-/** Implementation of {@link ExternalConfigRepository} */
+/**
+ * Implementation of {@link ExternalConfigRepository}.
+ */
 public class ExternalConfigRepositoryImpl extends ExternalConfigRepository {
 
   private Logger logger = LoggerFactory.getLogger(ExternalConfigRepositoryImpl.class);
 
-  /** @param externalConfig config to make external rpc calls */
   @Override
   public void setExternalConfig(
       Map<String, Map<Class<? extends TestDataType>, ExternalConfig>> externalConfig) {
@@ -39,10 +39,6 @@ public class ExternalConfigRepositoryImpl extends ExternalConfigRepository {
     }
   }
 
-  /**
-   * @param testDataType
-   * @return config by client Map
-   */
   @Override
   public Map<String, ExternalConfig> getExternalConfigByType(
       Class<? extends TestDataType> testDataType) {
@@ -64,10 +60,6 @@ public class ExternalConfigRepositoryImpl extends ExternalConfigRepository {
     return clientMap;
   }
 
-  /**
-   * @param clientId clientId
-   * @return
-   */
   @Override
   public ExternalConfig getExternalConfigFor(
       String clientId, Class<? extends TestDataType> testDataType) {
@@ -80,7 +72,6 @@ public class ExternalConfigRepositoryImpl extends ExternalConfigRepository {
     return null;
   }
 
-  /** @return */
   @Override
   public Map<String, Map<Class<? extends TestDataType>, ExternalConfig>> getExternalConfig() {
     return externalConfigHashMap;

@@ -16,18 +16,24 @@
 
 package com.flipkart.gojira.core;
 
+import com.rabbitmq.client.AMQP;
+
 /**
- * Created by arunachalam.s on 05/01/18.
+ * Implementation of {@link RmqFilterHandler} in mode {@link Mode#SERIALIZE}.
  */
-public class DummyArgument {
+public class SerializeRmqFilterHandler extends RmqFilterHandler {
 
-  private String a;
-
-  public String getA() {
-    return a;
-  }
-
-  public void setA(String a) {
-    this.a = a;
+  @Override
+  protected void handle(
+      String exchangeName,
+      byte[] key,
+      byte[] value,
+      AMQP.BasicProperties basicProperties,
+      boolean mandatory) {
+    String id = getTestId(basicProperties);
+    if (id == null) {
+      throw new RuntimeException("X-GOJIRA-ID header not present");
+    }
+    DefaultProfileOrTestHandler.start(id, null);
   }
 }

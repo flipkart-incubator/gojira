@@ -1,3 +1,19 @@
+/*
+ * Copyright 2020 Flipkart Internet, pvt ltd.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.flipkart.gojira.external.rmq;
 
 import com.flipkart.gojira.core.injectors.TestExecutionInjector;
@@ -6,40 +22,38 @@ import com.flipkart.gojira.external.Managed;
 import com.flipkart.gojira.external.SetupException;
 import com.flipkart.gojira.external.ShutdownException;
 import com.flipkart.gojira.external.config.ExternalConfig;
-import com.flipkart.gojira.external.config.RMQConfig;
-import com.flipkart.gojira.models.rmq.RMQTestDataType;
+import com.flipkart.gojira.external.config.RmqConfig;
+import com.flipkart.gojira.models.rmq.RmqTestDataType;
 import com.rabbitmq.client.Address;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public enum RMQManager implements IRMQManager, Managed {
+public enum RmqManager implements IRmqManager, Managed {
   RMQ_MANAGER;
 
-  private static final Logger logger = LoggerFactory.getLogger(RMQManager.class);
+  private static final Logger logger = LoggerFactory.getLogger(RmqManager.class);
 
-  /** @throws SetupException , raised whn unable to setup a connection to RMQ */
   @Override
   public void setup() throws SetupException {
     try {
       Map<String, ExternalConfig> externalConfigMap =
           TestExecutionInjector.getInjector()
               .getInstance(ExternalConfigRepository.class)
-              .getExternalConfigByType(RMQTestDataType.class);
+              .getExternalConfigByType(RmqTestDataType.class);
 
       if (!externalConfigMap.isEmpty()) {
         for (Map.Entry<String, ExternalConfig> entry : externalConfigMap.entrySet()) {
           ExternalConfig externalConfig = entry.getValue();
           if (externalConfig != null) {
-            RMQConfig rmqConfig = (RMQConfig) externalConfig;
+            RmqConfig rmqConfig = (RmqConfig) externalConfig;
             clientVsChannelMap.put(entry.getKey(), createChannel(rmqConfig));
           }
         }
@@ -50,7 +64,6 @@ public enum RMQManager implements IRMQManager, Managed {
     }
   }
 
-  /** @throws ShutdownException , raised when unable to perform shutdown */
   @Override
   public void shutdown() throws ShutdownException {
     try {
@@ -64,11 +77,14 @@ public enum RMQManager implements IRMQManager, Managed {
   }
 
   /**
-   * @param rmqConfig
+   * Creates {@link Channel} to publish Rmq messages.
+   *
+   * @param rmqConfig Provided in the {@link com.flipkart.gojira.external.ExternalModule} for a
+   *     given client
    * @return a Channel for app to exchange publish
-   * @throws SetupException
+   * @throws SetupException if we are not able to setup connection.
    */
-  private Channel createChannel(RMQConfig rmqConfig) throws SetupException {
+  private Channel createChannel(RmqConfig rmqConfig) throws SetupException {
     Channel rmqChannel;
     ConnectionFactory factory = new ConnectionFactory();
     Connection connection;
@@ -102,7 +118,11 @@ public enum RMQManager implements IRMQManager, Managed {
     }
   }
 
-  /** @param channel, that needs to be disconnected */
+  /**
+   * Closes the {@link Channel}.
+   *
+   * @param channel that needs to be disconnected
+   */
   private void stopConsumer(Channel channel) {
     try {
       logger.info("Stopping Consumer Service");
@@ -110,7 +130,9 @@ public enum RMQManager implements IRMQManager, Managed {
         logger.info("closing RabbitMQ channel...");
         channel.getConnection().close();
       }
-      if (channel.isOpen()) channel.close();
+      if (channel.isOpen()) {
+        channel.close();
+      }
     } catch (Exception e) {
       logger.error("Exception while closing channel", e);
     }

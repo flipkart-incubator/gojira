@@ -29,27 +29,24 @@ public abstract class RequestSamplingRepository {
   protected List<Pattern> whitelist = null;
 
   /**
-   * @return {@link #samplingPercentage} set in
-   * @see RequestSamplingModule
+   * Returns the {@link #samplingPercentage} set in {@link RequestSamplingModule}.
    */
   public abstract double getSamplingPercentage();
 
   /**
-   * @param samplingPercentage This method sets the sampling percentage for {@link Mode#PROFILE}
-   *                           mode in
-   * @see RequestSamplingModule in {@link #samplingPercentage}
+   * This method sets the sampling percentage for {@link Mode#PROFILE} mode in {@link
+   * RequestSamplingModule}.
    */
   abstract void setSamplingPercentage(double samplingPercentage);
 
   /**
-   * @return {@link #whitelist} set in
-   * @see RequestSamplingModule
+   * Returns {@link #whitelist} set in {@link RequestSamplingModule}.
    */
   public abstract List<Pattern> getWhitelist();
 
   /**
-   * @param whitelist This method sets the whiteList for {@link Mode#PROFILE} mode in
-   * @see RequestSamplingModule in {@link #whitelist}
+   * This method sets the whiteList for {@link Mode#PROFILE} mode in {@link RequestSamplingModule}
+   * in {@link #whitelist}.
    */
   abstract void setWhitelist(List<Pattern> whitelist);
 }

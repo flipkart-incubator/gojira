@@ -19,9 +19,6 @@ package com.flipkart.gojira.core;
 import com.flipkart.compare.TestCompareException;
 import com.flipkart.compare.handlers.TestCompareHandler;
 
-/**
- * Created by arunachalam.s on 19/12/17.
- */
 public class SystemTimeCompareHandler extends TestCompareHandler {
 
   @Override

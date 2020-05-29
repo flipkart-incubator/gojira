@@ -39,16 +39,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Implementation for {@link TestQueuedSender}
+ * Implementation for {@link TestQueuedSender}.
  */
 public class TestQueuedSenderImpl extends TestQueuedSender {
 
-  private static final Logger LOGGER = LoggerFactory
-      .getLogger(TestQueuedSenderImpl.class.getSimpleName());
+  private static final Logger LOGGER =
+      LoggerFactory.getLogger(TestQueuedSenderImpl.class.getSimpleName());
   private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(2);
   private IBigQueue messageQueue;
-  ;
 
+  @Override
   public void setup() throws Exception {
     Set<PosixFilePermission> perms = PosixFilePermissions.fromString("rwxrwxrwx");
     FileAttribute<Set<PosixFilePermission>> attr = PosixFilePermissions.asFileAttribute(perms);
@@ -56,12 +56,16 @@ public class TestQueuedSenderImpl extends TestQueuedSender {
     this.messageQueue = new BigQueueImpl(testQueuedSenderConfig.getPath(), "gojira-messages");
 
     MessageSenderThread messageSenderThread = new MessageSenderThread(messageQueue);
-    scheduler.scheduleWithFixedDelay(messageSenderThread, 20,
-        testQueuedSenderConfig.getQueuePurgeInterval(), TimeUnit.SECONDS);
-    scheduler.scheduleAtFixedRate(new TestQueueCleaner(messageQueue), 20,
-        testQueuedSenderConfig.getQueuePurgeInterval(), TimeUnit.SECONDS);
+    scheduler.scheduleWithFixedDelay(
+        messageSenderThread, 20, testQueuedSenderConfig.getQueuePurgeInterval(), TimeUnit.SECONDS);
+    scheduler.scheduleAtFixedRate(
+        new TestQueueCleaner(messageQueue),
+        20,
+        testQueuedSenderConfig.getQueuePurgeInterval(),
+        TimeUnit.SECONDS);
   }
 
+  @Override
   public void shutdown() throws Exception {
     while (!messageQueue.isEmpty()) {
       Thread.sleep(1000);
@@ -69,15 +73,22 @@ public class TestQueuedSenderImpl extends TestQueuedSender {
     this.scheduler.shutdownNow();
   }
 
+  @Override
   public <T extends TestDataType> void send(
       TestData<TestRequestData<T>, TestResponseData<T>, T> testData) throws Exception {
     if (messageQueue.size() < testQueuedSenderConfig.getQueueSize()) {
       LOGGER.info("TestData with id: " + testData.getId() + " enqueued.");
-      messageQueue.enqueue(GuiceInjector.getInjector().getInstance(SerdeHandlerRepository.class)
-          .getTestDataSerdeHandler().serialize(testData));
+      messageQueue.enqueue(
+          GuiceInjector.getInjector()
+              .getInstance(SerdeHandlerRepository.class)
+              .getTestDataSerdeHandler()
+              .serialize(testData));
     } else {
-      LOGGER.error("messageQueue size greater than " + testQueuedSenderConfig.getQueueSize()
-          + " testData.id " + testData.getId());
+      LOGGER.error(
+          "messageQueue size greater than "
+              + testQueuedSenderConfig.getQueueSize()
+              + " testData.id "
+              + testData.getId());
     }
   }
 
@@ -98,9 +109,12 @@ public class TestQueuedSenderImpl extends TestQueuedSender {
           if (null == data) {
             break;
           }
-          TestData<TestRequestData<TestDataType>, TestResponseData<TestDataType>, TestDataType> testData = GuiceInjector
-              .getInjector().getInstance(SerdeHandlerRepository.class)
-              .getTestDataSerdeHandler().deserialize(data, TestData.class);
+          TestData<TestRequestData<TestDataType>, TestResponseData<TestDataType>, TestDataType>
+              testData =
+                  GuiceInjector.getInjector()
+                      .getInstance(SerdeHandlerRepository.class)
+                      .getTestDataSerdeHandler()
+                      .deserialize(data, TestData.class);
           LOGGER.info("TestData with id: " + testData.getId() + " send for DataStore write.");
           GuiceInjector.getInjector().getInstance(SinkHandler.class).write(testData.getId(), data);
         }
@@ -123,8 +137,10 @@ public class TestQueuedSenderImpl extends TestQueuedSender {
       try {
         long startTime = System.currentTimeMillis();
         this.messageQueue.gc();
-        LOGGER.info(String.format("Ran GC on queue. Took: %d milliseconds",
-            (System.currentTimeMillis() - startTime)));
+        LOGGER.info(
+            String.format(
+                "Ran GC on queue. Took: %d milliseconds",
+                (System.currentTimeMillis() - startTime)));
       } catch (IOException e) {
         LOGGER.error("Could not perform GC on hyperion message queue: ", e);
       }

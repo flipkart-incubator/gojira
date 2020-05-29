@@ -16,6 +16,8 @@
 
 package com.flipkart.gojira.core;
 
+import static com.flipkart.gojira.core.GojiraConstants.TEST_HEADER;
+
 import com.flipkart.gojira.models.TestResponseData;
 import java.io.IOException;
 import javax.servlet.ServletRequest;
@@ -23,10 +25,8 @@ import javax.servlet.ServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.flipkart.gojira.core.GojiraConstants.TEST_HEADER;
-
 /**
- * Implementation of {@link HttpFilterHandler} for mode {@link Mode#NONE}
+ * Implementation of {@link HttpFilterHandler} for mode {@link Mode#NONE}.
  */
 public class NoneHttpFilterHandler extends HttpFilterHandler {
 
@@ -35,20 +35,27 @@ public class NoneHttpFilterHandler extends HttpFilterHandler {
   /**
    * Get's the test-id and throws an exception if test-header is present.
    *
-   * @param request wrapped original http request as a {@link HttpFilter.CustomHttpServletRequestWrapper}
-   *                object
+   * @param request wrapped original http request as a {@link
+   *     HttpFilter.CustomHttpServletRequestWrapper} object
    * @return true if {@link javax.servlet.FilterChain#doFilter(ServletRequest, ServletResponse)}
-   * needs to be called, else false.
+   *     needs to be called, else false.
    */
   @Override
   public boolean preFilter(HttpFilter.CustomHttpServletRequestWrapper request) {
     String id = super.getTestId(request);
     if (id != null) {
-      LOGGER.error("Header with name: " + TEST_HEADER + " present. But service is running in "
-          + ProfileRepository.getMode() + " mode.");
+      LOGGER.error(
+          "Header with name: "
+              + TEST_HEADER
+              + " present. But service is running in "
+              + ProfileRepository.getMode()
+              + " mode.");
       throw new RuntimeException(
-          "Header with name: " + TEST_HEADER + " present. But service is running in "
-              + ProfileRepository.getMode() + " mode.");
+          "Header with name: "
+              + TEST_HEADER
+              + " present. But service is running in "
+              + ProfileRepository.getMode()
+              + " mode.");
     }
     // TODO: Check if this needs to be done.
     DefaultProfileOrTestHandler.start(null, null);
@@ -56,22 +63,26 @@ public class NoneHttpFilterHandler extends HttpFilterHandler {
   }
 
   /**
-   * Calls {@link DefaultProfileOrTestHandler#end(TestResponseData)} as per {@link Mode} needs and
-   * calls {@link javax.servlet.ServletOutputStream#write(byte[])} of {@link
+   * {@inheritDoc}
+   *
+   * <p>Calls {@link DefaultProfileOrTestHandler#end(TestResponseData)} as per {@link Mode} needs
+   * and calls {@link javax.servlet.ServletOutputStream#write(byte[])} of {@link
    * javax.servlet.http.HttpServletResponse} by getting byte[] from {@link
    * HttpFilter.TestServletResponseWrapper}
    *
-   * @param request     wrapped original http request as a {@link HttpFilter.CustomHttpServletRequestWrapper}
-   *                    object
-   * @param respWrapper wrapped original http response as a {@link HttpFilter.TestServletResponseWrapper}
-   *                    object
-   * @param response    original http response as a {@link HttpFilter.CustomHttpServletRequestWrapper}
-   *                    object
-   * @throws IOException
+   * @param request wrapped original http request as a {@link
+   *     HttpFilter.CustomHttpServletRequestWrapper} object
+   * @param respWrapper wrapped original http response as a {@link
+   *     HttpFilter.TestServletResponseWrapper} object
+   * @param response original http response as a {@link HttpFilter.CustomHttpServletRequestWrapper}
+   *     object
+   * @throws IOException if an input or output exception occurred
    */
   @Override
-  protected void postFilter(HttpFilter.CustomHttpServletRequestWrapper request,
-      HttpFilter.TestServletResponseWrapper respWrapper, ServletResponse response)
+  protected void postFilter(
+      HttpFilter.CustomHttpServletRequestWrapper request,
+      HttpFilter.TestServletResponseWrapper respWrapper,
+      ServletResponse response)
       throws IOException {
     byte[] outputBuffer = respWrapper.getBuffer();
     response.getOutputStream().write(outputBuffer);

@@ -36,24 +36,23 @@ public class KafkaFilter {
   /**
    * Initializes a map of {@link Mode} specific filter handlers.
    */
-  private static final Map<Mode, KafkaFilterHandler> filterHashMap = Collections.unmodifiableMap(
-      new HashMap<Mode, KafkaFilterHandler>() {{
-        put(Mode.NONE, new NoneKafkaFilterHandler());
-        put(Mode.PROFILE, new ProfileKafkaFilterHandler());
-        put(Mode.TEST, new TestKafkaFilterHandler());
-        put(Mode.SERIALIZE, new SerializeKafkaFilterHandler());
-      }}
-  );
+  private static final Map<Mode, KafkaFilterHandler> filterHashMap =
+      Collections.unmodifiableMap(
+          new HashMap<Mode, KafkaFilterHandler>() {
+            {
+              put(Mode.NONE, new NoneKafkaFilterHandler());
+              put(Mode.PROFILE, new ProfileKafkaFilterHandler());
+              put(Mode.TEST, new TestKafkaFilterHandler());
+              put(Mode.SERIALIZE, new SerializeKafkaFilterHandler());
+            }
+          });
 
-  public KafkaFilter() {
-  }
+  public KafkaFilter() {}
 
   /**
-   * Helper method which given
+   * Helper method to get headers.
    *
    * @param headers kafka headers
-   *                <p>
-   *                returns
    * @return map of headers as with key as string and value as byte[]
    */
   private static Map<String, byte[]> getMapForRequestHeaders(Headers headers) {
@@ -61,44 +60,43 @@ public class KafkaFilter {
     if (headers == null) {
       return headersMap;
     }
-    headers.forEach(header -> {
-      headersMap.put(header.key(), header.value());
-    });
+    headers.forEach(
+        header -> {
+          headersMap.put(header.key(), header.value());
+        });
     return headersMap;
   }
 
   /**
-   * @param topicName     kafka topic name
-   * @param key           key used for producing message to the topic
-   * @param value         body used for producing message to the topic
+   * Integrating application is required to call this method during the start of request-response
+   * capture life-cycle. Failure to do so may result in not capturing the request-response data.
+   *
+   * <p>This method invokes the {@link Mode} specific handler to process the incoming request.
+   *
+   * @param topicName kafka topic name
+   * @param key key used for producing message to the topic
+   * @param value body used for producing message to the topic
    * @param recordHeaders headers used for producing message to the topic
-   *                      <p>
-   *                      Integrating application is required to call this method during the start
-   *                      of request-response capture life-cycle. Failure to do so may result in not
-   *                      capturing the request-response data.
-   *                      <p>
-   *                      This method converts invokes the {@link Mode} specific handler to process
-   *                      the incoming request.
    */
   public void start(String topicName, byte[] key, byte[] value, Headers recordHeaders) {
     Map<String, byte[]> headersMap = getMapForRequestHeaders(recordHeaders);
-    filterHashMap.getOrDefault(ProfileRepository.getMode(), new NoneKafkaFilterHandler())
+    filterHashMap
+        .getOrDefault(ProfileRepository.getMode(), new NoneKafkaFilterHandler())
         .handle(topicName, key, value, headersMap);
   }
 
   /**
+   * Integrating application is required to call this method during the end of request-response
+   * capture life-cycle. Failure to do so may result in not capturing the request-response data and
+   * also potential memory leak.
+   *
+   * <p>This method calls {@link DefaultProfileOrTestHandler#end(TestResponseData)}.
+   *
    * @param bytes response data if any. In most cases this may be null
-   *              <p>
-   *              Integrating application is required to call this method during the end of
-   *              request-response capture life-cycle. Failure to do so may result in not capturing
-   *              the request-response data and also potential memory leak.
-   *              <p>
-   *              This method calls {@link DefaultProfileOrTestHandler#end(TestResponseData)}
    */
   public void end(byte[] bytes) {
-    KafkaTestResponseData kafkaTestResponseData = KafkaTestResponseData.builder()
-        .setRespondData(bytes)
-        .build();
+    KafkaTestResponseData kafkaTestResponseData =
+        KafkaTestResponseData.builder().setRespondData(bytes).build();
     DefaultProfileOrTestHandler.end(kafkaTestResponseData);
   }
 }

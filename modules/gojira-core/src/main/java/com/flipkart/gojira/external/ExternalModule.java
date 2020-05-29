@@ -16,18 +16,17 @@
 
 package com.flipkart.gojira.external;
 
+import static com.flipkart.gojira.core.GojiraConstants.TEST_DATA_TYPE_STRING_TO_CLASS;
+
 import com.flipkart.gojira.external.config.ExternalConfig;
 import com.flipkart.gojira.models.TestDataType;
 import com.google.inject.AbstractModule;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.flipkart.gojira.core.GojiraConstants.TEST_DATA_TYPE_STRING_TO_CLASS;
-
 /**
- * Guice module which is used for binding {@link ExternalConfig}
+ * Guice module which is used for binding {@link ExternalConfig}.
  */
 public class ExternalModule extends AbstractModule {
 
@@ -40,17 +39,24 @@ public class ExternalModule extends AbstractModule {
   @Override
   protected void configure() {
     ExternalConfigRepositoryImpl externalConfigRepository = new ExternalConfigRepositoryImpl();
-    Map<String, Map<Class<? extends TestDataType>, ExternalConfig>> externalConfigMap = new HashMap<>();
+    Map<String, Map<Class<? extends TestDataType>, ExternalConfig>> externalConfigMap =
+        new HashMap<>();
 
-    clientToListConfigMap.forEach((client, configList) -> {
-      externalConfigMap.putIfAbsent(client, new HashMap<>());
-      configList.forEach((config) -> {
-        if (externalConfigMap.get(client).containsKey(TEST_DATA_TYPE_STRING_TO_CLASS.get(config.getType()))) {
-          throw new RuntimeException("Only one config per type is allowed. ");
-        }
-        externalConfigMap.get(client).put(TEST_DATA_TYPE_STRING_TO_CLASS.get(config.getType()), config);
-      });
-    });
+    clientToListConfigMap.forEach(
+        (client, configList) -> {
+          externalConfigMap.putIfAbsent(client, new HashMap<>());
+          configList.forEach(
+              (config) -> {
+                if (externalConfigMap
+                    .get(client)
+                    .containsKey(TEST_DATA_TYPE_STRING_TO_CLASS.get(config.getType()))) {
+                  throw new RuntimeException("Only one config per type is allowed. ");
+                }
+                externalConfigMap
+                    .get(client)
+                    .put(TEST_DATA_TYPE_STRING_TO_CLASS.get(config.getType()), config);
+              });
+        });
     externalConfigRepository.setExternalConfig(externalConfigMap);
     bind(ExternalConfigRepository.class).toInstance(externalConfigRepository);
   }

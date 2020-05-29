@@ -19,16 +19,16 @@ package com.flipkart.gojira.core;
 import org.aopalliance.intercept.MethodInvocation;
 
 /**
- * Implementation for {@link MethodDataInterceptorHandler} for mode {@link Mode#NONE}
+ * Implementation for {@link MethodDataInterceptorHandler} for mode {@link Mode#NONE}.
  */
 public class NoneMethodDataInterceptorHandler implements MethodDataInterceptorHandler {
 
   /**
-   * Simply invokes {@link MethodInvocation#proceed()}
+   * Simply invokes {@link MethodInvocation#proceed()}.
    *
    * @param invocation intercepted method invocation
    * @return the object returned by the called method
-   * @throws Throwable the exception thrown by the called method
+   * @throws Throwable for any exception thrown by the called method
    */
   @Override
   public Object handle(MethodInvocation invocation) throws Throwable {

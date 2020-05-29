@@ -1,36 +1,52 @@
+/*
+ * Copyright 2020 Flipkart Internet, pvt ltd.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.flipkart.gojira.core;
+
+import static com.flipkart.gojira.core.GojiraConstants.TEST_HEADER;
 
 import com.flipkart.gojira.core.injectors.GuiceInjector;
 import com.flipkart.gojira.models.TestRequestData;
 import com.flipkart.gojira.requestsampling.RequestSamplingRepository;
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.LongString;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
-
-import static com.flipkart.gojira.core.GojiraConstants.TEST_HEADER;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class is expected to provide an interface for implementing different logic for different
  * {@link Mode} during request capture.
  */
-public abstract class RMQFilterHandler {
+public abstract class RmqFilterHandler {
 
-  protected static final Logger LOGGER = LoggerFactory.getLogger(RMQFilterHandler.class);
+  protected static final Logger LOGGER = LoggerFactory.getLogger(RmqFilterHandler.class);
 
   /**
+   * Implementation of this is expected to call {@link DefaultProfileOrTestHandler#start(String,
+   * TestRequestData)} (String, TestRequestData)} as per {@link Mode} specific needs.
+   *
    * @param exchangeName rmq exchange name
    * @param key key used for producing message to the exchange
    * @param value body used for producing message to the exchange
-   * @param basicProperties contains headers, transactional reply-to id and meta data for successful RMQ operation
-   * @param mandatory  mandatory flag tells RabbitMq that the message must be routable.
-   *     <p>Implementation of this is expected to call {@link
-   *     DefaultProfileOrTestHandler#start(String, TestRequestData)} (String, TestRequestData)} as
-   *     per {@link Mode} specific needs.
+   * @param basicProperties contains headers, transactional reply-to id and meta data for successful
+   *     RMQ operation
+   * @param mandatory mandatory flag tells RabbitMq that the message must be routable.
    */
   protected abstract void handle(
       String exchangeName,
@@ -40,10 +56,10 @@ public abstract class RMQFilterHandler {
       boolean mandatory);
 
   /**
-   * Helper method which tells whether the exchange being published to is whitelisted?
+   * Helper method which tells whether the exchange being published to is whitelisted.
    *
    * @param exchangeName rmq exchange for publishing
-   * @return boolean true if whitelisted, else false.
+   * @return true if whitelisted, else false.
    */
   protected boolean isExchangeWhitelisted(String exchangeName) {
     List<Pattern> whitelistedExchanges =
@@ -60,7 +76,7 @@ public abstract class RMQFilterHandler {
   }
 
   /**
-   * Helper method which given
+   * Extracts the test-id for gojira.
    *
    * @param basicProperties rmq basic properties which contains headers
    * @return test id

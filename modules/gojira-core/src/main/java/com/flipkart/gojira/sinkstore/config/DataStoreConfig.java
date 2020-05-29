@@ -28,8 +28,7 @@ public class DataStoreConfig {
    */
   private SinkHandler sinkHandler = null;
 
-  private DataStoreConfig() {
-  }
+  private DataStoreConfig() {}
 
   public static Builder builder() {
     return new Builder();

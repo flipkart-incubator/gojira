@@ -21,6 +21,8 @@ import com.flipkart.gojira.external.ExternalConfigRepository;
 import com.flipkart.gojira.external.config.ExternalConfig;
 import com.flipkart.gojira.external.config.HttpConfig;
 import com.flipkart.gojira.models.http.HttpTestDataType;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import org.asynchttpclient.DefaultAsyncHttpClient;
 import org.asynchttpclient.ListenableFuture;
 import org.asynchttpclient.RequestBuilder;
@@ -29,20 +31,21 @@ import org.asynchttpclient.util.HttpConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
-import java.util.concurrent.ExecutionException;
-
-/** Helper class which implements {@link IHttpHelper} */
+/**
+ * Helper class which implements {@link IHttpHelper}.
+ */
 public class HttpHelper implements IHttpHelper {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(HttpHelper.class);
 
   /**
+   * {@inheritDoc}
+   *
    * @param clientId identifier to fetch externalConfig
    * @param urlWithQueryParams http uri and query params
    * @param header headers as {@link Map}
-   * @return returns the {@link Response} object.
-   * @throws HttpCallException exception thrown if we are not able to initiate execution
+   * @return the {@link Response} object.
+   * @throws HttpCallException if we are not able to initiate execution
    */
   @Override
   public Response doGet(String clientId, String urlWithQueryParams, Map<String, String> header)
@@ -57,12 +60,14 @@ public class HttpHelper implements IHttpHelper {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * @param clientId identifier to fetch externalConfig
    * @param urlWithQueryParams http uri and query params
    * @param header headers as {@link Map}
    * @param payload headers as {@link Map}
-   * @return returns the {@link Response} object.
-   * @throws HttpCallException exception thrown if we are not able to initiate execution
+   * @return the {@link Response} object.
+   * @throws HttpCallException if we are not able to initiate execution
    */
   @Override
   public Response doPost(
@@ -79,12 +84,14 @@ public class HttpHelper implements IHttpHelper {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * @param clientId identifier to fetch externalConfig
    * @param urlWithQueryParams http uri and query params
    * @param header headers as {@link Map}
    * @param payload headers as {@link Map}
-   * @return returns the {@link Response} object.
-   * @throws HttpCallException exception thrown if we are not able to initiate execution
+   * @return the {@link Response} object.
+   * @throws HttpCallException if we are not able to initiate execution
    */
   @Override
   public Response doPut(
@@ -101,11 +108,13 @@ public class HttpHelper implements IHttpHelper {
   }
 
   /**
+   * {@inheritDoc}
+   *
    * @param clientId identifier to fetch externalConfig
    * @param urlWithQueryParams http uri and query params
    * @param header headers as {@link Map}
-   * @return returns the {@link Response} object.
-   * @throws HttpCallException exception thrown if we are not able to initiate execution
+   * @return the {@link Response} object.
+   * @throws HttpCallException if we are not able to initiate execution
    */
   @Override
   public Response doDelete(String clientId, String urlWithQueryParams, Map<String, String> header)
@@ -130,8 +139,8 @@ public class HttpHelper implements IHttpHelper {
    * @param clientId identifier to fetch externalConfig
    * @param requestBuilder requestBuilder object
    * @param urlWithQueryParams http uri and query params
-   * @return returns the {@link Response} object.
-   * @throws HttpCallException exception thrown if we are not able to initiate execution
+   * @return the {@link Response} object.
+   * @throws HttpCallException if we are not able to initiate execution
    */
   private Response execute(
       String clientId, RequestBuilder requestBuilder, String urlWithQueryParams)

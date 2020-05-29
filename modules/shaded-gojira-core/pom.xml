@@ -5,19 +5,19 @@
   <parent>
     <artifactId>gojira-parent</artifactId>
     <groupId>com.flipkart</groupId>
-    <version>${revision}</version>
+    <version>1.9.4</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>shaded-gojira-core</artifactId>
   <packaging>jar</packaging>
-  <name>Shaded core Gojira libraries</name>
+  <name>Shaded Gojira core libraries</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <java.version>1.8</java.version>
     <maven.version>3.2</maven.version>
-    <gojira.core.model.version>${revision}</gojira.core.model.version>
+    <gojira.core.model.version>1.9.4</gojira.core.model.version>
   </properties>
 
   <dependencies>

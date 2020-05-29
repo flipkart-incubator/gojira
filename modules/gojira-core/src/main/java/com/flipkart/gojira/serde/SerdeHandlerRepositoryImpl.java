@@ -22,7 +22,7 @@ import java.lang.annotation.Annotation;
 import org.aopalliance.intercept.MethodInvocation;
 
 /**
- * Implementaion of {@link SerdeHandlerRepository}
+ * Implementaion of {@link SerdeHandlerRepository}.
  */
 public class SerdeHandlerRepositoryImpl extends SerdeHandlerRepository {
 
@@ -30,7 +30,7 @@ public class SerdeHandlerRepositoryImpl extends SerdeHandlerRepository {
    * This method fetches the {@link SerdeHandler} annotation for a give method argument.
    *
    * @param invocation method invocation instance
-   * @param position   position of the method argument
+   * @param position position of the method argument
    * @return {@link SerdeHandler} annotation for a give method argument.
    */
   private static SerdeHandler annotatedSerdeHandler(MethodInvocation invocation, int position) {
@@ -59,70 +59,40 @@ public class SerdeHandlerRepositoryImpl extends SerdeHandlerRepository {
     return null;
   }
 
-  /**
-   * @param methodId     unique method identifier.
-   * @param fqClassName  fully qualified class name.
-   * @param serdeHandler This add exceptionData serde handler provided in
-   */
   @Override
-  void addExceptionDataSerdeHandler(String methodId, String fqClassName,
-      TestSerdeHandler serdeHandler) {
+  void addExceptionDataSerdeHandler(
+      String methodId, String fqClassName, TestSerdeHandler serdeHandler) {}
 
-  }
-
-  /**
-   * @return
-   */
   @Override
   public TestSerdeHandler getDefaultSerdeHandler() {
     return defaultSerdeHandler;
   }
 
-  /**
-   * @param serdeHandler This method sets the default serde handler provided in
-   */
   @Override
   void setDefaultSerdeHandler(TestSerdeHandler serdeHandler) {
     defaultSerdeHandler = serdeHandler;
   }
 
-  /**
-   * @return
-   */
   @Override
   public TestSerdeHandler getReqRespDataSerdeHandler() {
     return reqRespDataSerdeHandler;
   }
 
-  /**
-   * @param serdeHandler This sets the default response serde handler provided in
-   */
   @Override
   void setReqRespDataSerdeHandler(TestSerdeHandler serdeHandler) {
     reqRespDataSerdeHandler = serdeHandler;
   }
 
-  /**
-   * @return
-   */
   @Override
   public TestSerdeHandler getTestDataSerdeHandler() {
     return testDataSerdeHandler;
   }
 
-  /**
-   * @param testSerdeHandler
-   */
   @Override
   void setTestDataSerdeHandler(TestSerdeHandler testSerdeHandler) {
     testDataSerdeHandler = testSerdeHandler;
   }
 
-  /**
-   * @param methodInvocation current methodInvocation instance.
-   * @return
-   * @throws Throwable
-   */
   @Override
   public TestSerdeHandler getOrUpdateAndGetOrDefaultReturnDataSerdeHandler(
       MethodInvocation methodInvocation) throws Throwable {
@@ -131,8 +101,8 @@ public class SerdeHandlerRepositoryImpl extends SerdeHandlerRepository {
       SerdeHandler annotatedSerdeHandler = annotatedReturnSerdeHandler(methodInvocation);
       if (annotatedSerdeHandler != null) {
         {
-          Class<? extends TestSerdeHandler> serdeHandler = annotatedSerdeHandler
-              .serdeHandlerClass();
+          Class<? extends TestSerdeHandler> serdeHandler =
+              annotatedSerdeHandler.serdeHandlerClass();
           TestSerdeHandler testSerdeHandler = serdeHandler.newInstance();
           returnDataSerdeHandler.put(mapEntryVar, testSerdeHandler);
         }
@@ -143,23 +113,12 @@ public class SerdeHandlerRepositoryImpl extends SerdeHandlerRepository {
     return returnDataSerdeHandler.get(mapEntryVar);
   }
 
-  /**
-   * @param methodId    unique method identifier
-   * @param fqClassName fully qualified class name.
-   * @return
-   */
   @Override
   public TestSerdeHandler getExceptionDataSerdeHandler(String methodId, String fqClassName) {
-    return exceptionDataSerdeHandler
-        .getOrDefault(methodId + "|" + fqClassName, getDefaultSerdeHandler());
+    return exceptionDataSerdeHandler.getOrDefault(
+        methodId + "|" + fqClassName, getDefaultSerdeHandler());
   }
 
-  /**
-   * @param methodInvocation current methodInvocation instance.
-   * @param argument         specific argument sequence # whose serdeHandler is needed.
-   * @return
-   * @throws Throwable
-   */
   @Override
   public TestSerdeHandler getOrUpdateAndGetOrDefaultMethodArgumentDataSerdeHandler(
       MethodInvocation methodInvocation, int argument) throws Throwable {
@@ -168,8 +127,8 @@ public class SerdeHandlerRepositoryImpl extends SerdeHandlerRepository {
       SerdeHandler annotatedSerdeHandler = annotatedSerdeHandler(methodInvocation, argument);
       if (annotatedSerdeHandler != null) {
         {
-          Class<? extends TestSerdeHandler> serdeHandler = annotatedSerdeHandler
-              .serdeHandlerClass();
+          Class<? extends TestSerdeHandler> serdeHandler =
+              annotatedSerdeHandler.serdeHandlerClass();
           TestSerdeHandler testSerdeHandler = serdeHandler.newInstance();
           methodArgumentDataSerdeHandler.put(mapEntryVar, testSerdeHandler);
         }

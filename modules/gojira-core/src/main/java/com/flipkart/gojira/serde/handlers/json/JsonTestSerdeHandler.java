@@ -43,9 +43,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Implementation of {@link TestSerdeHandler}
- * <p>
- * Please use {@link JsonDefaultTestSerdeHandler} if required.
+ * Implementation of {@link TestSerdeHandler}.
+ *
+ * <p>Please use {@link JsonMapListSerdeHandler} if required. This class will be deprecated in the
+ * next release.
  */
 @Deprecated
 public class JsonTestSerdeHandler implements TestSerdeHandler {
@@ -67,7 +68,8 @@ public class JsonTestSerdeHandler implements TestSerdeHandler {
     mapper.registerModule(module);
   }
 
-  public synchronized static <T> void registerSerializer(Class<T> type, JsonSerializer<T> ser) {
+  /** Registers a JsonSerializer instance against a mentioned type. */
+  public static synchronized <T> void registerSerializer(Class<T> type, JsonSerializer<T> ser) {
     module.addSerializer(type, ser);
     mapper.registerModule(module);
 
@@ -75,11 +77,11 @@ public class JsonTestSerdeHandler implements TestSerdeHandler {
 
     TestListDeserializer.registerSerializer(type, ser);
     TestMapDeserializer.registerSerializer(type, ser);
-
   }
 
-  public synchronized static <T> void registerDeSerializer(Class<T> type,
-      JsonDeserializer<T> deser) {
+  /** Registers a JsonDeserializer instance against a mentioned type. */
+  public static synchronized <T> void registerDeSerializer(
+      Class<T> type, JsonDeserializer<T> deser) {
     module.addDeserializer(type, deser);
     mapper.registerModule(module);
 
@@ -121,8 +123,8 @@ public class JsonTestSerdeHandler implements TestSerdeHandler {
       return mapper.readValue(bytes, clazz);
     } catch (IOException e) {
       LOGGER.error("error de-serializing data. class: " + clazz.toGenericString(), e);
-      throw new TestSerdeException("error de-serializing data. class: " + clazz.toGenericString(),
-          e);
+      throw new TestSerdeException(
+          "error de-serializing data. class: " + clazz.toGenericString(), e);
     }
   }
 
@@ -179,10 +181,9 @@ public class JsonTestSerdeHandler implements TestSerdeHandler {
 
       mapper.registerModule(module);
       recursiveMapper.registerModule(recursiveModule);
-
     }
 
-    public synchronized static <T> void registerSerializer(Class<T> type, JsonSerializer<T> ser) {
+    static synchronized <T> void registerSerializer(Class<T> type, JsonSerializer<T> ser) {
       module.addSerializer(type, ser);
       mapper.registerModule(module);
 
@@ -190,8 +191,7 @@ public class JsonTestSerdeHandler implements TestSerdeHandler {
       mapper.registerModule(recursiveModule);
     }
 
-    public synchronized static <T> void registerDeserializer(Class<T> type,
-        JsonDeserializer<T> deser) {
+    static synchronized <T> void registerDeserializer(Class<T> type, JsonDeserializer<T> deser) {
       module.addDeserializer(type, deser);
       mapper.registerModule(module);
 
@@ -210,8 +210,8 @@ public class JsonTestSerdeHandler implements TestSerdeHandler {
       try {
         list = (List) Class.forName((arrayNode.get(0)).asText()).newInstance();
       } catch (Exception e) {
-        LOGGER
-            .error("Error creating new list of type " + listType + " in JsonTestSerdeHandler. ", e);
+        LOGGER.error(
+            "Error creating new list of type " + listType + " in JsonTestSerdeHandler. ", e);
         throw new IOException("Error creating new list instance in JsonTestSerdeHandler. ", e);
       }
       if (arrayNode.get(1) == null) {
@@ -228,10 +228,11 @@ public class JsonTestSerdeHandler implements TestSerdeHandler {
             listItemType = arrayNode.get(i).asText();
             itemType = false;
           } else {
-            list.add(List.class.isAssignableFrom(Class.forName(listItemType)) ?
-                recursiveMapper.readValue(arrayNode.get(i).toString().getBytes(), List.class) :
-                mapper.readValue(arrayNode.get(i).toString().getBytes(),
-                    Class.forName(listItemType)));
+            list.add(
+                List.class.isAssignableFrom(Class.forName(listItemType))
+                    ? recursiveMapper.readValue(arrayNode.get(i).toString().getBytes(), List.class)
+                    : mapper.readValue(
+                        arrayNode.get(i).toString().getBytes(), Class.forName(listItemType)));
             itemType = true;
           }
         }
@@ -256,13 +257,13 @@ public class JsonTestSerdeHandler implements TestSerdeHandler {
       mapper.registerModule(module);
     }
 
-    public synchronized static <T> void registerSerializer(Class<T> type, JsonSerializer<T> ser) {
+    public static synchronized <T> void registerSerializer(Class<T> type, JsonSerializer<T> ser) {
       module.addSerializer(type, ser);
       mapper.registerModule(module);
     }
 
-    public synchronized static <T> void registerDeserializer(Class<T> type,
-        JsonDeserializer<T> deser) {
+    public static synchronized <T> void registerDeserializer(
+        Class<T> type, JsonDeserializer<T> deser) {
       module.addDeserializer(type, deser);
       mapper.registerModule(module);
     }
@@ -281,15 +282,18 @@ public class JsonTestSerdeHandler implements TestSerdeHandler {
           if (value.keySet().toArray()[i] != null
               && value.get(value.keySet().toArray()[i]) != null) {
             gen.writeStartObject();
-            gen.writeStringField("TestMapSerializer|mapElementKeyType",
+            gen.writeStringField(
+                "TestMapSerializer|mapElementKeyType",
                 value.keySet().toArray()[i].getClass().getName());
             gen.writeEndObject();
             gen.writeStartObject();
-            gen.writeStringField("TestMapSerializer|mapElementValueType",
+            gen.writeStringField(
+                "TestMapSerializer|mapElementValueType",
                 value.get(value.keySet().toArray()[i]).getClass().getName());
             gen.writeEndObject();
             gen.writeStartObject();
-            gen.writeObjectField(mapper.writeValueAsString(value.keySet().toArray()[i]),
+            gen.writeObjectField(
+                mapper.writeValueAsString(value.keySet().toArray()[i]),
                 value.get(value.keySet().toArray()[i]));
             gen.writeEndObject();
           }
@@ -325,7 +329,7 @@ public class JsonTestSerdeHandler implements TestSerdeHandler {
       recursiveMapper.registerModule(recursiveModule);
     }
 
-    public synchronized static <T> void registerSerializer(Class<T> type, JsonSerializer<T> ser) {
+    static synchronized <T> void registerSerializer(Class<T> type, JsonSerializer<T> ser) {
       module.addSerializer(type, ser);
       mapper.registerModule(module);
 
@@ -333,15 +337,13 @@ public class JsonTestSerdeHandler implements TestSerdeHandler {
       mapper.registerModule(recursiveModule);
     }
 
-    public synchronized static <T> void registerDeserializer(Class<T> type,
-        JsonDeserializer<T> deser) {
+    static synchronized <T> void registerDeserializer(Class<T> type, JsonDeserializer<T> deser) {
       module.addDeserializer(type, deser);
       mapper.registerModule(module);
 
       recursiveModule.addDeserializer(type, deser);
       mapper.registerModule(recursiveModule);
     }
-
 
     @Override
     public Map deserialize(JsonParser p, DeserializationContext ctxt)
@@ -350,7 +352,8 @@ public class JsonTestSerdeHandler implements TestSerdeHandler {
       ObjectCodec oc = p.getCodec();
       ArrayNode arrayNode = oc.readTree(p);
       String mapType =
-          arrayNode.get(0) != null ? arrayNode.get(0).get("TestMapSerializer|mapType").asText()
+          arrayNode.get(0) != null
+              ? arrayNode.get(0).get("TestMapSerializer|mapType").asText()
               : null;
       if (mapType == null) {
         return new HashMap<>();
@@ -389,13 +392,14 @@ public class JsonTestSerdeHandler implements TestSerdeHandler {
           } else {
             while (keys.hasNext()) {
               String key = keys.next();
-              map.put(Map.class.isAssignableFrom(Class.forName(mapKeyType)) ?
-                      recursiveMapper.readValue(key.getBytes(), Map.class) :
-                      mapper.readValue(key.getBytes(), Class.forName(mapKeyType)),
-                  Map.class.isAssignableFrom(Class.forName(mapValueType)) ?
-                      recursiveMapper.readValue(element.get(key).toString().getBytes(), Map.class) :
-                      mapper.readValue(element.get(key).toString().getBytes(),
-                          Class.forName(mapValueType)));
+              map.put(
+                  Map.class.isAssignableFrom(Class.forName(mapKeyType))
+                      ? recursiveMapper.readValue(key.getBytes(), Map.class)
+                      : mapper.readValue(key.getBytes(), Class.forName(mapKeyType)),
+                  Map.class.isAssignableFrom(Class.forName(mapValueType))
+                      ? recursiveMapper.readValue(element.get(key).toString().getBytes(), Map.class)
+                      : mapper.readValue(
+                          element.get(key).toString().getBytes(), Class.forName(mapValueType)));
             }
             mapKey = true;
           }

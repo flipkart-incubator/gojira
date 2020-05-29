@@ -58,6 +58,5 @@ public class KafkaTestResponseData extends TestResponseData<KafkaTestDataType> {
       this.kafkaTestResponseDataToBuild.respondData = respondData;
       return this;
     }
-
   }
 }

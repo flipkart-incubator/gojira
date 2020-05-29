@@ -33,5 +33,4 @@ public class ProfileSetting {
   synchronized void setMode(Mode mode) {
     this.mode = mode;
   }
-
 }
