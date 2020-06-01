@@ -16,6 +16,8 @@
 
 package com.flipkart.gojira.core;
 
+import static com.flipkart.gojira.core.GojiraConstants.MODE_HEADER;
+
 import com.flipkart.gojira.models.TestResponseData;
 import com.flipkart.gojira.models.kafka.KafkaTestResponseData;
 import java.util.Collections;
@@ -80,8 +82,12 @@ public class KafkaFilter {
    */
   public void start(String topicName, byte[] key, byte[] value, Headers recordHeaders) {
     Map<String, byte[]> headersMap = getMapForRequestHeaders(recordHeaders);
+    byte[] id = headersMap.getOrDefault(MODE_HEADER, null);
+    Mode requestMode = ProfileRepository
+            .ModeHelper
+            .getRequestMode(id != null ? new String(id) : null);
     filterHashMap
-        .getOrDefault(ProfileRepository.getMode(), new NoneKafkaFilterHandler())
+        .getOrDefault(requestMode, new NoneKafkaFilterHandler())
         .handle(topicName, key, value, headersMap);
   }
 

@@ -34,19 +34,22 @@ public class NoneKafkaFilterHandler extends KafkaFilterHandler {
    */
   @Override
   protected void handle(
-      String topicName, byte[] key, byte[] value, Map<String, byte[]> headersMap) {
+      String topicName,
+      byte[] key,
+      byte[] value,
+      Map<String, byte[]> headersMap) {
     String id = getTestId(headersMap);
     if (id != null) {
       LOGGER.error(
           "Header with name: "
               + GojiraConstants.TEST_HEADER
               + " present. But service is not running in TEST mode. : "
-              + ProfileRepository.getMode());
+              + Mode.NONE);
       throw new RuntimeException(
           "Header with name: "
               + GojiraConstants.TEST_HEADER
               + " present. But service is not running in TEST mode. : "
-              + ProfileRepository.getMode());
+              + Mode.NONE);
     }
   }
 }

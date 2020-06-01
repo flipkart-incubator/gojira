@@ -32,10 +32,10 @@ public class ProfileKafkaFilterHandler extends KafkaFilterHandler {
    * request in other {@link Mode}.
    *
    * <p>Then begins recording session by calling {@link DefaultProfileOrTestHandler#start(String,
-   * TestRequestData)}
+   * TestRequestData, Mode)}
    *
    * <p>Implementation of this is expected to call {@link DefaultProfileOrTestHandler#start(String,
-   * TestRequestData)}
+   * TestRequestData, Mode)}
    *
    * @param topicName kafka topic name
    * @param key key used for producing message to the topic
@@ -45,19 +45,22 @@ public class ProfileKafkaFilterHandler extends KafkaFilterHandler {
    */
   @Override
   protected void handle(
-      String topicName, byte[] key, byte[] value, Map<String, byte[]> headersMap) {
+      String topicName,
+      byte[] key,
+      byte[] value,
+      Map<String, byte[]> headersMap) {
     String id = getTestId(headersMap);
     if (id != null) {
       LOGGER.error(
           "Header with name: "
               + GojiraConstants.TEST_HEADER
               + " present. But service is not running in TEST mode. : "
-              + ProfileRepository.getMode());
+              + Mode.PROFILE);
       throw new RuntimeException(
           "Header with name: "
               + GojiraConstants.TEST_HEADER
               + " present. But service is not running in TEST mode. : "
-              + ProfileRepository.getMode());
+              + Mode.PROFILE);
     }
     if (!isWhitelistedTopic(topicName)) {
       return;
@@ -71,7 +74,7 @@ public class ProfileKafkaFilterHandler extends KafkaFilterHandler {
             .setHeaders(headersMap)
             .build();
     try {
-      DefaultProfileOrTestHandler.start(id, kafkaTestRequestData);
+      DefaultProfileOrTestHandler.start(id, kafkaTestRequestData, Mode.PROFILE);
     } catch (Exception e) {
       LOGGER.error("Exception trying to construct KafkaTestRequest. ", e);
     }

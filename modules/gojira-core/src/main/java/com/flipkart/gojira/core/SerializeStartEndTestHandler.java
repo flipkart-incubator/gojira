@@ -17,6 +17,7 @@
 package com.flipkart.gojira.core;
 
 import com.flipkart.gojira.core.injectors.GuiceInjector;
+import com.flipkart.gojira.models.ExecutionData;
 import com.flipkart.gojira.models.TestData;
 import com.flipkart.gojira.models.TestDataType;
 import com.flipkart.gojira.models.TestRequestData;
@@ -59,6 +60,8 @@ public class SerializeStartEndTestHandler<T extends TestDataType>
    * <p>Begins execution by calling {@link ProfileRepository#begin(String)} and adds {@link
    * TestData} for execution by calling {@link ProfileRepository#setTestData(TestData)} to make
    * method intercepted and response data recorded in {@link Mode#PROFILE} mode available.
+   * It also adds the {@link Mode} to {@link ExecutionData#executionMode} by
+   * calling the {@link ProfileRepository#setRequestMode(Mode)}
    *
    * @param id this is the id, which will be used for synchronizing testing across multiple threads
    *     within a single request-response scope.
@@ -82,6 +85,7 @@ public class SerializeStartEndTestHandler<T extends TestDataType>
       }
       ProfileRepository.begin(id);
       ProfileRepository.setTestData(testData);
+      ProfileRepository.setRequestMode(Mode.SERIALIZE);
     } catch (Exception e) {
       LOGGER.error("unable to fetch data against test id: " + id);
       // TODO: Check if well-defined exception can be thrown.

@@ -34,7 +34,7 @@ public class SerializeHttpFilterHandler extends HttpFilterHandler {
    * Gets the test id and validates that it is not null.
    *
    * <p>If the URL is whitelisted, begins execution by calling {@link
-   * DefaultProfileOrTestHandler#start(String, TestRequestData)}
+   * DefaultProfileOrTestHandler#start(String, TestRequestData, Mode)}
    *
    * <p>returns true if whitelisted else false.
    *
@@ -52,7 +52,7 @@ public class SerializeHttpFilterHandler extends HttpFilterHandler {
     }
     boolean whitelisted = isWhitelistedUrl(request.getRequestURI(), request.getMethod());
     if (whitelisted) {
-      DefaultProfileOrTestHandler.start(id, null);
+      DefaultProfileOrTestHandler.start(id, null, Mode.SERIALIZE);
     }
     return whitelisted;
   }
