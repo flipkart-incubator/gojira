@@ -83,7 +83,9 @@ public class KafkaFilter {
   public void start(String topicName, byte[] key, byte[] value, Headers recordHeaders) {
     Map<String, byte[]> headersMap = getMapForRequestHeaders(recordHeaders);
     byte[] id = headersMap.getOrDefault(MODE_HEADER, null);
-    Mode requestMode = ModeHelper.getRequestMode(id != null ? new String(id) : null);
+    Mode requestMode = ProfileRepository
+            .ModeHelper
+            .getRequestMode(id != null ? new String(id) : null);
     filterHashMap
         .getOrDefault(requestMode, new NoneKafkaFilterHandler())
         .handle(topicName, key, value, headersMap);

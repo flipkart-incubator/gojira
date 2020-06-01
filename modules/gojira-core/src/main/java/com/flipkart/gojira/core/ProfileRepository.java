@@ -298,4 +298,30 @@ public class ProfileRepository<
               + " which is not found.");
     }
   }
+
+  public static class ModeHelper {
+    /**
+     * Takes string input and returns appropriate Gojira Execution Mode.
+     *
+     * @param requestMode String Gojira header.
+     * @return gojira mode
+     */
+    public static Mode getRequestMode(String requestMode) {
+      if (Mode.DYNAMIC.equals(ProfileRepository.getGlobalProfileSetting().getMode())) {
+        try {
+          if (null == requestMode
+                  || requestMode.isEmpty()
+                  || Mode.DYNAMIC.name().equals(requestMode)) {
+            return Mode.NONE;
+          } else {
+            return Mode.valueOf(requestMode);
+          }
+        } catch (Exception e) {
+          return Mode.NONE;
+        }
+      } else {
+        return ProfileRepository.getGlobalProfileSetting().getMode();
+      }
+    }
+  }
 }

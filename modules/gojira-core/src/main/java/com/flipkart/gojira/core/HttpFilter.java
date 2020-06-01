@@ -96,8 +96,9 @@ public class HttpFilter implements Filter {
     CustomHttpServletRequestWrapper requestWrapper =
         new CustomHttpServletRequestWrapper((HttpServletRequest) request);
 
-    Mode requestMode = ModeHelper.getRequestMode(requestWrapper.getHeader(MODE_HEADER));
-
+    Mode requestMode = ProfileRepository
+            .ModeHelper
+            .getRequestMode(requestWrapper.getHeader(MODE_HEADER));
     if (filterHashMap.containsKey(requestMode)) {
       if (filterHashMap.get(requestMode).preFilter(requestWrapper)) {
         // Wrapping the ServletResponse to make the output stream readable
