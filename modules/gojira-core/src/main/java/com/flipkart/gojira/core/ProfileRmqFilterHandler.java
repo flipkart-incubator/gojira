@@ -30,8 +30,7 @@ public class ProfileRmqFilterHandler extends RmqFilterHandler {
       byte[] key,
       byte[] value,
       AMQP.BasicProperties basicProperties,
-      boolean mandatory,
-      Mode requestMode) {
+      boolean mandatory) {
     String id = getTestId(basicProperties);
     if (id != null) {
       LOGGER.error(
@@ -59,7 +58,7 @@ public class ProfileRmqFilterHandler extends RmqFilterHandler {
             .setMandatory(mandatory)
             .build();
     try {
-      DefaultProfileOrTestHandler.start(id, rmqTestRequestData, requestMode);
+      DefaultProfileOrTestHandler.start(id, rmqTestRequestData, Mode.PROFILE);
     } catch (Exception e) {
       LOGGER.error("Exception trying to construct RmqTestRequest. ", e);
     }

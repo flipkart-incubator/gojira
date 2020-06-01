@@ -37,29 +37,26 @@ public class NoneHttpFilterHandler extends HttpFilterHandler {
    *
    * @param request wrapped original http request as a {@link
    *     HttpFilter.CustomHttpServletRequestWrapper} object
-   * @param requestMode this is the mode of execution of gojira at a request level
    * @return true if {@link javax.servlet.FilterChain#doFilter(ServletRequest, ServletResponse)}
    *     needs to be called, else false.
    */
   @Override
-  public boolean preFilter(HttpFilter.CustomHttpServletRequestWrapper request, Mode requestMode) {
+  public boolean preFilter(HttpFilter.CustomHttpServletRequestWrapper request) {
     String id = super.getTestId(request);
     if (id != null) {
       LOGGER.error(
           "Header with name: "
               + TEST_HEADER
               + " present. But service is running in "
-              + ProfileRepository.getMode()
-              + " mode.");
+              + " NONE mode.");
       throw new RuntimeException(
           "Header with name: "
               + TEST_HEADER
               + " present. But service is running in "
-              + ProfileRepository.getMode()
-              + " mode.");
+              + " NONE mode.");
     }
     // TODO: Check if this needs to be done.
-    DefaultProfileOrTestHandler.start(null, null, requestMode);
+    DefaultProfileOrTestHandler.start(null, null, Mode.NONE);
     return true;
   }
 

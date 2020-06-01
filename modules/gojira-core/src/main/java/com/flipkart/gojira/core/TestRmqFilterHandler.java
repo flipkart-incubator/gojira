@@ -29,12 +29,11 @@ public class TestRmqFilterHandler extends RmqFilterHandler {
       byte[] key,
       byte[] value,
       AMQP.BasicProperties basicProperties,
-      boolean mandatory,
-      Mode requestMode) {
+      boolean mandatory) {
     String id = getTestId(basicProperties);
     if (id == null) {
       throw new RuntimeException("X-GOJIRA-ID header not present");
     }
-    DefaultProfileOrTestHandler.start(id, null, requestMode);
+    DefaultProfileOrTestHandler.start(id, null, Mode.TEST);
   }
 }

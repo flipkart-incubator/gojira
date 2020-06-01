@@ -48,16 +48,15 @@ public class ProfileStartEndTestHandler<T extends TestDataType> implements Start
    * @param id this is the id, which will be used for synchronizing testing across multiple threads
    *     within a single request-response scope.
    * @param requestData this is the request-data with which test is initiated
-   * @param requestMode this is the mode of execution of gojira at a request level
    */
   @Override
-  public void start(String id, TestRequestData<T> requestData, Mode requestMode) {
+  public void start(String id, TestRequestData<T> requestData) {
     try {
       if (fallsInSamplingBucket()) {
         // add request data to thread-local.
         ProfileRepository.begin(id);
         ProfileRepository.setRequestData(requestData);
-        ProfileRepository.setRequestMode(requestMode);
+        ProfileRepository.setRequestMode(Mode.PROFILE);
         LOGGER.info("Profiling initiated for id: " + ProfileRepository.getTestData().getId());
       } else {
         LOGGER.info("doesn't fall into this sampling bucket, ignoring profiling for this request");

@@ -40,11 +40,10 @@ public class SerializeHttpFilterHandler extends HttpFilterHandler {
    *
    * @param request wrapped original http request as a {@link
    *     HttpFilter.CustomHttpServletRequestWrapper} object
-   * @param requestMode this is the mode of execution of gojira at a request level
    * @return true if whitelisted else false
    */
   @Override
-  public boolean preFilter(HttpFilter.CustomHttpServletRequestWrapper request, Mode requestMode) {
+  public boolean preFilter(HttpFilter.CustomHttpServletRequestWrapper request) {
     String id = super.getTestId(request);
     if (id == null) {
       LOGGER.error("X-GOJIRA-ID header not present but the service is running in SERIALIZE mode.");
@@ -53,7 +52,7 @@ public class SerializeHttpFilterHandler extends HttpFilterHandler {
     }
     boolean whitelisted = isWhitelistedUrl(request.getRequestURI(), request.getMethod());
     if (whitelisted) {
-      DefaultProfileOrTestHandler.start(id, null, requestMode);
+      DefaultProfileOrTestHandler.start(id, null, Mode.SERIALIZE);
     }
     return whitelisted;
   }

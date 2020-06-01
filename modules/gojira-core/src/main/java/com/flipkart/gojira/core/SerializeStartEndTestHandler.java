@@ -66,10 +66,9 @@ public class SerializeStartEndTestHandler<T extends TestDataType>
    * @param id this is the id, which will be used for synchronizing testing across multiple threads
    *     within a single request-response scope.
    * @param requestData this is the request-data with which test is initiated
-   * @param requestMode this is the mode of execution of gojira at a request level
    */
   @Override
-  public void start(String id, TestRequestData<T> requestData, Mode requestMode) {
+  public void start(String id, TestRequestData<T> requestData) {
     if (id == null || id.isEmpty()) {
       // TODO: Check if well-defined exception can be thrown.
       throw new RuntimeException("test id is null");
@@ -86,7 +85,7 @@ public class SerializeStartEndTestHandler<T extends TestDataType>
       }
       ProfileRepository.begin(id);
       ProfileRepository.setTestData(testData);
-      ProfileRepository.setRequestMode(requestMode);
+      ProfileRepository.setRequestMode(Mode.SERIALIZE);
     } catch (Exception e) {
       LOGGER.error("unable to fetch data against test id: " + id);
       // TODO: Check if well-defined exception can be thrown.

@@ -32,7 +32,7 @@ public class TestHttpFilterHandler extends HttpFilterHandler {
   private static final Logger LOGGER = LoggerFactory.getLogger(TestHttpFilterHandler.class);
 
   @Override
-  public boolean preFilter(HttpFilter.CustomHttpServletRequestWrapper request, Mode requestMode) {
+  public boolean preFilter(HttpFilter.CustomHttpServletRequestWrapper request) {
     String id = super.getTestId(request);
     if (id == null) {
       LOGGER.error("X-GOJIRA-ID header not present but the service is running in TEST mode.");
@@ -41,7 +41,7 @@ public class TestHttpFilterHandler extends HttpFilterHandler {
     }
     boolean whitelisted = isWhitelistedUrl(request.getRequestURI(), request.getMethod());
     if (whitelisted) {
-      DefaultProfileOrTestHandler.start(id, null, requestMode);
+      DefaultProfileOrTestHandler.start(id, null, Mode.TEST);
     }
     return whitelisted;
   }

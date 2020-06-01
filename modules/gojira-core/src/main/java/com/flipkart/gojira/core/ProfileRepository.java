@@ -98,29 +98,11 @@ public class ProfileRepository<
     }
   }
 
-  static synchronized Mode getMode() {
+  static synchronized Mode getRequestMode() {
     if (globalProfiledDataMap.containsKey(GLOBAL_PER_REQUEST_ID.get())) {
       return globalProfiledDataMap.get(GLOBAL_PER_REQUEST_ID.get()).getExecutionMode();
     } else {
       return Mode.NONE;
-    }
-  }
-
-  static synchronized Mode getRequestMode(String requestMode) {
-    if (Mode.DYNAMIC.equals(globalProfileSetting.getMode())) {
-      try {
-        if (null == requestMode
-                || requestMode.isEmpty()
-                || Mode.DYNAMIC.name().equals(requestMode)) {
-          return Mode.NONE;
-        } else {
-          return Mode.valueOf(requestMode);
-        }
-      } catch (Exception e) {
-        return Mode.NONE;
-      }
-    } else {
-      return globalProfileSetting.getMode();
     }
   }
 

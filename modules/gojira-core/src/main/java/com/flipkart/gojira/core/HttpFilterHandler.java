@@ -52,13 +52,11 @@ public abstract class HttpFilterHandler {
    *
    * @param request wrapped original http request as a {@link
    *     HttpFilter.CustomHttpServletRequestWrapper} object
-   * @param requestMode this is the mode of execution of gojira at a request level
    * @return true if {@link FilterChain#doFilter(ServletRequest, ServletResponse)} should be
    *     called, else false.
    */
   protected abstract boolean preFilter(
-          HttpFilter.CustomHttpServletRequestWrapper request,
-          Mode requestMode);
+          HttpFilter.CustomHttpServletRequestWrapper request);
 
   /**
    * Wrapper method for {@link FilterChain#doFilter(ServletRequest, ServletResponse)} internally.

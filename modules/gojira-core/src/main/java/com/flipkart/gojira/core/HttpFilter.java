@@ -77,7 +77,7 @@ public class HttpFilter implements Filter {
    * <p>TODO: Add check for {@link HttpServletRequest}
    * @param request incoming request into a {@link CustomHttpServletRequestWrapper} and calls mode
    *     specific preFilter implementation. If {@link
-   *     HttpFilterHandler#preFilter(CustomHttpServletRequestWrapper, Mode)} returns true, wraps the
+   *     HttpFilterHandler#preFilter(CustomHttpServletRequestWrapper)} returns true, wraps the
    *     response object into a {@link TestServletResponseWrapper} before calling {@link
    *     HttpFilterHandler#filter(CustomHttpServletRequestWrapper, TestServletResponseWrapper,
    *     FilterChain)} in a try/finally block where {@link
@@ -96,26 +96,26 @@ public class HttpFilter implements Filter {
     CustomHttpServletRequestWrapper requestWrapper =
         new CustomHttpServletRequestWrapper((HttpServletRequest) request);
 
-    Mode requestMode = ProfileRepository.getRequestMode(requestWrapper.getHeader(MODE_HEADER));
+    Mode requestMode = ModeHelper.getRequestMode(requestWrapper.getHeader(MODE_HEADER));
 
     if (filterHashMap.containsKey(requestMode)) {
-      if (filterHashMap.get(requestMode).preFilter(requestWrapper, requestMode)) {
+      if (filterHashMap.get(requestMode).preFilter(requestWrapper)) {
         // Wrapping the ServletResponse to make the output stream readable
         TestServletResponseWrapper testServletResponseWrapper =
             new TestServletResponseWrapper((HttpServletResponse) response);
         try {
           filterHashMap
-              .get(ProfileRepository.getMode())
+              .get(ProfileRepository.getRequestMode())
               .filter(requestWrapper, testServletResponseWrapper, chain);
         } finally {
           filterHashMap
-              .get(ProfileRepository.getMode())
+              .get(ProfileRepository.getRequestMode())
               .postFilter(requestWrapper, testServletResponseWrapper, response);
         }
       }
     } else {
       LOGGER.error(
-          "Processing logic not implemented for this mode: " + ProfileRepository.getMode());
+          "Processing logic not implemented for this mode: " + requestMode);
       chain.doFilter(request, response);
     }
   }

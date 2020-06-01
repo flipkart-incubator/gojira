@@ -42,27 +42,25 @@ public class ProfileKafkaFilterHandler extends KafkaFilterHandler {
    * @param value body used for producing message to the topic
    * @param headersMap headers used for producing message to the topic with key as string and value
    *     as map
-   * @param requestMode this is the mode of execution of gojira at a request level
    */
   @Override
   protected void handle(
       String topicName,
       byte[] key,
       byte[] value,
-      Map<String, byte[]> headersMap,
-      Mode requestMode) {
+      Map<String, byte[]> headersMap) {
     String id = getTestId(headersMap);
     if (id != null) {
       LOGGER.error(
           "Header with name: "
               + GojiraConstants.TEST_HEADER
               + " present. But service is not running in TEST mode. : "
-              + ProfileRepository.getMode());
+              + Mode.PROFILE);
       throw new RuntimeException(
           "Header with name: "
               + GojiraConstants.TEST_HEADER
               + " present. But service is not running in TEST mode. : "
-              + ProfileRepository.getMode());
+              + Mode.PROFILE);
     }
     if (!isWhitelistedTopic(topicName)) {
       return;
@@ -76,7 +74,7 @@ public class ProfileKafkaFilterHandler extends KafkaFilterHandler {
             .setHeaders(headersMap)
             .build();
     try {
-      DefaultProfileOrTestHandler.start(id, kafkaTestRequestData, requestMode);
+      DefaultProfileOrTestHandler.start(id, kafkaTestRequestData, Mode.PROFILE);
     } catch (Exception e) {
       LOGGER.error("Exception trying to construct KafkaTestRequest. ", e);
     }

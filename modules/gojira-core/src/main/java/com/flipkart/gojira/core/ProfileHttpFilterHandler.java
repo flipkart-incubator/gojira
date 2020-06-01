@@ -77,26 +77,23 @@ public class ProfileHttpFilterHandler extends HttpFilterHandler {
    *
    * @param request wrapped original http request as a {@link
    *     HttpFilter.CustomHttpServletRequestWrapper} object
-   * @param requestMode this is the mode of execution of gojira at a request level
    * @return true if {@link FilterChain#doFilter(ServletRequest, ServletResponse)} should be
    *     called, else false.
    */
   @Override
-  public boolean preFilter(HttpFilter.CustomHttpServletRequestWrapper request, Mode requestMode) {
+  public boolean preFilter(HttpFilter.CustomHttpServletRequestWrapper request) {
     String id = getTestId(request);
     if (id != null) {
       LOGGER.error(
           "Header with name: "
               + TEST_HEADER
               + " present. But service is running in "
-              + ProfileRepository.getMode()
-              + " mode.");
+              + " PROFILE mode.");
       throw new RuntimeException(
           "Header with name: "
               + TEST_HEADER
               + " present. But service is running in "
-              + ProfileRepository.getMode()
-              + " mode.");
+              + " PROFILE mode.");
     }
     if (isWhitelistedUrl(request.getRequestURI(), request.getMethod())) {
       byte[] body;
@@ -119,7 +116,7 @@ public class ProfileHttpFilterHandler extends HttpFilterHandler {
         LOGGER.info(
             String.format(
                 "Gojira generated testId %s for the API call: %s", id, request.getRequestURI()));
-        DefaultProfileOrTestHandler.start(id, requestData, requestMode);
+        DefaultProfileOrTestHandler.start(id, requestData, Mode.PROFILE);
       } catch (Exception e) {
         LOGGER.error("Error trying to construct servelet request");
       }

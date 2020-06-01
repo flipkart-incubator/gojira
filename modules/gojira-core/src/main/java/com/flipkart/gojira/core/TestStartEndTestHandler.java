@@ -91,10 +91,9 @@ public class TestStartEndTestHandler<T extends TestDataType> implements StartEnd
    * @param id this is the id, which will be used for synchronizing testing across multiple threads
    *     within a single request-response scope.
    * @param requestData this is the request-data with which test is initiated
-   * @param requestMode this is the mode of execution of gojira at a request level
    */
   @Override
-  public void start(String id, TestRequestData<T> requestData, Mode requestMode) {
+  public void start(String id, TestRequestData<T> requestData) {
     if (id == null || id.isEmpty()) {
       throw new RuntimeException("invalid test id.");
     }
@@ -109,7 +108,7 @@ public class TestStartEndTestHandler<T extends TestDataType> implements StartEnd
       }
       ProfileRepository.begin(id);
       ProfileRepository.setTestData(testData);
-      ProfileRepository.setRequestMode(requestMode);
+      ProfileRepository.setRequestMode(Mode.TEST);
     } catch (Exception e) {
       ProfileRepository.setProfileState(ProfileState.FAILED);
       LOGGER.error("unable to fetch data against test id: " + id);

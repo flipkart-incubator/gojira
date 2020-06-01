@@ -50,7 +50,7 @@ public class DefaultProfileOrTestHandler {
 
   /**
    * Simply gets the respective handler for {@link Mode} and calls {@link
-   * StartEndTestHandler#start(String, TestRequestData, Mode)} method.
+   * StartEndTestHandler#start(String, TestRequestData)} method.
    *
    * <p>If mode is not registered, logs an error.
    *
@@ -63,10 +63,10 @@ public class DefaultProfileOrTestHandler {
           TestRequestData<? extends TestDataType> requestData,
           Mode requestMode) {
     if (startTestHandlerHashMap.containsKey(requestMode)) {
-      startTestHandlerHashMap.get(requestMode).start(id, requestData, requestMode);
+      startTestHandlerHashMap.get(requestMode).start(id, requestData);
       return;
     }
-    LOGGER.error("Processing logic not implemented for this mode: " + ProfileRepository.getMode());
+    LOGGER.error("Processing logic not implemented for this mode: " + requestMode);
   }
 
   /**
@@ -78,10 +78,11 @@ public class DefaultProfileOrTestHandler {
    * @param responseData response data at the end of execution
    */
   public static void end(TestResponseData<? extends TestDataType> responseData) {
-    if (startTestHandlerHashMap.containsKey(ProfileRepository.getMode())) {
-      startTestHandlerHashMap.get(ProfileRepository.getMode()).end(responseData);
+    if (startTestHandlerHashMap.containsKey(ProfileRepository.getRequestMode())) {
+      startTestHandlerHashMap.get(ProfileRepository.getRequestMode()).end(responseData);
       return;
     }
-    LOGGER.error("Processing logic not implemented for this mode: " + ProfileRepository.getMode());
+    LOGGER.error("Processing logic not implemented for this mode: "
+            + ProfileRepository.getRequestMode());
   }
 }

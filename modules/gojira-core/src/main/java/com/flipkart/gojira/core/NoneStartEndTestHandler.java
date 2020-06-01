@@ -34,10 +34,9 @@ public class NoneStartEndTestHandler<T extends TestDataType> implements StartEnd
    * @param id this is the id, which will be used for synchronizing testing across multiple threads
    *     within a single request-response scope.
    * @param requestData this is the request-data with which test is initiated
-   * @param requestMode this is the mode of execution of gojira at a request level
    */
   @Override
-  public void start(String id, TestRequestData<T> requestData, Mode requestMode) {}
+  public void start(String id, TestRequestData<T> requestData) {}
 
   /**
    * Calls {@link ProfileRepository#end()} to remove any thread-local associated with this

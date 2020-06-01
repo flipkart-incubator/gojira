@@ -16,24 +16,24 @@
 
 package com.flipkart.gojira.core;
 
-import com.rabbitmq.client.AMQP;
+public class ModeHelper {
 
-/**
- * Implementation of {@link RmqFilterHandler} in mode {@link Mode#SERIALIZE}.
- */
-public class SerializeRmqFilterHandler extends RmqFilterHandler {
-
-  @Override
-  protected void handle(
-      String exchangeName,
-      byte[] key,
-      byte[] value,
-      AMQP.BasicProperties basicProperties,
-      boolean mandatory) {
-    String id = getTestId(basicProperties);
-    if (id == null) {
-      throw new RuntimeException("X-GOJIRA-ID header not present");
+  public static Mode getRequestMode(String requestMode) {
+    if (Mode.DYNAMIC.equals(ProfileRepository.getGlobalProfileSetting().getMode())) {
+      try {
+        if (null == requestMode
+                || requestMode.isEmpty()
+                || Mode.DYNAMIC.name().equals(requestMode)) {
+          return Mode.NONE;
+        } else {
+          return Mode.valueOf(requestMode);
+        }
+      } catch (Exception e) {
+        return Mode.NONE;
+      }
+    } else {
+      return ProfileRepository.getGlobalProfileSetting().getMode();
     }
-    DefaultProfileOrTestHandler.start(id, null, Mode.SERIALIZE);
   }
 }
+
