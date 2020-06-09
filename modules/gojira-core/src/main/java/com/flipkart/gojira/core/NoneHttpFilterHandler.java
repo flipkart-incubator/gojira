@@ -56,17 +56,15 @@ public class NoneHttpFilterHandler extends HttpFilterHandler {
           "Header with name: "
               + TEST_HEADER
               + " present. But service is running in "
-              + ProfileRepository.getMode()
-              + " mode.");
+              + " NONE mode.");
       throw new RuntimeException(
           "Header with name: "
               + TEST_HEADER
               + " present. But service is running in "
-              + ProfileRepository.getMode()
-              + " mode.");
+              + " NONE mode.");
     }
     // TODO: Check if this needs to be done.
-    DefaultProfileOrTestHandler.start(null, null);
+    DefaultProfileOrTestHandler.start(null, null, Mode.NONE);
     return true;
   }
 

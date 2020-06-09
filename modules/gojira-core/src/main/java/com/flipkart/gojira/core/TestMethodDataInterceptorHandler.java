@@ -22,9 +22,9 @@ import com.flipkart.gojira.compare.GojiraCompareHandlerRepository;
 import com.flipkart.gojira.execute.TestExecutionException;
 import com.flipkart.gojira.hash.HashHandlerUtil;
 import com.flipkart.gojira.hash.TestHashHandler;
+import com.flipkart.gojira.models.ExecutionData;
 import com.flipkart.gojira.models.MethodData;
 import com.flipkart.gojira.models.MethodDataType;
-import com.flipkart.gojira.models.ProfileData;
 import com.flipkart.gojira.serde.SerdeHandlerRepository;
 import com.flipkart.gojira.serde.handlers.TestSerdeHandler;
 import com.google.inject.Inject;
@@ -57,7 +57,7 @@ public class TestMethodDataInterceptorHandler implements MethodDataInterceptorHa
   }
 
   /**
-   * Gets {@link ProfileData#profileState}, throws exception if not {@link ProfileState#INITIATED}.
+   * Gets {@link ExecutionData#profileState}, throws exception if not {@link ProfileState#INITIATED}
    *
    * <p>Gets the {@link ProfileRepository#getGlobalPerRequestID()}, {@link Method#toGenericString()}
    * of {@link MethodInvocation#getMethod()} to get data corresponding to this specific method. On

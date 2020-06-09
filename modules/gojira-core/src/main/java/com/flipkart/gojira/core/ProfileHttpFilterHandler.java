@@ -18,7 +18,7 @@ package com.flipkart.gojira.core;
 
 import static com.flipkart.gojira.core.GojiraConstants.TEST_HEADER;
 
-import com.flipkart.gojira.models.ProfileData;
+import com.flipkart.gojira.models.ExecutionData;
 import com.flipkart.gojira.models.TestResponseData;
 import com.flipkart.gojira.models.http.HttpTestRequestData;
 import com.flipkart.gojira.models.http.HttpTestResponseData;
@@ -75,7 +75,7 @@ public class ProfileHttpFilterHandler extends HttpFilterHandler {
    *
    * <p>If whitelisted, makes a copy of {@link
    * HttpFilter.CustomHttpServletRequestWrapper#getInputStream()}. On error, marks {@link
-   * ProfileData#getProfileState()} as {@link ProfileState#FAILED} and returns true enable {@link
+   * ExecutionData#getProfileState()} as {@link ProfileState#FAILED} and returns true enable {@link
    * HttpFilter} to call {@link javax.servlet.FilterChain#doFilter(ServletRequest,
    * ServletResponse)}.
    *
@@ -95,14 +95,12 @@ public class ProfileHttpFilterHandler extends HttpFilterHandler {
           "Header with name: "
               + TEST_HEADER
               + " present. But service is running in "
-              + ProfileRepository.getMode()
-              + " mode.");
+              + " PROFILE mode.");
       throw new RuntimeException(
           "Header with name: "
               + TEST_HEADER
               + " present. But service is running in "
-              + ProfileRepository.getMode()
-              + " mode.");
+              + " PROFILE mode.");
     }
     if (isWhitelistedUrl(request.getRequestURI(), request.getMethod())) {
       byte[] body;
@@ -125,7 +123,7 @@ public class ProfileHttpFilterHandler extends HttpFilterHandler {
         LOGGER.info(
             String.format(
                 "Gojira generated testId %s for the API call: %s", id, request.getRequestURI()));
-        DefaultProfileOrTestHandler.start(id, requestData);
+        DefaultProfileOrTestHandler.start(id, requestData, Mode.PROFILE);
       } catch (Exception e) {
         LOGGER.error("Error trying to construct servelet request");
       }
@@ -142,7 +140,7 @@ public class ProfileHttpFilterHandler extends HttpFilterHandler {
    * <p>If URL is whitelisted, adds the HTTP response data needed for comparison later during
    * execution and adds them to {@link HttpTestResponseData}.
    *
-   * <p>On failure, marks {@link ProfileData#getProfileState()} as {@link ProfileState#FAILED}
+   * <p>On failure, marks {@link ExecutionData#getProfileState()} as {@link ProfileState#FAILED}
    *
    * <p>In finally block, {@link DefaultProfileOrTestHandler#end(TestResponseData)} is called.
    *

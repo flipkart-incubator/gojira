@@ -26,7 +26,7 @@ import com.flipkart.gojira.models.http.HttpTestResponseData;
 import com.flipkart.gojira.queuedsender.config.TestQueuedSenderConfig;
 import com.flipkart.gojira.requestsampling.config.RequestSamplingConfig;
 import com.flipkart.gojira.serde.config.SerdeConfig;
-import com.flipkart.gojira.serde.handlers.json.JsonTestSerdeHandler;
+import com.flipkart.gojira.serde.handlers.json.JsonMapListSerdeHandler;
 import com.flipkart.gojira.sinkstore.config.DataStoreConfig;
 import com.flipkart.gojira.sinkstore.file.FileBasedDataStoreHandler;
 import java.nio.file.Files;
@@ -41,60 +41,70 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import org.junit.BeforeClass;
 
-/**
- * Created by arunachalam.s on 10/10/17.
- */
 public class ParallelCallTest {
 
-  private ParallelCallThreadPoolExecutor executor = new ParallelCallThreadPoolExecutor(400, 400,
-      400, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(10));
+  private ParallelCallThreadPoolExecutor executor =
+      new ParallelCallThreadPoolExecutor(
+          400, 400, 400, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(10));
 
   @BeforeClass
   public static void setup() throws Exception {
     Map<String, List<String>> jsonDiffIgnoreMap = null;
     try {
-      jsonDiffIgnoreMap = new ObjectMapper()
-          .readValue(Files.readAllBytes(Paths.get("/etc/fk-gojira/json_diff_ignore_patterns")),
-              HashMap.class);
+      jsonDiffIgnoreMap =
+          new ObjectMapper()
+              .readValue(
+                  Files.readAllBytes(Paths.get("/etc/fk-gojira/json_diff_ignore_patterns")),
+                  HashMap.class);
     } catch (Exception e) {
       System.out.println("unable to load ignore_patterns.");
     }
 
-    RequestSamplingConfig requestSamplingConfig = RequestSamplingConfig.builder()
-        .setSamplingPercentage(100)
-        .setWhitelist(new ArrayList<>())
-        .build();
-    SerdeConfig serdeConfig = SerdeConfig.builder()
-        .setDefaultSerdeHandler(new JsonTestSerdeHandler()).build();
-    GojiraComparisonConfig comparisonConfig = GojiraComparisonConfig.builder()
-        .setDiffIgnoreMap(jsonDiffIgnoreMap)
-        .setDefaultCompareHandler(new JsonTestCompareHandler())
-        .setResponseDataCompareHandler(new JsonTestCompareHandler())
-        .build();
-    DataStoreConfig dataStoreConfig = DataStoreConfig.builder().setDataStoreHandler(
-        new FileBasedDataStoreHandler("/var/log/flipkart/fk-gojira/gojira-data"))
-        .build();
-    TestQueuedSenderConfig testQueuedSenderConfig = TestQueuedSenderConfig.builder()
-        .setPath("/var/log/flipkart/fk-gojira/gojira-messages")
-        .setQueueSize(10L)
-        .build();
+    RequestSamplingConfig requestSamplingConfig =
+        RequestSamplingConfig.builder()
+            .setSamplingPercentage(100)
+            .setWhitelist(new ArrayList<>())
+            .build();
+    SerdeConfig serdeConfig =
+        SerdeConfig.builder().setDefaultSerdeHandler(new JsonMapListSerdeHandler()).build();
+    GojiraComparisonConfig comparisonConfig =
+        GojiraComparisonConfig.builder()
+            .setDiffIgnoreMap(jsonDiffIgnoreMap)
+            .setDefaultCompareHandler(new JsonTestCompareHandler())
+            .setResponseDataCompareHandler(new JsonTestCompareHandler())
+            .build();
+    DataStoreConfig dataStoreConfig =
+        DataStoreConfig.builder()
+            .setDataStoreHandler(
+                new FileBasedDataStoreHandler("/var/log/flipkart/fk-gojira/gojira-data"))
+            .build();
+    TestQueuedSenderConfig testQueuedSenderConfig =
+        TestQueuedSenderConfig.builder()
+            .setPath("/var/log/flipkart/fk-gojira/gojira-messages")
+            .setQueueSize(10L)
+            .build();
 
-    SetupModule profileOrTestModule = new SetupModule(Mode.PROFILE,
-        requestSamplingConfig,
-        serdeConfig,
-        comparisonConfig,
-        dataStoreConfig,
-        testQueuedSenderConfig);
+    SetupModule profileOrTestModule =
+        new SetupModule(
+            Mode.PROFILE,
+            requestSamplingConfig,
+            serdeConfig,
+            comparisonConfig,
+            dataStoreConfig,
+            testQueuedSenderConfig);
 
     DI.install(profileOrTestModule);
   }
 
   public static void main(String[] args) throws Exception {
     setup();
-    System.out.println("ThreadID: " + Thread.currentThread().getId() + " main: before setting: "
-        + ProfileRepository.getGlobalPerRequestID());
+    System.out.println(
+        "ThreadID: "
+            + Thread.currentThread().getId()
+            + " main: before setting: "
+            + ProfileRepository.getGlobalPerRequestID());
     ParallelCallTest parallelCallTestPool = new ParallelCallTest();
-    DefaultProfileOrTestHandler.start("1", HttpTestRequestData.builder().build());
+    DefaultProfileOrTestHandler.start("1", HttpTestRequestData.builder().build(), Mode.PROFILE);
     ProfileRepository.setTestDataId("1");
     List<Long> usedList1 = new ArrayList<>();
     while (true) {
@@ -123,10 +133,10 @@ public class ParallelCallTest {
 
     Thread.sleep(20000);
     System.out.println("wait");
-//        DefaultProfileOrTestHandler.end(new HttpTestResponseData());
+    //        DefaultProfileOrTestHandler.end(new HttpTestResponseData());
     Thread.sleep(20000);
     ProfileRepository.setMode(Mode.TEST);
-//        DefaultProfileOrTestHandler.start("1", new HttpTestRequestData());
+    //        DefaultProfileOrTestHandler.start("1", new HttpTestRequestData());
     for (int i = 0; i < 100; i++) {
       parallelCallTestPool.doSomeTask(i);
     }
@@ -140,29 +150,41 @@ public class ParallelCallTest {
   }
 
   public void doSomeTask(long i) {
-    executor.execute(new Runnable() {
-      @Override
-      public void run() {
-        System.out.println(i + ":" + di().getInstance(MethodInterceptionTest.class)
-            .checkMethodInterception(i, "a".getBytes(), System.currentTimeMillis(), 1));
-      }
-    });
+    executor.execute(
+        new Runnable() {
+          @Override
+          public void run() {
+            System.out.println(
+                i
+                    + ":"
+                    + di().getInstance(MethodInterceptionTest.class)
+                        .checkMethodInterception(i, "a".getBytes(), System.currentTimeMillis(), 1));
+          }
+        });
   }
 
   public class ParallelCallThreadPoolExecutor extends ThreadPoolExecutor {
 
-    public ParallelCallThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime,
-        TimeUnit unit, BlockingQueue<Runnable> workQueue) {
+    public ParallelCallThreadPoolExecutor(
+        int corePoolSize,
+        int maximumPoolSize,
+        long keepAliveTime,
+        TimeUnit unit,
+        BlockingQueue<Runnable> workQueue) {
       super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue);
     }
 
     public void beforeExecute(Thread t, Runnable r) {
       System.out.println(
-          "ThreadID: " + Thread.currentThread().getId() + " beforeExecute: before setting: "
+          "ThreadID: "
+              + Thread.currentThread().getId()
+              + " beforeExecute: before setting: "
               + ProfileRepository.getGlobalPerRequestID());
       ProfileRepository.setGlobalPerRequestID("1");
       System.out.println(
-          "ThreadID: " + Thread.currentThread().getId() + " beforeExecute: after setting: "
+          "ThreadID: "
+              + Thread.currentThread().getId()
+              + " beforeExecute: after setting: "
               + ProfileRepository.getGlobalPerRequestID());
       super.beforeExecute(t, r);
     }
@@ -170,11 +192,15 @@ public class ParallelCallTest {
     public void afterExecute(Runnable r, Throwable t) {
       super.afterExecute(r, t);
       System.out.println(
-          "ThreadID: " + Thread.currentThread().getId() + " afterExecute: before resetting: "
+          "ThreadID: "
+              + Thread.currentThread().getId()
+              + " afterExecute: before resetting: "
               + ProfileRepository.getGlobalPerRequestID());
       ProfileRepository.clearGlobalPerRequestID();
       System.out.println(
-          "ThreadID: " + Thread.currentThread().getId() + " afterExecute: after resetting: "
+          "ThreadID: "
+              + Thread.currentThread().getId()
+              + " afterExecute: after resetting: "
               + ProfileRepository.getGlobalPerRequestID());
     }
   }

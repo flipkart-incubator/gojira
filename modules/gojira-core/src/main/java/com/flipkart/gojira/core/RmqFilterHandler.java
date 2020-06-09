@@ -44,7 +44,7 @@ public abstract class RmqFilterHandler {
 
   /**
    * Implementation of this is expected to call {@link DefaultProfileOrTestHandler#start(String,
-   * TestRequestData)} (String, TestRequestData)} as per {@link Mode} specific needs.
+   * TestRequestData, Mode)} as per {@link Mode} specific needs.
    *
    * @param exchangeName rmq exchange name
    * @param key key used for producing message to the exchange

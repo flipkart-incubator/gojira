@@ -65,7 +65,7 @@ public class ProfileRmqFilterHandler extends RmqFilterHandler {
             .setMandatory(mandatory)
             .build();
     try {
-      DefaultProfileOrTestHandler.start(id, rmqTestRequestData);
+      DefaultProfileOrTestHandler.start(id, rmqTestRequestData, Mode.PROFILE);
     } catch (Exception e) {
       LOGGER.error("Exception trying to construct RmqTestRequest. ", e);
     }

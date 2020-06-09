@@ -41,6 +41,6 @@ public class SerializeRmqFilterHandler extends RmqFilterHandler {
     if (id == null) {
       throw new RuntimeException("X-GOJIRA-ID header not present");
     }
-    DefaultProfileOrTestHandler.start(id, null);
+    DefaultProfileOrTestHandler.start(id, null, Mode.SERIALIZE);
   }
 }

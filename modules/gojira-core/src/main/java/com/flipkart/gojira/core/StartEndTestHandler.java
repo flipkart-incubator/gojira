@@ -16,7 +16,7 @@
 
 package com.flipkart.gojira.core;
 
-import com.flipkart.gojira.models.ProfileData;
+import com.flipkart.gojira.models.ExecutionData;
 import com.flipkart.gojira.models.TestDataType;
 import com.flipkart.gojira.models.TestRequestData;
 import com.flipkart.gojira.models.TestResponseData;
@@ -28,7 +28,7 @@ public interface StartEndTestHandler<T extends TestDataType> {
 
   /**
    * Implementations of this interface are expected to take care of setting {@link
-   * ProfileData#getProfileState()} ()} for different {@link Mode}.
+   * ExecutionData#getProfileState()} ()} for different {@link Mode}.
    *
    * <p>They are also expected to take care of retrieving test data against id if required and call
    * {@link ProfileRepository#begin(String)} as needed per {@link Mode}
@@ -41,7 +41,7 @@ public interface StartEndTestHandler<T extends TestDataType> {
 
   /**
    * Implementations of this interface are expected to take care of setting {@link
-   * ProfileData#getProfileState()} for different {@link Mode}.
+   * ExecutionData#getProfileState()} for different {@link Mode}.
    *
    * <p>They are also expected to take care of storing test data against test-data id if required
    * and call {@link ProfileRepository#end()} as needed per {@link Mode}

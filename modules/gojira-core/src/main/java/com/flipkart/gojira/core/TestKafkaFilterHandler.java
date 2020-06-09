@@ -35,10 +35,10 @@ public class TestKafkaFilterHandler extends KafkaFilterHandler {
    * Gets test-id from headers and throws {@link RuntimeException} if it is null.
    *
    * <p>Initiates execution by calling {@link DefaultProfileOrTestHandler#start(String,
-   * TestRequestData)}
+   * TestRequestData, Mode)}
    *
    * <p>Implementation of this is expected to call {@link DefaultProfileOrTestHandler#start(String,
-   * TestRequestData)}
+   * TestRequestData, Mode)}
    *
    * @param topicName kafka topic name
    * @param key key used for producing message to the topic
@@ -48,11 +48,14 @@ public class TestKafkaFilterHandler extends KafkaFilterHandler {
    */
   @Override
   protected void handle(
-      String topicName, byte[] key, byte[] value, Map<String, byte[]> headersMap) {
+      String topicName,
+      byte[] key,
+      byte[] value,
+      Map<String, byte[]> headersMap) {
     String id = getTestId(headersMap);
     if (id == null) {
       throw new RuntimeException("X-GOJIRA-ID header not present");
     }
-    DefaultProfileOrTestHandler.start(id, null);
+    DefaultProfileOrTestHandler.start(id, null, Mode.TEST);
   }
 }

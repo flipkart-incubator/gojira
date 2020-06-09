@@ -76,9 +76,9 @@ public class ProfileOrTestMethodInterceptor implements MethodInterceptor {
    */
   @Override
   public Object invoke(MethodInvocation invocation) throws Throwable {
-    if (modeMethodDataInterceptorHandlerMap.containsKey(ProfileRepository.getMode())) {
+    if (modeMethodDataInterceptorHandlerMap.containsKey(ProfileRepository.getRequestMode())) {
       return modeMethodDataInterceptorHandlerMap
-          .get(ProfileRepository.getMode())
+          .get(ProfileRepository.getRequestMode())
           .handle(invocation);
     }
 

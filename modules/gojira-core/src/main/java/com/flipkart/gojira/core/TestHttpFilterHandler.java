@@ -16,7 +16,7 @@
 
 package com.flipkart.gojira.core;
 
-import com.flipkart.gojira.models.ProfileData;
+import com.flipkart.gojira.models.ExecutionData;
 import com.flipkart.gojira.models.TestResponseData;
 import com.flipkart.gojira.models.http.HttpTestResponseData;
 import com.flipkart.gojira.requestsampling.RequestSamplingRepository;
@@ -48,7 +48,7 @@ public class TestHttpFilterHandler extends HttpFilterHandler {
     }
     boolean whitelisted = isWhitelistedUrl(request.getRequestURI(), request.getMethod());
     if (whitelisted) {
-      DefaultProfileOrTestHandler.start(id, null);
+      DefaultProfileOrTestHandler.start(id, null, Mode.TEST);
     }
     return whitelisted;
   }
@@ -60,7 +60,7 @@ public class TestHttpFilterHandler extends HttpFilterHandler {
    * HttpFilter.TestServletResponseWrapper}.
    *
    * <p>If whitelisted, adds HTTP response data required for comparing to {@link
-   * HttpTestResponseData}. On error, marks {@link ProfileData#profileState} as {@link
+   * HttpTestResponseData}. On error, marks {@link ExecutionData#profileState} as {@link
    * ProfileState#FAILED} and throws {@link RuntimeException}
    *
    * <p>In finally block {@link DefaultProfileOrTestHandler#end(TestResponseData)} is called to

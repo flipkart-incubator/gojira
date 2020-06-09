@@ -18,9 +18,10 @@ package com.flipkart.gojira.core;
 
 import com.flipkart.compare.TestCompareException;
 import com.flipkart.gojira.compare.GojiraCompareHandlerRepository;
+import com.flipkart.gojira.core.injectors.GuiceInjector;
+import com.flipkart.gojira.models.ExecutionData;
 import com.flipkart.gojira.models.MethodData;
 import com.flipkart.gojira.models.MethodDataType;
-import com.flipkart.gojira.models.ProfileData;
 import com.flipkart.gojira.models.TestData;
 import com.flipkart.gojira.models.TestDataType;
 import com.flipkart.gojira.models.TestRequestData;
@@ -94,8 +95,10 @@ public class TestStartEndTestHandler<T extends TestDataType> implements StartEnd
    * <p>Begins execution by calling {@link ProfileRepository#begin(String)} and adds {@link
    * TestData} for execution by calling {@link ProfileRepository#setTestData(TestData)} to make
    * method intercepted and response data recorded in {@link Mode#PROFILE} mode available.
+   * It also adds the {@link Mode} to {@link ExecutionData#executionMode} by
+   * calling the {@link ProfileRepository#setRequestMode(Mode)}
    *
-   * <p>In case of any exception, marks {@link ProfileData#getProfileState()} as {@link
+   * <p>In case of any exception, marks {@link ExecutionData#getProfileState()} as {@link
    * ProfileState#FAILED} and stores result as {@value READ_FAILURE}.
    *
    * <p>In case {@link SinkHandler#writeResults(String, String)} throws {@link SinkException},
@@ -121,6 +124,7 @@ public class TestStartEndTestHandler<T extends TestDataType> implements StartEnd
       }
       ProfileRepository.begin(id);
       ProfileRepository.setTestData(testData);
+      ProfileRepository.setRequestMode(Mode.TEST);
     } catch (Exception e) {
       ProfileRepository.setProfileState(ProfileState.FAILED);
       LOGGER.error("unable to fetch data against test id: " + id);
@@ -138,8 +142,9 @@ public class TestStartEndTestHandler<T extends TestDataType> implements StartEnd
   }
 
   /**
-   * If {@link ProfileData#getProfileState()} is not {@link ProfileState#NONE}, compares the {@link
-   * TestResponseData} using {@link GojiraCompareHandlerRepository#getResponseDataCompareHandler()}
+   * If {@link ExecutionData#getProfileState()} is not {@link ProfileState#NONE}, compares the
+   * {@link TestResponseData}
+   * using {@link GojiraCompareHandlerRepository#getResponseDataCompareHandler()}
    * instance after serializing using {@link SerdeHandlerRepository#getReqRespDataSerdeHandler()}.
    *
    * <p>Based on the result of comparison, {@link SinkHandler#writeResults(String, String)} is

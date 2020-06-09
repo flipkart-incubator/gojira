@@ -33,7 +33,7 @@ public class BindingsModule extends AbstractModule {
 
   @Override
   protected void configure() {
-    if (!ProfileRepository.getMode().equals(Mode.NONE)) {
+    if (!ProfileRepository.getGlobalProfileSetting().getMode().equals(Mode.NONE)) {
       ProfileOrTestMethodInterceptor profileOrTestMethodInterceptor =
           new ProfileOrTestMethodInterceptor(
               serdeHandlerRepository, gojiraCompareHandlerRepository);
