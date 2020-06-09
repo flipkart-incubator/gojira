@@ -16,9 +16,9 @@
 
 package com.flipkart.gojira.core;
 
+import com.flipkart.gojira.models.ExecutionData;
 import com.flipkart.gojira.models.MethodData;
 import com.flipkart.gojira.models.MethodDataType;
-import com.flipkart.gojira.models.ProfileData;
 import com.flipkart.gojira.models.TestData;
 import com.flipkart.gojira.models.TestDataType;
 import com.flipkart.gojira.models.TestRequestData;
@@ -56,8 +56,9 @@ public class ProfileRepository<
         }
       };
   private static ProfileSetting globalProfileSetting = new ProfileSetting();
+
   // TODO: Wrap below map in a size restricted collection for memory protection
-  private static ConcurrentHashMap<String, ProfileData> globalProfiledDataMap =
+  private static ConcurrentHashMap<String, ExecutionData> globalProfiledDataMap =
       new ConcurrentHashMap<>();
 
   public static String getGlobalPerRequestID() {
@@ -97,8 +98,12 @@ public class ProfileRepository<
     }
   }
 
-  static synchronized Mode getMode() {
-    return globalProfileSetting.getMode();
+  static synchronized Mode getRequestMode() {
+    if (globalProfiledDataMap.containsKey(GLOBAL_PER_REQUEST_ID.get())) {
+      return globalProfiledDataMap.get(GLOBAL_PER_REQUEST_ID.get()).getExecutionMode();
+    } else {
+      return Mode.NONE;
+    }
   }
 
   static synchronized void setMode(Mode mode) {
@@ -112,7 +117,7 @@ public class ProfileRepository<
   static void begin(String globalPerRequestId) {
     if (globalPerRequestId != null) {
       GLOBAL_PER_REQUEST_ID.set(globalPerRequestId);
-      if (globalProfiledDataMap.putIfAbsent(globalPerRequestId, new ProfileData()) != null) {
+      if (globalProfiledDataMap.putIfAbsent(globalPerRequestId, new ExecutionData()) != null) {
         LOGGER.error(
             "Error beginning profiling/testing since"
                 + globalPerRequestId
@@ -197,6 +202,19 @@ public class ProfileRepository<
     }
   }
 
+  static void setRequestMode(Mode requestMode) {
+    if (globalProfiledDataMap.containsKey(GLOBAL_PER_REQUEST_ID.get())) {
+      globalProfiledDataMap
+              .get(GLOBAL_PER_REQUEST_ID.get())
+              .setExecutionMode(requestMode);
+    } else {
+      LOGGER.error(
+              "Trying to set request execution mode against global request id: "
+                      + GLOBAL_PER_REQUEST_ID.get()
+                      + " which is not found.");
+    }
+  }
+
   static void setResponseData(TestResponseData<? extends TestDataType> responseData) {
     if (globalProfiledDataMap.containsKey(GLOBAL_PER_REQUEST_ID.get())) {
       globalProfiledDataMap
@@ -278,6 +296,32 @@ public class ProfileRepository<
           "Trying to add method intercepted data against global request id: "
               + GLOBAL_PER_REQUEST_ID.get()
               + " which is not found.");
+    }
+  }
+
+  public static class ModeHelper {
+    /**
+     * Takes string input and returns appropriate Gojira Execution Mode.
+     *
+     * @param requestMode String Gojira header.
+     * @return gojira mode
+     */
+    public static Mode getRequestMode(String requestMode) {
+      if (Mode.DYNAMIC.equals(ProfileRepository.getGlobalProfileSetting().getMode())) {
+        try {
+          if (null == requestMode
+                  || requestMode.isEmpty()
+                  || Mode.DYNAMIC.name().equals(requestMode)) {
+            return Mode.NONE;
+          } else {
+            return Mode.valueOf(requestMode);
+          }
+        } catch (Exception e) {
+          return Mode.NONE;
+        }
+      } else {
+        return ProfileRepository.getGlobalProfileSetting().getMode();
+      }
     }
   }
 }

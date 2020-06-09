@@ -16,6 +16,8 @@
 
 package com.flipkart.gojira.core;
 
+import static com.flipkart.gojira.core.GojiraConstants.MODE_HEADER;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -93,24 +95,28 @@ public class HttpFilter implements Filter {
     // Wrapping the ServletRequest to make the input stream N times readable
     CustomHttpServletRequestWrapper requestWrapper =
         new CustomHttpServletRequestWrapper((HttpServletRequest) request);
-    if (filterHashMap.containsKey(ProfileRepository.getMode())) {
-      if (filterHashMap.get(ProfileRepository.getMode()).preFilter(requestWrapper)) {
+
+    Mode requestMode = ProfileRepository
+            .ModeHelper
+            .getRequestMode(requestWrapper.getHeader(MODE_HEADER));
+    if (filterHashMap.containsKey(requestMode)) {
+      if (filterHashMap.get(requestMode).preFilter(requestWrapper)) {
         // Wrapping the ServletResponse to make the output stream readable
         TestServletResponseWrapper testServletResponseWrapper =
             new TestServletResponseWrapper((HttpServletResponse) response);
         try {
           filterHashMap
-              .get(ProfileRepository.getMode())
+              .get(ProfileRepository.getRequestMode())
               .filter(requestWrapper, testServletResponseWrapper, chain);
         } finally {
           filterHashMap
-              .get(ProfileRepository.getMode())
+              .get(ProfileRepository.getRequestMode())
               .postFilter(requestWrapper, testServletResponseWrapper, response);
         }
       }
     } else {
       LOGGER.error(
-          "Processing logic not implemented for this mode: " + ProfileRepository.getMode());
+          "Processing logic not implemented for this mode: " + requestMode);
       chain.doFilter(request, response);
     }
   }

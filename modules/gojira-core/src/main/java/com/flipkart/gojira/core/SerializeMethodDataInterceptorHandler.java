@@ -18,9 +18,9 @@ package com.flipkart.gojira.core;
 
 import com.flipkart.gojira.core.injectors.GuiceInjector;
 import com.flipkart.gojira.execute.TestExecutionException;
+import com.flipkart.gojira.models.ExecutionData;
 import com.flipkart.gojira.models.MethodData;
 import com.flipkart.gojira.models.MethodDataType;
-import com.flipkart.gojira.models.ProfileData;
 import com.flipkart.gojira.serde.SerdeHandlerRepository;
 import com.flipkart.gojira.serde.handlers.TestSerdeHandler;
 import java.util.List;
@@ -47,7 +47,7 @@ public class SerializeMethodDataInterceptorHandler implements MethodDataIntercep
   public SerializeMethodDataInterceptorHandler() {}
 
   /**
-   * Throws a {@link TestExecutionException} if {@link ProfileData#profileState} is not {@link
+   * Throws a {@link TestExecutionException} if {@link ExecutionData#profileState} is not {@link
    * ProfileState#INITIATED}
    *
    * <p>Loops throw every instance of {@link MethodData} and de-serializes them using appropriate

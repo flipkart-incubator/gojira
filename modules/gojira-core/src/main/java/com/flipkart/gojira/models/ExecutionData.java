@@ -26,12 +26,17 @@ import java.util.Objects;
  *
  * <p>//TODO: Rename this ExecutionData
  */
-public class ProfileData<T extends TestDataType> {
+public class ExecutionData<T extends TestDataType> {
 
   /**
    * Instance of test-data in a given execution cycle. It gets mutated as the execution progresses.
    */
   private TestData<TestRequestData<T>, TestResponseData<T>, T> testData = new TestData<>();
+
+  /**
+   * Keeps track of request level mode.
+   */
+  private Mode executionMode = Mode.NONE;
 
   /**
    * Keeps track of the current execution state. Defaults to {@link ProfileState#NONE}.
@@ -54,6 +59,14 @@ public class ProfileData<T extends TestDataType> {
     this.profileState = profileState;
   }
 
+  public Mode getExecutionMode() {
+    return executionMode;
+  }
+
+  public void setExecutionMode(Mode executionMode) {
+    this.executionMode = executionMode;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -63,7 +76,7 @@ public class ProfileData<T extends TestDataType> {
       return false;
     }
 
-    ProfileData that = (ProfileData) o;
+    ExecutionData that = (ExecutionData) o;
 
     if (!Objects.equals(testData, that.testData)) {
       return false;
@@ -80,6 +93,13 @@ public class ProfileData<T extends TestDataType> {
 
   @Override
   public String toString() {
-    return "ProfileData{" + "profileState=" + profileState + ", testData=" + testData + '}';
+    return "ExecutionData{"
+            + "profileState="
+            + profileState
+            + ", testData="
+            + testData
+            + ", executionMode="
+            + executionMode
+            + '}';
   }
 }
