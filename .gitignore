@@ -41,5 +41,5 @@ modules/src/
 
 #shade
 modules/shaded-gojira-core/dependency-reduced-pom.xml
-modules/gojira-core/src/test/java/com/flipkart/gojira/sample/config/dev/queue-messages/gojira-messages/meta_data/page-0.dat
-modules/gojira-core/src/test/java/com/flipkart/gojira/sample/config/dev/queue-messages/gojira-messages/front_index/page-0.dat
+modules/gojira-core/src/test/java/com/flipkart/gojira/sample/config/dev/queue-messages/gojira-messages/
+modules/gojira-core/src/test/java/com/flipkart/gojira/sample/config/dev/datastore
