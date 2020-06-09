@@ -1,0 +1,14 @@
+#template: Hello, %s!
+#defaultName: Stranger
+server:
+
+  applicationConnectors:
+      - type: http
+        port: 5000
+        acceptorThreads: 8
+        selectorThreads: 32
+  adminConnectors:
+      - type: http
+        port: 5001
+        acceptorThreads: 1
+        selectorThreads: 8

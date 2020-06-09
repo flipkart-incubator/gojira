@@ -21,6 +21,7 @@ import com.flipkart.gojira.sinkstore.handlers.SinkHandler;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collections;
 
 /**
  * Sample implementation of {@link SinkHandler}.
@@ -30,16 +31,18 @@ public class FileBasedDataStoreHandler extends SinkHandler {
   /**
    * Path to the file where data is read from and written to.
    */
-  private Path file;
+  private Path testFile;
+  private Path resultFile;
 
   public FileBasedDataStoreHandler(String path) {
-    this.file = Paths.get(path);
+    this.testFile = Paths.get(path);
+    this.resultFile = Paths.get(path + "Result");
   }
 
   @Override
   public void write(String id, byte[] testData) throws SinkException {
     try {
-      Files.write(file, testData);
+      Files.write(testFile, testData);
     } catch (Exception e) {
       throw new SinkException();
     }
@@ -48,12 +51,18 @@ public class FileBasedDataStoreHandler extends SinkHandler {
   @Override
   public byte[] read(String id) throws SinkException {
     try {
-      return Files.readAllBytes(file);
+      return Files.readAllBytes(testFile);
     } catch (Exception e) {
       throw new SinkException();
     }
   }
 
   @Override
-  public void writeResults(String id, String result) {}
+  public void writeResults(String id, String result) throws SinkException {
+    try {
+      Files.write(resultFile, Collections.singleton(result));
+    } catch (Exception e) {
+      throw new SinkException();
+    }
+  }
 }
