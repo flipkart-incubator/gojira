@@ -21,7 +21,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>3.0.0</version>
+        <version>3.2.4</version>
         <executions>
           <execution>
             <phase>package</phase>
@@ -87,4 +87,3 @@
     <gojira.core.model.version>1.9.5</gojira.core.model.version>
   </properties>
 </project>
-

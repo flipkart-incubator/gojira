@@ -16,28 +16,33 @@
 
 package com.flipkart.gojira.core.compare;
 
+import com.flipkart.compare.ComparisonModule;
 import com.flipkart.compare.TestCompareException;
 import com.flipkart.compare.handlers.TestCompareHandler;
 import com.flipkart.compare.handlers.json.JsonTestCompareHandler;
 import com.flipkart.gojira.compare.config.GojiraComparisonConfig;
 import com.flipkart.gojira.core.DI;
-import com.flipkart.gojira.core.Mode;
-import com.flipkart.gojira.core.SetupModule;
 import com.flipkart.gojira.core.serde.DeserializeTest;
-import com.flipkart.gojira.queuedsender.config.TestQueuedSenderConfig;
-import com.flipkart.gojira.requestsampling.config.RequestSamplingConfig;
 import com.flipkart.gojira.serde.TestSerdeException;
-import com.flipkart.gojira.serde.config.SerdeConfig;
 import com.flipkart.gojira.serde.handlers.TestSerdeHandler;
 import com.flipkart.gojira.serde.handlers.json.JsonMapListSerdeHandler;
-import com.flipkart.gojira.sinkstore.config.DataStoreConfig;
-import com.flipkart.gojira.sinkstore.file.FileBasedDataStoreHandler;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class ComparisionTest {
+
+  @BeforeClass
+  public static void setup() {
+    GojiraComparisonConfig comparisonConfig =
+        GojiraComparisonConfig.builder()
+            .setDiffIgnoreMap(null)
+            .setDefaultCompareHandler(new JsonTestCompareHandler())
+            .setResponseDataCompareHandler(new JsonTestCompareHandler())
+            .build();
+    DI.install(new ComparisonModule(comparisonConfig));
+  }
 
   @Test(expected = TestCompareException.class)
   public void checkCompare() throws TestSerdeException, TestCompareException {
@@ -55,39 +60,6 @@ public class ComparisionTest {
     DeserializeTest.TestClass testClass2 = new DeserializeTest.TestClass();
     testClass2.setMap(map2);
 
-    RequestSamplingConfig requestSamplingConfig =
-        RequestSamplingConfig.builder()
-            .setSamplingPercentage(100)
-            .setWhitelist(new ArrayList<>())
-            .build();
-    SerdeConfig serdeConfig =
-        SerdeConfig.builder().setDefaultSerdeHandler(new JsonMapListSerdeHandler()).build();
-    GojiraComparisonConfig comparisonConfig =
-        GojiraComparisonConfig.builder()
-            .setDiffIgnoreMap(null)
-            .setDefaultCompareHandler(new JsonTestCompareHandler())
-            .setResponseDataCompareHandler(new JsonTestCompareHandler())
-            .build();
-    DataStoreConfig dataStoreConfig =
-        DataStoreConfig.builder()
-            .setDataStoreHandler(
-                new FileBasedDataStoreHandler("/var/log/flipkart/fk-gojira/gojira-data"))
-            .build();
-    TestQueuedSenderConfig testQueuedSenderConfig =
-        TestQueuedSenderConfig.builder()
-            .setPath("/var/log/flipkart/fk-gojira/gojira-messages")
-            .setQueueSize(10L)
-            .build();
-    SetupModule profileOrTestModule =
-        new SetupModule(
-            Mode.PROFILE,
-            requestSamplingConfig,
-            serdeConfig,
-            comparisonConfig,
-            dataStoreConfig,
-            testQueuedSenderConfig);
-
-    DI.install(profileOrTestModule);
     TestCompareHandler testCompareHandler = new JsonTestCompareHandler();
     TestSerdeHandler testSerdeHandler = new JsonMapListSerdeHandler();
     testCompareHandler.compare(testSerdeHandler.serialize(map1), testSerdeHandler.serialize(map2));

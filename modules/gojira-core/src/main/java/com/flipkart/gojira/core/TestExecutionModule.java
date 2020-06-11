@@ -17,7 +17,7 @@
 package com.flipkart.gojira.core;
 
 import com.flipkart.gojira.core.injectors.TestExecutionInjector;
-import com.flipkart.gojira.external.ExternalModule;
+import com.flipkart.gojira.external.ExternalConfigModule;
 import com.flipkart.gojira.external.ManagedModule;
 import com.flipkart.gojira.external.config.ExternalConfig;
 import com.flipkart.gojira.serde.SerdeModule;
@@ -49,7 +49,7 @@ public class TestExecutionModule extends AbstractModule {
     Injector injector = Guice.createInjector(new AbstractModule() {
       @Override
       protected void configure() {
-        install(new ExternalModule(clientToListConfigMap));
+        install(new ExternalConfigModule(clientToListConfigMap));
         install(new ManagedModule());
         install(new SerdeModule(SerdeConfig.builder().build()));
       }

@@ -1,6 +1,0 @@
-{
-  "ADD": [],
-  "MODIFY": ["/, headers, Date, /"],
-  "MOVE": [],
-  "REMOVE": []
-}

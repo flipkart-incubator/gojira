@@ -47,7 +47,7 @@ public abstract class ExternalConfigRepository {
       getExternalConfig();
 
   /**
-   * Sets the {@link #externalConfigHashMap} to the map specified in {@link ExternalModule}.
+   * Sets the {@link #externalConfigHashMap} to the map specified in {@link ExternalConfigModule}.
    *
    * @param externalConfig config to make external rpc calls
    */
