@@ -45,13 +45,13 @@ public class TestStartEndTestHandler<T extends TestDataType> implements StartEnd
   private static final Logger LOGGER = LoggerFactory.getLogger(TestStartEndTestHandler.class);
 
   // TODO: Move this global constants file.
-  private static final String delim = " | ";
-  private static final String RESULT_SUCCESS = "SUCCESS";
-  private static final String NON_EMPTY_METHOD_DATA_MAP = "NON_EMPTY_METHOD_DATA_MAP";
-  private static final String READ_FAILURE = "READ_FAILED";
-  private static final String COMPARE_FAILED = "COMPARE_FAILED";
-  private static final String EXECUTION_FAILED = "EXECUTION_FAILED";
-  private static final String UNKNOWN_FAILED = "UNKNOWN_FAILED";
+  public static final String delim = " | ";
+  public static final String RESULT_SUCCESS = "SUCCESS";
+  public static final String NON_EMPTY_METHOD_DATA_MAP = "NON_EMPTY_METHOD_DATA_MAP";
+  public static final String READ_FAILURE = "READ_FAILED";
+  public static final String COMPARE_FAILED = "COMPARE_FAILED";
+  public static final String EXECUTION_FAILED = "EXECUTION_FAILED";
+  public static final String UNKNOWN_FAILED = "UNKNOWN_FAILED";
   /**
    * compareHandlerRepository for comparing {@link TestResponseData}.
    */

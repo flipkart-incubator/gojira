@@ -17,7 +17,6 @@
 package com.flipkart.gojira.sample.app.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.flipkart.gojira.core.ProfileRepository;
 import com.flipkart.gojira.sample.app.http.ISampleAppHttpHelper;
 import com.flipkart.gojira.sample.app.http.SampleAppHttpException;
 import com.google.inject.Inject;
@@ -25,17 +24,20 @@ import com.squareup.okhttp.Headers;
 import java.util.Collections;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-/** This API is used for testing the GET request */
+/**
+ * This API is used for testing the GET request.
+ */
 @Path("/github")
 @Produces(MediaType.APPLICATION_JSON)
 public class SampleAppGithubResource {
   private final ISampleAppHttpHelper httpHelper;
   private final ObjectMapper objectMapper;
+
+  private static final String GITHUB_URL = "https://api.github.com/users/flipkart-incubator";
 
   @Inject
   public SampleAppGithubResource(ISampleAppHttpHelper httpHelper, ObjectMapper objectMapper) {
@@ -43,17 +45,24 @@ public class SampleAppGithubResource {
     this.objectMapper = objectMapper;
   }
 
+  /**
+   * Sample API which simply calls https://api.github.com/users/flipkart-incubator
+   * 1. Calls GET https://api.github.com/users/flipkart-incubator using
+   * {@link com.flipkart.gojira.sample.app.http.SampleAppHttpHelper} instance created via Guice
+   * to ensure method interception works.
+   * 2. Returns  the response.
+   * @return returns {@link Response}
+   * @throws Exception exception
+   */
   @GET
-  @Path("/{name}")
-  public Response getGithubUserMeta(@PathParam("name") String name) throws Exception {
+  @Path("/usersFlipkartIncubator")
+  public Response getGithubUserMeta() throws Exception {
     try {
-      // setting id to API method name for ensuring same id in the test class and here.
-      ProfileRepository.setTestDataId("getGithubUserMeta");
-
-      // unit of work.
+      // unit of work. Note that the method is invoked on an instance which is created by Guice
+      // which ensures that method interception would work.
       String metaInfo =
           httpHelper.doGet(
-              "https://api.github.com/users/flipkart-incubator",
+              GITHUB_URL,
               Headers.of(Collections.emptyMap()));
 
       // return response.

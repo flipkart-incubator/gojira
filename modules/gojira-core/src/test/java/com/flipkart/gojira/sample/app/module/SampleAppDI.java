@@ -20,15 +20,27 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 
+/**
+ * DI class for SampleApp.
+ */
 public class SampleAppDI {
-  public static Injector INJECTOR = Guice.createInjector();
+  public static Injector INJECTOR = null;
 
+  /**
+   * Calls {@link Guice#createInjector(Module...)}.
+   * @param module creates a {@link com.flipkart.gojira.core.injectors.GuiceInjector}
+   *               with the given module and assigns it to {@link #INJECTOR}
+   */
   public static void install(Module module) {
     synchronized (SampleAppDI.class) {
       INJECTOR = Guice.createInjector(module);
     }
   }
 
+  /**
+   * returns the {@link #INJECTOR}.
+   * @return returns the {@link #INJECTOR}
+   */
   public static Injector di() {
     return INJECTOR;
   }

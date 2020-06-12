@@ -26,6 +26,9 @@ import com.squareup.okhttp.Response;
 import java.io.IOException;
 import javax.inject.Inject;
 
+/**
+ * Helper class for making external HTTP calls.
+ */
 public class SampleAppHttpHelper implements ISampleAppHttpHelper {
   public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
@@ -36,6 +39,16 @@ public class SampleAppHttpHelper implements ISampleAppHttpHelper {
     this.client = client;
   }
 
+  /**
+   * Method to make GET calls. * Note that this method has {@link ProfileOrTest} annotation
+   * added. So if this method is called on an object which is created using Guice/AspectJ and
+   * profiling was initiated for this, then this method would be recorded or replayed.
+   *
+   * @param url external url to be called.
+   * @param headers headers to be passed.
+   * @return return data.
+   * @throws SampleAppHttpException exception thrown in case of n/w call failure.
+   */
   @Override
   @ProfileOrTest
   public String doGet(String url, Headers headers) throws SampleAppHttpException {
@@ -48,6 +61,18 @@ public class SampleAppHttpHelper implements ISampleAppHttpHelper {
     }
   }
 
+  /**
+   * Method to make POST calls.
+   * Note that this method has {@link ProfileOrTest} annotation added. So if this method is called
+   * on an object which is created using Guice/AspectJ and profiling was initiated for this, then
+   * this method would be recorded or replayed.
+   *
+   * @param url external url to be called.
+   * @param payload payload to be passed.
+   * @param headers headers to be passed.
+   * @return return data.
+   * @throws SampleAppHttpException exception thrown in case of n/w call failure.
+   */
   @Override
   @ProfileOrTest
   public String doPost(String url, String payload, Headers headers) throws SampleAppHttpException {

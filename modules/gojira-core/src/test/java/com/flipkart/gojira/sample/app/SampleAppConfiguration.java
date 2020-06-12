@@ -20,7 +20,14 @@ import io.dropwizard.Configuration;
 import io.dropwizard.jetty.HttpConnectorFactory;
 import io.dropwizard.server.DefaultServerFactory;
 
+/**
+ * Configuration class for the {@link SampleApp}.
+ */
 public class SampleAppConfiguration extends Configuration {
+
+  /**
+   * Hard-codes the port number to 5000 and 5001 for app and admin.
+   */
   public SampleAppConfiguration() {
     super();
     ((HttpConnectorFactory)

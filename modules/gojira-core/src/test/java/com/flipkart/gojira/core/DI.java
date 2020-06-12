@@ -34,9 +34,7 @@ public class DI {
     }
   }
 
-  /**
-   * Returns latest guice injector instance.
-   */
+  /** Returns latest guice injector instance. */
   public static Injector di() {
     return INJECTOR;
   }

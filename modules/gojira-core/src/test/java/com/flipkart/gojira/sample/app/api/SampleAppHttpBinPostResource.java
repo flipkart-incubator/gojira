@@ -31,12 +31,16 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-/** This API is used for testing the GET request */
+/**
+ * This API is used for testing the POST request.
+ * */
 @Path("/httpbin")
 @Produces(MediaType.APPLICATION_JSON)
 public class SampleAppHttpBinPostResource {
   private final ISampleAppHttpHelper httpHelper;
   private final ObjectMapper objectMapper;
+
+  private static final String HTTPBIN_DATA_URL = "https://httpbin.org/post";
 
   @Inject
   public SampleAppHttpBinPostResource(ISampleAppHttpHelper httpHelper, ObjectMapper objectMapper) {
@@ -44,6 +48,15 @@ public class SampleAppHttpBinPostResource {
     this.objectMapper = objectMapper;
   }
 
+  /**
+   * Sample API which simply calls https://httpbin.org/post
+   * 1. Calls POST https://httpbin.org/post using instance of
+   * {@link com.flipkart.gojira.sample.app.http.SampleAppHttpHelper} created via Guice for method
+   * interception to work.
+   * 2. Returns  the response.
+   * @return returns {@link Response}
+   * @throws Exception exception
+   */
   @POST
   @Path("/post")
   public Response postHttpBinData() throws Exception {
@@ -57,9 +70,12 @@ public class SampleAppHttpBinPostResource {
       Map<Object, Object> timeDetails = new HashMap<>();
       timeDetails.put("epochTime", System.currentTimeMillis());
       httpPostSampleData.put("timeDetails", timeDetails);
+
+      // Note that the method is invoked on an instance which is created by Guice
+      // which ensures that method interception would work.
       String responseData =
           httpHelper.doPost(
-              "https://httpbin.org/post",
+              HTTPBIN_DATA_URL,
               objectMapper.writeValueAsString(httpPostSampleData),
               Headers.of(Collections.emptyMap()));
 

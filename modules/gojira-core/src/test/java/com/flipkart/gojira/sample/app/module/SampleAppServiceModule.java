@@ -21,9 +21,22 @@ import com.flipkart.gojira.sample.app.http.ISampleAppHttpHelper;
 import com.flipkart.gojira.sample.app.http.SampleAppHttpHelper;
 import com.google.inject.AbstractModule;
 
+/**
+ * Sample application guice module containing all configurations that need to be installed.
+ */
 public class SampleAppServiceModule extends AbstractModule {
   private static final ObjectMapper mapper = new ObjectMapper();
 
+  /**
+   * Installs/Binds the following:
+   * 1. {@link ISampleAppHttpHelper} to {@link SampleAppHttpHelper} which will be used for making
+   * external HTTP calls from this application. The methods of this application have been
+   * annotated with {@link com.flipkart.gojira.core.annotations.ProfileOrTest}, for method
+   * interception to work in order to enable capturing rpc calls.
+   * 2. Binds {@link ObjectMapper} to an instance, so the same can be used across the app, instead
+   * of having to create new ones.
+   * 3. {@link SampleAppServiceModule} which contains all configurations for testing.
+   */
   @Override
   protected void configure() {
     bind(ISampleAppHttpHelper.class).to(SampleAppHttpHelper.class).asEagerSingleton();

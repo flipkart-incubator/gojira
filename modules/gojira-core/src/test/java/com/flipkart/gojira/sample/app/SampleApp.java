@@ -27,6 +27,9 @@ import io.dropwizard.setup.Environment;
 import java.util.EnumSet;
 import javax.servlet.DispatcherType;
 
+/**
+ * Sample Dropwizard application.
+ */
 public class SampleApp extends Application<SampleAppConfiguration> {
 
   public static void main(final String[] args) throws Exception {
@@ -43,6 +46,16 @@ public class SampleApp extends Application<SampleAppConfiguration> {
     // TODO: application initialization
   }
 
+  /**
+   * 1. Installs {@link SampleAppServiceModule} which has application related configurations to be
+   * installed and {@link com.flipkart.gojira.sample.app.module.SampleAppGojiraModule}.
+   * 2. Add {@link HttpFilter} to environment-servlets so that requests can be intercepted and
+   * gojira executions in various {@link com.flipkart.gojira.core.Mode} can be begun.
+   * 3. Registers a couple of resources for enabling demo/test.
+   *
+   * @param configuration application configuration.
+   * @param environment dropwizard application environment.
+   */
   @Override
   public void run(final SampleAppConfiguration configuration, final Environment environment) {
     SampleAppDI.install(new SampleAppServiceModule());

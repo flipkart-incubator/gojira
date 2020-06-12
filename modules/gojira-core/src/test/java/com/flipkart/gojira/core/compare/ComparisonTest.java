@@ -18,6 +18,7 @@ package com.flipkart.gojira.core.compare;
 
 import com.flipkart.compare.ComparisonModule;
 import com.flipkart.compare.TestCompareException;
+import com.flipkart.compare.config.ComparisonConfig;
 import com.flipkart.compare.handlers.TestCompareHandler;
 import com.flipkart.compare.handlers.json.JsonTestCompareHandler;
 import com.flipkart.gojira.compare.config.GojiraComparisonConfig;
@@ -31,11 +32,18 @@ import java.util.Map;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class ComparisionTest {
+/**
+ * Class to test comparison of Map.
+ */
+public class ComparisonTest {
 
+  /**
+   * Setup for the class.
+   * Installs the {@link ComparisonModule} with {@link ComparisonConfig} for testing.
+   */
   @BeforeClass
   public static void setup() {
-    GojiraComparisonConfig comparisonConfig =
+    ComparisonConfig comparisonConfig =
         GojiraComparisonConfig.builder()
             .setDiffIgnoreMap(null)
             .setDefaultCompareHandler(new JsonTestCompareHandler())
@@ -44,6 +52,12 @@ public class ComparisionTest {
     DI.install(new ComparisonModule(comparisonConfig));
   }
 
+  /**
+   * Creates 2 instances of Map with different data for comparison purposes and checks that
+   * exception is thrown.
+   * @throws TestSerdeException serialization exception
+   * @throws TestCompareException comparison exception
+   */
   @Test(expected = TestCompareException.class)
   public void checkCompare() throws TestSerdeException, TestCompareException {
     Map<String, String> map1 = new HashMap<>();

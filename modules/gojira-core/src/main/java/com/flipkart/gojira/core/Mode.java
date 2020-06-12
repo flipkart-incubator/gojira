@@ -18,12 +18,33 @@ package com.flipkart.gojira.core;
 
 /**
  * Different types of modes the gojira library runs in.
- * * PROFILE - when recording
- * * TEST - when replaying for regression testing
- * * NONE - kind of no-op(has minor non-functional implications)
- * * SERIALIZE - when replaying for de-serialization testing
- * * DYNAMIC - will use above mentioned modes depending upon request MODE_HEADER
  */
 public enum Mode {
-  PROFILE, TEST, NONE, SERIALIZE, DYNAMIC
+  /**
+   * Use this method when profiling production traffic.
+   */
+  PROFILE,
+  /**
+   * Use this method when replaying for regression testing.
+   */
+  TEST,
+  /**
+   * Use this mode, if you do not want data to be profiled or tested. This has the least non-
+   * functional impact on the application. In this {@link Mode}, as a performance optimization,
+   * for Guice {@link org.aopalliance.intercept.MethodInterceptor} is not bound.
+   */
+  NONE,
+  /**
+   * request-level mode. if you set this as the mode, all requests are expected to provide
+   * {@link GojiraConstants#MODE_HEADER}. If not, it will be assumed to {@link Mode#NONE}.
+   * {@link ProfileOrTestMethodInterceptor} will be bound in this mode.
+   */
+  DYNAMIC,
+  /**
+   * Use this mode for testing de-serialization of data profiled. More often than not, it is
+   * observed that de-serialization of method dat is the biggest friction to on-boarding, so we
+   * have added this as a mode, so integrating applications can use this {@link  Mode} to identify
+   * all failures, before running in {@link Mode#TEST}.
+   */
+  SERIALIZE
 }

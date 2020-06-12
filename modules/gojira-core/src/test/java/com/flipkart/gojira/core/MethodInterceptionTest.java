@@ -16,18 +16,19 @@
 
 package com.flipkart.gojira.core;
 
-import com.flipkart.gojira.compare.annotations.CompareHandler;
 import com.flipkart.gojira.core.annotations.ProfileOrTest;
-import com.flipkart.gojira.hash.annotations.HashHandler;
 
+/** Class whose instance will be used for testing method interception. */
 public class MethodInterceptionTest {
 
+  /**
+   * Method on which {@link ProfileOrTest} annotation is added.
+   *
+   * @param input1 long value
+   * @return the input value as a string.
+   */
   @ProfileOrTest
-  public String checkMethodInterception(Long input1,
-      @HashHandler(hashHandlerClass = ByteArrayHashHandler.class)
-      @CompareHandler(compareHandlerClass = ByteArrayCompareHandler.class) byte[] input2,
-      @CompareHandler(compareHandlerClass = SystemTimeCompareHandler.class) Long time,
-      @HashHandler(hashHandlerClass = ByteArrayHashHandler.class) Integer input3) {
+  public String checkMethodInterception(Long input1) {
     return input1.toString();
   }
 }
