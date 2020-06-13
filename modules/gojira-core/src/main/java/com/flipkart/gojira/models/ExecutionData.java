@@ -23,8 +23,6 @@ import java.util.Objects;
 /**
  * This class contains execution related data for a given request-response cycle in different {@link
  * Mode}.
- *
- * <p>//TODO: Rename this ExecutionData
  */
 public class ExecutionData<T extends TestDataType> {
 

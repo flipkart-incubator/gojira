@@ -16,10 +16,12 @@
 
 package com.flipkart.gojira.sample.test;
 
-import com.flipkart.gojira.core.GojiraConstants;
+import static com.flipkart.gojira.core.GlobalConstants.COMPARE_FAILED;
+import static com.flipkart.gojira.core.GlobalConstants.RESULT_SUCCESS;
+
+import com.flipkart.gojira.core.GlobalConstants;
 import com.flipkart.gojira.core.Mode;
 import com.flipkart.gojira.core.TestExecutionModule;
-import com.flipkart.gojira.core.TestStartEndTestHandler;
 import com.flipkart.gojira.core.injectors.GuiceInjector;
 import com.flipkart.gojira.core.injectors.TestExecutionInjector;
 import com.flipkart.gojira.execute.TestExecutor;
@@ -135,7 +137,7 @@ public class SampleAppTest {
           .doGet(
               GET_GITHUB_USER_META_URL,
               Headers
-                  .of(Collections.singletonMap(GojiraConstants.MODE_HEADER, Mode.PROFILE.name())));
+                  .of(Collections.singletonMap(GlobalConstants.MODE_HEADER, Mode.PROFILE.name())));
       Thread.sleep(WAIT_DURATION_IN_MS_AFTER_PROFILE_BEFORE_TEST);
     } catch (Exception e) {
       throw new RuntimeException("test initiation failed.", e);
@@ -166,7 +168,7 @@ public class SampleAppTest {
       throw new RuntimeException("test reading results failed.", e);
     }
 
-    Assert.assertEquals(TestStartEndTestHandler.RESULT_SUCCESS, result);
+    Assert.assertEquals(RESULT_SUCCESS, result);
   }
 
   /**
@@ -185,7 +187,7 @@ public class SampleAppTest {
               POST_HTTPBIN_DATA_URL,
               "",
               Headers.of(
-                  Collections.singletonMap(GojiraConstants.MODE_HEADER, Mode.PROFILE.name())));
+                  Collections.singletonMap(GlobalConstants.MODE_HEADER, Mode.PROFILE.name())));
       Thread.sleep(WAIT_DURATION_IN_MS_AFTER_PROFILE_BEFORE_TEST);
     } catch (Exception e) {
       throw new RuntimeException("test initiation failed.", e);
@@ -215,7 +217,7 @@ public class SampleAppTest {
       throw new RuntimeException("test reading results failed.", e);
     }
 
-    Assert.assertEquals(TestStartEndTestHandler.COMPARE_FAILED, result);
+    Assert.assertEquals(COMPARE_FAILED, result);
   }
 
   /**

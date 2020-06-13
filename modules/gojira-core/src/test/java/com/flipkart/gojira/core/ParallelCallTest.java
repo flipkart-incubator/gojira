@@ -17,6 +17,7 @@
 package com.flipkart.gojira.core;
 
 import static com.flipkart.gojira.core.DI.di;
+import static com.flipkart.gojira.core.GlobalConstants.RESULT_SUCCESS;
 
 import com.flipkart.compare.handlers.json.JsonTestCompareHandler;
 import com.flipkart.gojira.compare.config.GojiraComparisonConfig;
@@ -121,7 +122,7 @@ public class ParallelCallTest {
     Thread.sleep(WAIT_TIME_IN_MS_BEFORE_ENDING_TESTING);
     DefaultProfileOrTestHandler.end(HttpTestResponseData.builder().build());
 
-    Assert.assertEquals(TestStartEndTestHandler.RESULT_SUCCESS,
+    Assert.assertEquals(RESULT_SUCCESS,
         new String(DI.di().getInstance(SinkHandler.class).read(TEST_ID)));
   }
 

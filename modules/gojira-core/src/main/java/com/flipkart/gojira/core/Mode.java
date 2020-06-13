@@ -36,7 +36,7 @@ public enum Mode {
   NONE,
   /**
    * request-level mode. if you set this as the mode, all requests are expected to provide
-   * {@link GojiraConstants#MODE_HEADER}. If not, it will be assumed to {@link Mode#NONE}.
+   * {@link GlobalConstants#MODE_HEADER}. If not, it will be assumed to {@link Mode#NONE}.
    * {@link ProfileOrTestMethodInterceptor} will be bound in this mode.
    */
   DYNAMIC,

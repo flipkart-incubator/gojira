@@ -16,7 +16,7 @@
 
 package com.flipkart.gojira.external.config;
 
-import static com.flipkart.gojira.core.GojiraConstants.RMQ_TEST_DATA_TYPE;
+import static com.flipkart.gojira.core.GlobalConstants.RMQ_TEST_DATA_TYPE;
 
 import java.util.List;
 
