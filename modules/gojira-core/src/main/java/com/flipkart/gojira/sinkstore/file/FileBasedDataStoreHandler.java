@@ -18,7 +18,6 @@ package com.flipkart.gojira.sinkstore.file;
 
 import com.flipkart.gojira.sinkstore.SinkException;
 import com.flipkart.gojira.sinkstore.handlers.SinkHandler;
-import com.google.common.annotations.VisibleForTesting;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;

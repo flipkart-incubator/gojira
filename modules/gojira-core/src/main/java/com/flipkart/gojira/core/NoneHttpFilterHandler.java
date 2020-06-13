@@ -33,7 +33,7 @@ public class NoneHttpFilterHandler extends HttpFilterHandler {
   private static final Logger LOGGER = LoggerFactory.getLogger(NoneHttpFilterHandler.class);
 
   /**
-   * Get's the test-id and throws an exception if test-header is present.
+   * Gets the test-id and throws an exception if test-header is present.
    *
    * @param request wrapped original http request as a {@link
    *     HttpFilter.CustomHttpServletRequestWrapper} object

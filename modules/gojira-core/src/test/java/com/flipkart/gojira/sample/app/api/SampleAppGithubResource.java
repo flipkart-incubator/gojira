@@ -68,7 +68,7 @@ public class SampleAppGithubResource {
       // return response.
       return Response.ok(metaInfo).build();
     } catch (SampleAppHttpException e) {
-      throw new Exception("Get to github failed!");
+      throw new Exception("GET from github failed!");
     }
   }
 }
