@@ -16,7 +16,6 @@
 
 package com.flipkart.gojira.sample.app.api;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flipkart.gojira.sample.app.http.ISampleAppHttpHelper;
 import com.flipkart.gojira.sample.app.http.SampleAppHttpException;
 import com.google.inject.Inject;

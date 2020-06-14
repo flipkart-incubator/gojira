@@ -43,7 +43,6 @@ public class GlobalConstants {
             }
           });
 
-
   // test result constants
   public static final String RESULT_SUCCESS = "SUCCESS";
   public static final String NON_EMPTY_METHOD_DATA_MAP = "NON_EMPTY_METHOD_DATA_MAP";
