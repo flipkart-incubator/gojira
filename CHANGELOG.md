@@ -1,3 +1,9 @@
+## 1.9.7
+- Adding sample service as a test.
+- Updated jackson-databind dependency to 2.11.0
+- Updated guice dependency to 4.2.3 
+- Updated maven-shade-plugin dependency to 3.2.4
+ 
 ## 1.9.5
 - new Mode introduced: DYNAMIC.
 - Request level mode support.
