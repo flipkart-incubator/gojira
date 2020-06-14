@@ -16,7 +16,7 @@
 
 package com.flipkart.gojira.models.http;
 
-import static com.flipkart.gojira.core.GojiraConstants.HTTP_TEST_DATA_TYPE;
+import static com.flipkart.gojira.core.GlobalConstants.HTTP_TEST_DATA_TYPE;
 
 import com.flipkart.gojira.models.TestDataType;
 

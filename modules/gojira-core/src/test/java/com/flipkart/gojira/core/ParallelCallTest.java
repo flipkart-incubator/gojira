@@ -17,6 +17,7 @@
 package com.flipkart.gojira.core;
 
 import static com.flipkart.gojira.core.DI.di;
+import static com.flipkart.gojira.core.GlobalConstants.RESULT_SUCCESS;
 
 import com.flipkart.compare.handlers.json.JsonTestCompareHandler;
 import com.flipkart.gojira.compare.config.GojiraComparisonConfig;
@@ -57,17 +58,19 @@ import org.junit.Test;
 public class ParallelCallTest {
   private static ParallelCallThreadPoolExecutor executor;
 
+  private static final int PARALLELISM = 25;
+
   // executor params.
   // keeping number of threads very high to enable maximum parallelism.
-  private static final int NUMBER_OF_THREADS = 500;
+  private static final int NUMBER_OF_THREADS = PARALLELISM * 2 * 2;
   private static final int KEEP_ALIVE_TIME = 120;
   private static final int BLOCKING_QUEUE_SIZE = 500;
 
   // wait time before ending profiling or testing.
-  private static final int WAIT_TIME_IN_MS_BEFORE_ENDING_PROFILING = 20000;
+  private static final int WAIT_TIME_IN_MS_BEFORE_ENDING_PROFILING = 10000;
 
   // wait time before ending profiling or testing.
-  private static final int WAIT_TIME_IN_MS_BEFORE_ENDING_TESTING   = 90000;
+  private static final int WAIT_TIME_IN_MS_BEFORE_ENDING_TESTING   = 30000;
 
   // wait time between end of profiling and start of testing
   private static final int WAIT_TIME_IN_MS_BETWEEN_TEST_START_AND_PROFILING_END = 5000;
@@ -121,7 +124,7 @@ public class ParallelCallTest {
     Thread.sleep(WAIT_TIME_IN_MS_BEFORE_ENDING_TESTING);
     DefaultProfileOrTestHandler.end(HttpTestResponseData.builder().build());
 
-    Assert.assertEquals(TestStartEndTestHandler.RESULT_SUCCESS,
+    Assert.assertEquals(RESULT_SUCCESS,
         new String(DI.di().getInstance(SinkHandler.class).read(TEST_ID)));
   }
 
@@ -133,12 +136,12 @@ public class ParallelCallTest {
   private void randomizeAndExecuteTask() {
     List<Long> usedList = new ArrayList<>();
     while (true) {
-      long num = System.nanoTime() % 100;
+      long num = System.nanoTime() % PARALLELISM;
       if (!usedList.contains(num)) {
         executor.execute(new CustomRunnable(ProfileRepository.getGlobalPerRequestID(), num));
         usedList.add(num);
       }
-      if (usedList.size() == 100) {
+      if (usedList.size() == PARALLELISM) {
         return;
       }
     }

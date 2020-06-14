@@ -24,7 +24,7 @@ import com.rabbitmq.client.AMQP;
 public class NoneRmqFilterHandler extends RmqFilterHandler {
 
   /**
-   * Get's the test-id and throws an exception if test-header is present.
+   * Gets the test-id and throws an exception if test-header is present.
    *
    * <p>{@inheritDoc}
    */
@@ -39,12 +39,12 @@ public class NoneRmqFilterHandler extends RmqFilterHandler {
     if (id != null) {
       LOGGER.error(
           "Header with name: "
-              + GojiraConstants.TEST_HEADER
+              + GlobalConstants.TEST_HEADER
               + " present. But service is not running in mode. : "
               + Mode.NONE);
       throw new RuntimeException(
           "Header with name: "
-              + GojiraConstants.TEST_HEADER
+              + GlobalConstants.TEST_HEADER
               + " present. But service is not running in mode. : "
               + Mode.NONE);
     }

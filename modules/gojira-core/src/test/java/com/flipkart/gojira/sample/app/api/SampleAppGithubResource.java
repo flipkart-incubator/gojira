@@ -35,14 +35,12 @@ import javax.ws.rs.core.Response;
 @Produces(MediaType.APPLICATION_JSON)
 public class SampleAppGithubResource {
   private final ISampleAppHttpHelper httpHelper;
-  private final ObjectMapper objectMapper;
 
   private static final String GITHUB_URL = "https://api.github.com/users/flipkart-incubator";
 
   @Inject
-  public SampleAppGithubResource(ISampleAppHttpHelper httpHelper, ObjectMapper objectMapper) {
+  public SampleAppGithubResource(ISampleAppHttpHelper httpHelper) {
     this.httpHelper = httpHelper;
-    this.objectMapper = objectMapper;
   }
 
   /**
@@ -68,7 +66,7 @@ public class SampleAppGithubResource {
       // return response.
       return Response.ok(metaInfo).build();
     } catch (SampleAppHttpException e) {
-      throw new Exception("Get to github failed!");
+      throw new Exception("GET from github failed!");
     }
   }
 }

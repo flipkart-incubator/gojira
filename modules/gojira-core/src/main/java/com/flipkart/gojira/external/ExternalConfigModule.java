@@ -16,7 +16,7 @@
 
 package com.flipkart.gojira.external;
 
-import static com.flipkart.gojira.core.GojiraConstants.TEST_DATA_TYPE_STRING_TO_CLASS;
+import static com.flipkart.gojira.core.GlobalConstants.TEST_DATA_TYPE_STRING_TO_CLASS;
 
 import com.flipkart.gojira.external.config.ExternalConfig;
 import com.flipkart.gojira.models.TestDataType;

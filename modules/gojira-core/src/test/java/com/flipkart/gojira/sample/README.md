@@ -1,6 +1,6 @@
 #### Gojira Sample Project 
 
-This project is intended to share the code samples on  how to use Gojira.
+This project is intended to share the code samples on how to use Gojira.
 
 This project using dropwizard in order to run two APIs. 
 

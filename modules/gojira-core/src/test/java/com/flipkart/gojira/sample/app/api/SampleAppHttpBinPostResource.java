@@ -82,7 +82,7 @@ public class SampleAppHttpBinPostResource {
       // return response
       return Response.ok(responseData).build();
     } catch (SampleAppHttpException e) {
-      throw new Exception("Post to http bin failed!");
+      throw new Exception("POST to http bin failed!");
     }
   }
 }

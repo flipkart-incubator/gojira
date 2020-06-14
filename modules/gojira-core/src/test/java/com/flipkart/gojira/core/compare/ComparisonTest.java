@@ -37,6 +37,9 @@ import org.junit.Test;
  */
 public class ComparisonTest {
 
+  private TestSerdeHandler testSerdeHandler = new JsonMapListSerdeHandler();
+  private TestCompareHandler testCompareHandler = new JsonTestCompareHandler();
+
   /**
    * Setup for the class.
    * Installs the {@link ComparisonModule} with {@link ComparisonConfig} for testing.
@@ -74,8 +77,6 @@ public class ComparisonTest {
     DeserializeTest.TestClass testClass2 = new DeserializeTest.TestClass();
     testClass2.setMap(map2);
 
-    TestCompareHandler testCompareHandler = new JsonTestCompareHandler();
-    TestSerdeHandler testSerdeHandler = new JsonMapListSerdeHandler();
     testCompareHandler.compare(testSerdeHandler.serialize(map1), testSerdeHandler.serialize(map2));
   }
 }

@@ -16,9 +16,9 @@
 
 package com.flipkart.gojira.execute;
 
-import static com.flipkart.gojira.core.GojiraConstants.HTTP_TEST_DATA_TYPE;
-import static com.flipkart.gojira.core.GojiraConstants.KAFKA_TEST_DATA_TYPE;
-import static com.flipkart.gojira.core.GojiraConstants.RMQ_TEST_DATA_TYPE;
+import static com.flipkart.gojira.core.GlobalConstants.HTTP_TEST_DATA_TYPE;
+import static com.flipkart.gojira.core.GlobalConstants.KAFKA_TEST_DATA_TYPE;
+import static com.flipkart.gojira.core.GlobalConstants.RMQ_TEST_DATA_TYPE;
 
 import com.flipkart.gojira.execute.http.DefaultHttpTestExecutor;
 import com.flipkart.gojira.execute.kafka.DefaultKafkaTestExecutor;

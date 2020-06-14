@@ -57,10 +57,10 @@ public class TestQueuedSenderImpl extends TestQueuedSender {
 
     MessageSenderThread messageSenderThread = new MessageSenderThread(messageQueue);
     scheduler.scheduleWithFixedDelay(
-        messageSenderThread, 5, testQueuedSenderConfig.getQueuePurgeInterval(), TimeUnit.SECONDS);
+        messageSenderThread, 10, testQueuedSenderConfig.getQueuePurgeInterval(), TimeUnit.SECONDS);
     scheduler.scheduleAtFixedRate(
         new TestQueueCleaner(messageQueue),
-        5,
+        10,
         testQueuedSenderConfig.getQueuePurgeInterval(),
         TimeUnit.SECONDS);
   }
