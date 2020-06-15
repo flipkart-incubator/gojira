@@ -16,7 +16,7 @@
 
 package com.flipkart.gojira.core;
 
-import static com.flipkart.gojira.core.GojiraConstants.MODE_HEADER;
+import static com.flipkart.gojira.core.GlobalConstants.MODE_HEADER;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

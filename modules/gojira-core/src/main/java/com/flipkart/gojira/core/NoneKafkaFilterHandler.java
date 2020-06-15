@@ -24,7 +24,7 @@ import java.util.Map;
 public class NoneKafkaFilterHandler extends KafkaFilterHandler {
 
   /**
-   * Get's the test-id and throws an exception if test-header is present.
+   * Gets the test-id and throws an exception if test-header is present.
    *
    * @param topicName kafka topic name
    * @param key key used for producing message to the topic
@@ -42,12 +42,12 @@ public class NoneKafkaFilterHandler extends KafkaFilterHandler {
     if (id != null) {
       LOGGER.error(
           "Header with name: "
-              + GojiraConstants.TEST_HEADER
+              + GlobalConstants.TEST_HEADER
               + " present. But service is not running in TEST mode. : "
               + Mode.NONE);
       throw new RuntimeException(
           "Header with name: "
-              + GojiraConstants.TEST_HEADER
+              + GlobalConstants.TEST_HEADER
               + " present. But service is not running in TEST mode. : "
               + Mode.NONE);
     }

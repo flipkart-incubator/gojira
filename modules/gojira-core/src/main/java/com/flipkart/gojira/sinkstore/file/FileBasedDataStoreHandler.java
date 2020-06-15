@@ -18,6 +18,7 @@ package com.flipkart.gojira.sinkstore.file;
 
 import com.flipkart.gojira.sinkstore.SinkException;
 import com.flipkart.gojira.sinkstore.handlers.SinkHandler;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -55,5 +56,11 @@ public class FileBasedDataStoreHandler extends SinkHandler {
   }
 
   @Override
-  public void writeResults(String id, String result) {}
+  public void writeResults(String id, String result) throws SinkException {
+    try {
+      Files.write(file, result.getBytes());
+    } catch (IOException e) {
+      throw new SinkException();
+    }
+  }
 }

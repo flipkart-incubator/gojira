@@ -18,6 +18,7 @@ package com.flipkart.gojira.core.injectors;
 
 import com.flipkart.gojira.core.BindingsModule;
 import com.flipkart.gojira.core.SetupModule;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.inject.Injector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +31,7 @@ public class GuiceInjector {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(GuiceInjector.class);
 
-  private static Injector injector = null;
+  private static volatile Injector injector = null;
 
   /**
    * Assigns the provided {@link Injector} instance.
@@ -47,6 +48,23 @@ public class GuiceInjector {
     } else {
       LOGGER.error("Injector instance was already assigned.");
       throw new IllegalStateException("Injector instance was already assigned.");
+    }
+  }
+
+  /**
+   * Mark assigned injector as null. Added for un-assigning when running tests.
+   */
+  @VisibleForTesting
+  public static void unAssignInjector() {
+    if (injector != null) {
+      synchronized (GuiceInjector.class) {
+        if (injector != null) {
+          injector = null;
+        }
+      }
+    } else {
+      LOGGER.error("Injector instance was already un-assigned.");
+      throw new IllegalStateException("Injector instance was already un-assigned.");
     }
   }
 

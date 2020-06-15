@@ -16,9 +16,11 @@
 
 package com.flipkart.gojira.external;
 
+import com.flipkart.gojira.core.injectors.GuiceInjector;
 import com.flipkart.gojira.external.http.HttpManager;
 import com.flipkart.gojira.external.kafka.KafkaManager;
 import com.flipkart.gojira.external.rmq.RmqManager;
+import com.flipkart.gojira.queuedsender.TestQueuedSender;
 
 /**
  * Implementation of {@link Managed}.
@@ -48,5 +50,10 @@ public class ManagedImpl implements Managed {
     KafkaManager.KAFKA_MANAGER.shutdown();
     RmqManager.RMQ_MANAGER.shutdown();
 
+    try {
+      GuiceInjector.getInjector().getInstance(TestQueuedSender.class).shutdown();
+    } catch (Exception e) {
+      throw new ShutdownException("error during test-queued-sender shutdown", e);
+    }
   }
 }

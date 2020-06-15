@@ -17,6 +17,7 @@
 package com.flipkart.gojira.external.rmq;
 
 import com.flipkart.gojira.core.injectors.TestExecutionInjector;
+import com.flipkart.gojira.external.ExternalConfigModule;
 import com.flipkart.gojira.external.ExternalConfigRepository;
 import com.flipkart.gojira.external.Managed;
 import com.flipkart.gojira.external.SetupException;
@@ -79,7 +80,7 @@ public enum RmqManager implements IRmqManager, Managed {
   /**
    * Creates {@link Channel} to publish Rmq messages.
    *
-   * @param rmqConfig Provided in the {@link com.flipkart.gojira.external.ExternalModule} for a
+   * @param rmqConfig Provided in the {@link ExternalConfigModule} for a
    *     given client
    * @return a Channel for app to exchange publish
    * @throws SetupException if we are not able to setup connection.

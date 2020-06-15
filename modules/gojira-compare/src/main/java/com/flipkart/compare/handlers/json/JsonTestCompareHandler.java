@@ -59,7 +59,8 @@ public class JsonTestCompareHandler extends TestCompareHandler {
     try {
       // return if both profiledData and testData are null or empty.
       if ((profiledData == null && testData == null)
-          || (profiledData != null && profiledData.length == 0 && testData.length == 0)) {
+          || (profiledData != null && testData != null && profiledData.length == 0
+              && testData.length == 0)) {
         return;
       }
 

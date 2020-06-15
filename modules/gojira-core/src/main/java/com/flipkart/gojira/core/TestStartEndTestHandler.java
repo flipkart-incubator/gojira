@@ -16,6 +16,12 @@
 
 package com.flipkart.gojira.core;
 
+import static com.flipkart.gojira.core.GlobalConstants.COMPARE_FAILED;
+import static com.flipkart.gojira.core.GlobalConstants.NON_EMPTY_METHOD_DATA_MAP;
+import static com.flipkart.gojira.core.GlobalConstants.READ_FAILURE;
+import static com.flipkart.gojira.core.GlobalConstants.RESULT_SUCCESS;
+import static com.flipkart.gojira.core.GlobalConstants.UNKNOWN_FAILED;
+
 import com.flipkart.compare.TestCompareException;
 import com.flipkart.gojira.compare.GojiraCompareHandlerRepository;
 import com.flipkart.gojira.core.injectors.GuiceInjector;
@@ -44,14 +50,6 @@ public class TestStartEndTestHandler<T extends TestDataType> implements StartEnd
 
   private static final Logger LOGGER = LoggerFactory.getLogger(TestStartEndTestHandler.class);
 
-  // TODO: Move this global constants file.
-  private static final String delim = " | ";
-  private static final String RESULT_SUCCESS = "SUCCESS";
-  private static final String NON_EMPTY_METHOD_DATA_MAP = "NON_EMPTY_METHOD_DATA_MAP";
-  private static final String READ_FAILURE = "READ_FAILED";
-  private static final String COMPARE_FAILED = "COMPARE_FAILED";
-  private static final String EXECUTION_FAILED = "EXECUTION_FAILED";
-  private static final String UNKNOWN_FAILED = "UNKNOWN_FAILED";
   /**
    * compareHandlerRepository for comparing {@link TestResponseData}.
    */
@@ -83,7 +81,7 @@ public class TestStartEndTestHandler<T extends TestDataType> implements StartEnd
    * calling the {@link ProfileRepository#setRequestMode(Mode)}
    *
    * <p>In case of any exception, marks {@link ExecutionData#getProfileState()} as {@link
-   * ProfileState#FAILED} and stores result as {@value READ_FAILURE}.
+   * ProfileState#FAILED} and stores result as {@value GlobalConstants#READ_FAILURE}.
    *
    * <p>In case {@link SinkHandler#writeResults(String, String)} throws {@link SinkException},
    * simply logs and throws a {@link RuntimeException}
@@ -134,8 +132,9 @@ public class TestStartEndTestHandler<T extends TestDataType> implements StartEnd
    * <p>Based on the result of comparison, {@link SinkHandler#writeResults(String, String)} is
    * called.
    *
-   * <p>If comparison is successful, {@value RESULT_SUCCESS} is written. On comparison failure,
-   * {@value COMPARE_FAILED} is written. On unknown exception, {@value UNKNOWN_FAILED} is written.
+   * <p>If comparison is successful, {@value GlobalConstants#READ_FAILURE} is written. On comparison
+   * failure, {@value GlobalConstants#COMPARE_FAILED} is written. On unknown exception, {@value
+   * GlobalConstants#UNKNOWN_FAILED} is written.
    *
    * <p>If {@link SinkHandler#writeResults(String, String)} fails, {@link RuntimeException} is
    * thrown.
@@ -168,7 +167,6 @@ public class TestStartEndTestHandler<T extends TestDataType> implements StartEnd
             sinkHandler.writeResults(id, NON_EMPTY_METHOD_DATA_MAP);
             LOGGER.error("NON_EMPTY_METHOD_DATA_MAP for " + id);
           }
-
         } catch (TestCompareException e) {
           LOGGER.error("test compare exception.", e);
           sinkHandler.writeResults(id, COMPARE_FAILED);
@@ -197,10 +195,9 @@ public class TestStartEndTestHandler<T extends TestDataType> implements StartEnd
    */
   public boolean isMethodDataMapEmpty() {
     ConcurrentHashMap<
-            String, ConcurrentSkipListMap<Long,
-            ConcurrentHashMap<MethodDataType,
-                    List<MethodData>>>> methodDataMap =
-            ProfileRepository.getTestData().getMethodDataMap();
+            String,
+            ConcurrentSkipListMap<Long, ConcurrentHashMap<MethodDataType, List<MethodData>>>>
+        methodDataMap = ProfileRepository.getTestData().getMethodDataMap();
     for (String methodName : methodDataMap.keySet()) {
       if (!methodDataMap.get(methodName).isEmpty()) {
         return false;

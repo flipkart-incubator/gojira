@@ -28,7 +28,7 @@ public class TestExecutionInjector {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(GuiceInjector.class);
 
-  private static Injector injector = null;
+  private static volatile Injector injector = null;
 
   /**
    * Assigns the provided {@link Injector instance}.
