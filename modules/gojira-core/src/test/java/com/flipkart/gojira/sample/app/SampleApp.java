@@ -43,7 +43,6 @@ public class SampleApp extends Application<SampleAppConfiguration> {
 
   @Override
   public void initialize(final Bootstrap<SampleAppConfiguration> bootstrap) {
-    // TODO: application initialization
   }
 
   /**

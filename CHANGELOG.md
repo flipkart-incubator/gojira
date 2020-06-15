@@ -3,7 +3,7 @@
 - Refactored ParalleCallTest with lower concurrency, 25 threads and made it working.
 - Fixed a potential NPE in gojira-compare module.
 - Fixed potential bug with double-checked-locking: https://www.cs.umd.edu/~pugh/java/memoryModel/DoubleCheckedLocking.html
-- Renamed GojiraConstants -> GlobalConstants and added moved a few constants from TestStartEndTestHandler..
+- Renamed GojiraConstants -> GlobalConstants and moved a few constants from TestStartEndTestHandler.
 - Renamed ExternalModule -> ExternalConfigModule.
 - Updated jackson-databind dependency to 2.11.0
 - Updated guice dependency to 4.2.3 
