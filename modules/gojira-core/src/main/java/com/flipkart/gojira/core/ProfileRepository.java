@@ -106,7 +106,7 @@ public class ProfileRepository<
     }
   }
 
-  static synchronized void setMode(Mode mode) {
+  static void setMode(Mode mode) {
     globalProfileSetting.setMode(mode);
   }
 

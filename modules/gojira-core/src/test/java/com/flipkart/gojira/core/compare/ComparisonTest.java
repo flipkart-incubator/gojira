@@ -16,29 +16,51 @@
 
 package com.flipkart.gojira.core.compare;
 
+import com.flipkart.compare.ComparisonModule;
 import com.flipkart.compare.TestCompareException;
+import com.flipkart.compare.config.ComparisonConfig;
 import com.flipkart.compare.handlers.TestCompareHandler;
 import com.flipkart.compare.handlers.json.JsonTestCompareHandler;
 import com.flipkart.gojira.compare.config.GojiraComparisonConfig;
 import com.flipkart.gojira.core.DI;
-import com.flipkart.gojira.core.Mode;
-import com.flipkart.gojira.core.SetupModule;
 import com.flipkart.gojira.core.serde.DeserializeTest;
-import com.flipkart.gojira.queuedsender.config.TestQueuedSenderConfig;
-import com.flipkart.gojira.requestsampling.config.RequestSamplingConfig;
 import com.flipkart.gojira.serde.TestSerdeException;
-import com.flipkart.gojira.serde.config.SerdeConfig;
 import com.flipkart.gojira.serde.handlers.TestSerdeHandler;
 import com.flipkart.gojira.serde.handlers.json.JsonMapListSerdeHandler;
-import com.flipkart.gojira.sinkstore.config.DataStoreConfig;
-import com.flipkart.gojira.sinkstore.file.FileBasedDataStoreHandler;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class ComparisionTest {
+/**
+ * Class to test comparison of Map.
+ */
+public class ComparisonTest {
 
+  private TestSerdeHandler testSerdeHandler = new JsonMapListSerdeHandler();
+  private TestCompareHandler testCompareHandler = new JsonTestCompareHandler();
+
+  /**
+   * Setup for the class.
+   * Installs the {@link ComparisonModule} with {@link ComparisonConfig} for testing.
+   */
+  @BeforeClass
+  public static void setup() {
+    ComparisonConfig comparisonConfig =
+        GojiraComparisonConfig.builder()
+            .setDiffIgnoreMap(null)
+            .setDefaultCompareHandler(new JsonTestCompareHandler())
+            .setResponseDataCompareHandler(new JsonTestCompareHandler())
+            .build();
+    DI.install(new ComparisonModule(comparisonConfig));
+  }
+
+  /**
+   * Creates 2 instances of Map with different data for comparison purposes and checks that
+   * exception is thrown.
+   * @throws TestSerdeException serialization exception
+   * @throws TestCompareException comparison exception
+   */
   @Test(expected = TestCompareException.class)
   public void checkCompare() throws TestSerdeException, TestCompareException {
     Map<String, String> map1 = new HashMap<>();
@@ -55,41 +77,6 @@ public class ComparisionTest {
     DeserializeTest.TestClass testClass2 = new DeserializeTest.TestClass();
     testClass2.setMap(map2);
 
-    RequestSamplingConfig requestSamplingConfig =
-        RequestSamplingConfig.builder()
-            .setSamplingPercentage(100)
-            .setWhitelist(new ArrayList<>())
-            .build();
-    SerdeConfig serdeConfig =
-        SerdeConfig.builder().setDefaultSerdeHandler(new JsonMapListSerdeHandler()).build();
-    GojiraComparisonConfig comparisonConfig =
-        GojiraComparisonConfig.builder()
-            .setDiffIgnoreMap(null)
-            .setDefaultCompareHandler(new JsonTestCompareHandler())
-            .setResponseDataCompareHandler(new JsonTestCompareHandler())
-            .build();
-    DataStoreConfig dataStoreConfig =
-        DataStoreConfig.builder()
-            .setDataStoreHandler(
-                new FileBasedDataStoreHandler("/var/log/flipkart/fk-gojira/gojira-data"))
-            .build();
-    TestQueuedSenderConfig testQueuedSenderConfig =
-        TestQueuedSenderConfig.builder()
-            .setPath("/var/log/flipkart/fk-gojira/gojira-messages")
-            .setQueueSize(10L)
-            .build();
-    SetupModule profileOrTestModule =
-        new SetupModule(
-            Mode.PROFILE,
-            requestSamplingConfig,
-            serdeConfig,
-            comparisonConfig,
-            dataStoreConfig,
-            testQueuedSenderConfig);
-
-    DI.install(profileOrTestModule);
-    TestCompareHandler testCompareHandler = new JsonTestCompareHandler();
-    TestSerdeHandler testSerdeHandler = new JsonMapListSerdeHandler();
     testCompareHandler.compare(testSerdeHandler.serialize(map1), testSerdeHandler.serialize(map2));
   }
 }

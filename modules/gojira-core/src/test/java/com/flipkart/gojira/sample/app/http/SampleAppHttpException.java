@@ -14,19 +14,6 @@
  * limitations under the License.
  */
 
-package com.flipkart.gojira.models.http;
+package com.flipkart.gojira.sample.app.http;
 
-import static com.flipkart.gojira.core.GlobalConstants.HTTP_TEST_DATA_TYPE;
-
-import com.flipkart.gojira.models.TestDataType;
-
-/**
- * Extends {@link TestDataType} to indicate HTTP data.
- */
-public class HttpTestDataType extends TestDataType {
-
-  @Override
-  public String getType() {
-    return HTTP_TEST_DATA_TYPE;
-  }
-}
+public class SampleAppHttpException extends Exception {}

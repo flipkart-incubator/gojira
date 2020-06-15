@@ -16,9 +16,9 @@
 
 package com.flipkart.gojira.external.config;
 
-import static com.flipkart.gojira.core.GojiraConstants.HTTP_TEST_DATA_TYPE;
-import static com.flipkart.gojira.core.GojiraConstants.KAFKA_TEST_DATA_TYPE;
-import static com.flipkart.gojira.core.GojiraConstants.RMQ_TEST_DATA_TYPE;
+import static com.flipkart.gojira.core.GlobalConstants.HTTP_TEST_DATA_TYPE;
+import static com.flipkart.gojira.core.GlobalConstants.KAFKA_TEST_DATA_TYPE;
+import static com.flipkart.gojira.core.GlobalConstants.RMQ_TEST_DATA_TYPE;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;

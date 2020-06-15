@@ -14,19 +14,20 @@
  * limitations under the License.
  */
 
-package com.flipkart.gojira.models.http;
+package com.flipkart.gojira.sample.app.http;
 
-import static com.flipkart.gojira.core.GlobalConstants.HTTP_TEST_DATA_TYPE;
-
-import com.flipkart.gojira.models.TestDataType;
+import com.squareup.okhttp.Headers;
 
 /**
- * Extends {@link TestDataType} to indicate HTTP data.
+ * Interface which can implemented in order to make external client calls. Ignoring headers and
+ * params since this is a sample project
  */
-public class HttpTestDataType extends TestDataType {
+public interface ISampleAppHttpHelper {
+  String doGet(String url, Headers headers) throws SampleAppHttpException;
 
-  @Override
-  public String getType() {
-    return HTTP_TEST_DATA_TYPE;
-  }
+  String doPost(String url, String payload, Headers headers) throws SampleAppHttpException;
+
+  String doPut(String url, String payload, Headers headers) throws SampleAppHttpException;
+
+  String doDelete(String url, Headers headers) throws SampleAppHttpException;
 }

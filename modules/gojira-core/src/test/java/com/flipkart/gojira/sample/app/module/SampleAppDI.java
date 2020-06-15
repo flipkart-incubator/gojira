@@ -14,27 +14,33 @@
  * limitations under the License.
  */
 
-package com.flipkart.gojira.core;
+package com.flipkart.gojira.sample.app.module;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 
-public class DI {
+/**
+ * DI class for SampleApp.
+ */
+public class SampleAppDI {
   public static Injector INJECTOR = null;
 
   /**
-   * Creates guice injector.
-   *
-   * @param modules for which guice injector is to be created.
+   * Calls {@link Guice#createInjector(Module...)}.
+   * @param module creates a {@link com.flipkart.gojira.core.injectors.GuiceInjector}
+   *               with the given module and assigns it to {@link #INJECTOR}
    */
-  public static void install(Module... modules) {
-    synchronized (DI.class) {
-      INJECTOR = Guice.createInjector(modules);
+  public static void install(Module module) {
+    synchronized (SampleAppDI.class) {
+      INJECTOR = Guice.createInjector(module);
     }
   }
 
-  /** Returns latest guice injector instance. */
+  /**
+   * returns the {@link #INJECTOR}.
+   * @return returns the {@link #INJECTOR}
+   */
   public static Injector di() {
     return INJECTOR;
   }
