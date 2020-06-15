@@ -25,6 +25,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class GlobalConstants {
+  // empty sting
+  public static final String EMPTY_STRING = "";
+
   // test header constants
   public static final String TEST_HEADER = "X-GOJIRA-ID";
   public static final String MODE_HEADER = "X-GOJIRA-MODE";
@@ -49,4 +52,8 @@ public class GlobalConstants {
   public static final String READ_FAILURE = "READ_FAILED";
   public static final String COMPARE_FAILED = "COMPARE_FAILED";
   public static final String UNKNOWN_FAILED = "UNKNOWN_FAILED";
+
+  // Http constants
+  public static final String QUERY_PARAMS_DELIMITER = "?";
+  public static final String HEADER_CONTENT_LENGTH = "Content-Length";
 }

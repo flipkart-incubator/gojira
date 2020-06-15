@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
 public enum RmqManager implements IRmqManager, Managed {
   RMQ_MANAGER;
 
-  private static final Logger logger = LoggerFactory.getLogger(RmqManager.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(RmqManager.class);
 
   @Override
   public void setup() throws SetupException {
@@ -60,7 +60,7 @@ public enum RmqManager implements IRmqManager, Managed {
         }
       }
     } catch (Exception e) {
-      logger.error("error setting up rmq connections.", e);
+      LOGGER.error("error setting up rmq connections.", e);
       throw new SetupException("error setting up rmq connections.", e);
     }
   }
@@ -72,7 +72,7 @@ public enum RmqManager implements IRmqManager, Managed {
         stopConsumer(entry.getValue());
       }
     } catch (Exception e) {
-      logger.error("error closing http connections.", e);
+      LOGGER.error("error closing http connections.", e);
       throw new ShutdownException("error closing http connections.", e);
     }
   }
@@ -96,7 +96,7 @@ public enum RmqManager implements IRmqManager, Managed {
     List<Address> addressList = new LinkedList<Address>();
     for (String endpoint : rmqConfig.getEndpoints()) {
       addressList.add(new Address(endpoint, rmqConfig.getPort()));
-      logger.info(
+      LOGGER.info(
           "Adding the RMQ endpoint ["
               + endpoint
               + ":"
@@ -104,17 +104,17 @@ public enum RmqManager implements IRmqManager, Managed {
               + "] in connection factory");
     }
     Address[] addrArr = addressList.toArray(new Address[0]);
-    logger.info("Number of nodes connected to in RMQ:" + addrArr.length);
+    LOGGER.info("Number of nodes connected to in RMQ:" + addrArr.length);
     try {
       connection = factory.newConnection(addrArr);
       rmqChannel = connection.createChannel();
-      logger.info(
+      LOGGER.info(
           "Connection to RMQ established.."
               + rmqChannel.getConnection().getAddress().getHostName());
       return rmqChannel;
     } catch (IOException | TimeoutException e) {
       String errorMsg = "Connection to RMQ could not be established..";
-      logger.error(errorMsg);
+      LOGGER.error(errorMsg);
       throw new SetupException(errorMsg);
     }
   }
@@ -126,16 +126,16 @@ public enum RmqManager implements IRmqManager, Managed {
    */
   private void stopConsumer(Channel channel) {
     try {
-      logger.info("Stopping Consumer Service");
+      LOGGER.info("Stopping Consumer Service");
       if (channel.getConnection().isOpen()) {
-        logger.info("closing RabbitMQ channel...");
+        LOGGER.info("closing RabbitMQ channel...");
         channel.getConnection().close();
       }
       if (channel.isOpen()) {
         channel.close();
       }
     } catch (Exception e) {
-      logger.error("Exception while closing channel", e);
+      LOGGER.error("Exception while closing channel", e);
     }
   }
 

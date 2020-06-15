@@ -25,7 +25,7 @@ import com.google.inject.AbstractModule;
  * Sample application guice module containing all configurations that need to be installed.
  */
 public class SampleAppServiceModule extends AbstractModule {
-  private static final ObjectMapper mapper = new ObjectMapper();
+  private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
   /**
    * Installs/Binds the following:
@@ -40,7 +40,7 @@ public class SampleAppServiceModule extends AbstractModule {
   @Override
   protected void configure() {
     bind(ISampleAppHttpHelper.class).to(SampleAppHttpHelper.class).asEagerSingleton();
-    bind(ObjectMapper.class).toInstance(mapper);
+    bind(ObjectMapper.class).toInstance(OBJECT_MAPPER);
     install(new SampleAppGojiraModule());
   }
 }

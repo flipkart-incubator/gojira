@@ -34,7 +34,7 @@ import java.util.Map;
 @Singleton
 public class RmqPropertiesDeserializer extends JsonDeserializer<AMQP.BasicProperties> {
 
-  private static final ObjectMapper objectMapper = new ObjectMapper();
+  private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
   @Override
   public AMQP.BasicProperties deserialize(JsonParser jsonParser, DeserializationContext context)
@@ -42,9 +42,9 @@ public class RmqPropertiesDeserializer extends JsonDeserializer<AMQP.BasicProper
     TreeNode treeNode = jsonParser.getCodec().readTree(jsonParser);
     TreeNode headersTreeNode = treeNode.get("headers");
     String headersAsStr = headersTreeNode.toString();
-    TypeFactory typeFactory = objectMapper.getTypeFactory();
+    TypeFactory typeFactory = OBJECT_MAPPER.getTypeFactory();
     MapType mapType = typeFactory.constructMapType(HashMap.class, String.class, Object.class);
-    Map<String, Object> headersMap = objectMapper.readValue(headersAsStr, mapType);
+    Map<String, Object> headersMap = OBJECT_MAPPER.readValue(headersAsStr, mapType);
     String contentType = getStringValue("contentType", treeNode);
     String contentEncoding = getStringValue("contentEncoding", treeNode);
     Integer deliveryMode = getIntegerValue("deliveryMode", treeNode);
@@ -53,7 +53,7 @@ public class RmqPropertiesDeserializer extends JsonDeserializer<AMQP.BasicProper
     String replyTo = getStringValue("replyTo", treeNode);
     String expiration = getStringValue("expiration", treeNode);
     String messageId = getStringValue("messageId", treeNode);
-    Date timestamp = objectMapper.treeToValue(treeNode.get("timestamp"), Date.class);
+    Date timestamp = OBJECT_MAPPER.treeToValue(treeNode.get("timestamp"), Date.class);
     String type = getStringValue("type", treeNode);
     String userId = getStringValue("userId", treeNode);
     String appId = getStringValue("appId", treeNode);
@@ -83,7 +83,7 @@ public class RmqPropertiesDeserializer extends JsonDeserializer<AMQP.BasicProper
     if (propertyTree == null) {
       return null;
     }
-    return objectMapper.treeToValue(treeNode.get(propertyName), String.class);
+    return OBJECT_MAPPER.treeToValue(treeNode.get(propertyName), String.class);
   }
 
   private Integer getIntegerValue(String propertyName, TreeNode treeNode)
@@ -95,6 +95,6 @@ public class RmqPropertiesDeserializer extends JsonDeserializer<AMQP.BasicProper
     if (propertyTree == null) {
       return null;
     }
-    return objectMapper.treeToValue(treeNode.get(propertyName), Integer.class);
+    return OBJECT_MAPPER.treeToValue(treeNode.get(propertyName), Integer.class);
   }
 }
