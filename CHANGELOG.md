@@ -1,3 +1,6 @@
+## 1.9.7
+- Private method interception via AspectJ fixed
+
 ## 1.9.6
 - Sample DropWizard App has been added in gojira-core, it serves both as a test and a sample application.
 - Refactored ParalleCallTest with lower concurrency, 25 threads and made it working.
