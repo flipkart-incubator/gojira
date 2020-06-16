@@ -39,7 +39,7 @@
         <dependency>
             <groupId>com.google.inject</groupId>
             <artifactId>guice</artifactId>
-            <version>3.0</version>
+            <version>4.2.3</version>
         </dependency>
     </dependencies>
 
@@ -52,7 +52,7 @@
         <repository>
             <id>clojars</id>
             <name>Clojars Maven Repository</name>
-            <url>http://clojars.org/repo/</url>
+            <url>https://clojars.org/repo/</url>
         </repository>
     </repositories>
 
@@ -117,7 +117,7 @@
                     <consoleOutput>false</consoleOutput>
                     <encoding>UTF-8</encoding>
                     <failOnViolation>true</failOnViolation>
-                    <includeTestSourceDirectory>false</includeTestSourceDirectory>
+                    <includeTestSourceDirectory>true</includeTestSourceDirectory>
                     <violationSeverity>warning</violationSeverity>
                 </configuration>
                 <dependencies>

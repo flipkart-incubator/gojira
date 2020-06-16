@@ -21,7 +21,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>3.0.0</version>
+        <version>3.2.4</version>
         <executions>
           <execution>
             <phase>package</phase>
@@ -52,7 +52,7 @@
     <repository>
       <id>clojars</id>
       <name>Clojars Maven Repository</name>
-      <url>http://clojars.org/repo/</url>
+      <url>https://clojars.org/repo/</url>
     </repository>
   </repositories>
   <reporting>
@@ -87,4 +87,3 @@
     <gojira.core.model.version>1.9.6</gojira.core.model.version>
   </properties>
 </project>
-

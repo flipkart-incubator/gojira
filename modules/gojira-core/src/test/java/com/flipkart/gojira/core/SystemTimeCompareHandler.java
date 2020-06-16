@@ -22,7 +22,5 @@ import com.flipkart.compare.handlers.TestCompareHandler;
 public class SystemTimeCompareHandler extends TestCompareHandler {
 
   @Override
-  protected void doCompare(byte[] profiledData, byte[] testData) throws TestCompareException {
-
-  }
+  protected void doCompare(byte[] profiledData, byte[] testData) throws TestCompareException {}
 }

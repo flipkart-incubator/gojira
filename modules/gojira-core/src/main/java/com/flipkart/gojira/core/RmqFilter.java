@@ -16,7 +16,7 @@
 
 package com.flipkart.gojira.core;
 
-import static com.flipkart.gojira.core.GojiraConstants.MODE_HEADER;
+import static com.flipkart.gojira.core.GlobalConstants.MODE_HEADER;
 
 import com.flipkart.gojira.models.TestResponseData;
 import com.flipkart.gojira.models.rmq.RmqTestResponseData;
@@ -41,7 +41,7 @@ public class RmqFilter {
   /**
    * Initializes a map of {@link Mode} specific filter handlers for RMQ.
    */
-  private static final Map<Mode, RmqFilterHandler> filterHashMap =
+  private static final Map<Mode, RmqFilterHandler> FILTER_HANDLER_MAP =
       Collections.unmodifiableMap(
           new HashMap<Mode, RmqFilterHandler>() {
             {
@@ -73,7 +73,7 @@ public class RmqFilter {
       boolean mandatory) {
 
     Mode requestMode = ProfileRepository.ModeHelper.getRequestMode(getModeHeader(basicProperties));
-    filterHashMap
+    FILTER_HANDLER_MAP
         .getOrDefault(requestMode, new NoneRmqFilterHandler())
         .handle(exchangeName, routingKey, data, basicProperties, mandatory);
   }

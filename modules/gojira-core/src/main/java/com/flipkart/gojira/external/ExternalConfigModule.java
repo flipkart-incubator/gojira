@@ -16,7 +16,7 @@
 
 package com.flipkart.gojira.external;
 
-import static com.flipkart.gojira.core.GojiraConstants.TEST_DATA_TYPE_STRING_TO_CLASS;
+import static com.flipkart.gojira.core.GlobalConstants.TEST_DATA_TYPE_STRING_TO_CLASS;
 
 import com.flipkart.gojira.external.config.ExternalConfig;
 import com.flipkart.gojira.models.TestDataType;
@@ -28,11 +28,11 @@ import java.util.Map;
 /**
  * Guice module which is used for binding {@link ExternalConfig}.
  */
-public class ExternalModule extends AbstractModule {
+public class ExternalConfigModule extends AbstractModule {
 
   private final Map<String, List<ExternalConfig>> clientToListConfigMap;
 
-  public ExternalModule(Map<String, List<ExternalConfig>> clientToListConfigMap) {
+  public ExternalConfigModule(Map<String, List<ExternalConfig>> clientToListConfigMap) {
     this.clientToListConfigMap = clientToListConfigMap;
   }
 

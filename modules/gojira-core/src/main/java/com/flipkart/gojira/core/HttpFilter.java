@@ -16,7 +16,7 @@
 
 package com.flipkart.gojira.core;
 
-import static com.flipkart.gojira.core.GojiraConstants.MODE_HEADER;
+import static com.flipkart.gojira.core.GlobalConstants.MODE_HEADER;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -57,7 +57,7 @@ public class HttpFilter implements Filter {
   /**
    * Initializes a map of {@link Mode} specific filter handlers.
    */
-  private static final Map<Mode, HttpFilterHandler> filterHashMap =
+  private static final Map<Mode, HttpFilterHandler> FILTER_HANDLER_MAP =
       Collections.unmodifiableMap(
           new HashMap<Mode, HttpFilterHandler>() {
             {
@@ -99,17 +99,17 @@ public class HttpFilter implements Filter {
     Mode requestMode = ProfileRepository
             .ModeHelper
             .getRequestMode(requestWrapper.getHeader(MODE_HEADER));
-    if (filterHashMap.containsKey(requestMode)) {
-      if (filterHashMap.get(requestMode).preFilter(requestWrapper)) {
+    if (FILTER_HANDLER_MAP.containsKey(requestMode)) {
+      if (FILTER_HANDLER_MAP.get(requestMode).preFilter(requestWrapper)) {
         // Wrapping the ServletResponse to make the output stream readable
         TestServletResponseWrapper testServletResponseWrapper =
             new TestServletResponseWrapper((HttpServletResponse) response);
         try {
-          filterHashMap
+          FILTER_HANDLER_MAP
               .get(ProfileRepository.getRequestMode())
               .filter(requestWrapper, testServletResponseWrapper, chain);
         } finally {
-          filterHashMap
+          FILTER_HANDLER_MAP
               .get(ProfileRepository.getRequestMode())
               .postFilter(requestWrapper, testServletResponseWrapper, response);
         }

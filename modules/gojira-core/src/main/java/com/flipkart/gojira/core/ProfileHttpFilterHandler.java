@@ -16,7 +16,7 @@
 
 package com.flipkart.gojira.core;
 
-import static com.flipkart.gojira.core.GojiraConstants.TEST_HEADER;
+import static com.flipkart.gojira.core.GlobalConstants.TEST_HEADER;
 
 import com.flipkart.gojira.models.ExecutionData;
 import com.flipkart.gojira.models.TestResponseData;

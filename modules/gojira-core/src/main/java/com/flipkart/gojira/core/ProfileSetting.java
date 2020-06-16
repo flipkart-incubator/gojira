@@ -30,7 +30,7 @@ public class ProfileSetting {
     return mode;
   }
 
-  synchronized void setMode(Mode mode) {
+  void setMode(Mode mode) {
     this.mode = mode;
   }
 }

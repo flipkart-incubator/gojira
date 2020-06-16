@@ -186,13 +186,13 @@ public class TestMethodDataInterceptorHandler implements MethodDataInterceptorHa
       Map<MethodDataType, List<MethodData>> perMethodEntryValue = perMethodEntry.getValue();
       if (perMethodEntryValue == null || perMethodEntryValue.isEmpty()) {
         LOGGER.error(
-            "methodDataMap null or empty, error running test."
+            "methodDataMap null or empty, error running test. "
                 + "method: "
                 + genericMethodName
                 + " globalPerRequestId: "
                 + globalPerRequestId);
         throw new TestExecutionException(
-            "methodDataMap null or empty, error running test."
+            "methodDataMap null or empty, error running test. "
                 + "method: "
                 + genericMethodName
                 + " globalPerRequestId: "
@@ -204,13 +204,13 @@ public class TestMethodDataInterceptorHandler implements MethodDataInterceptorHa
           && !(perMethodEntryValue.containsKey(MethodDataType.RETURN)
               && !perMethodEntryValue.get(MethodDataType.RETURN).isEmpty())) {
         LOGGER.error(
-            "both return and exception data not present in methodDataMap, error running test."
+            "both return and exception data not present in methodDataMap, error running test. "
                 + "method: "
                 + genericMethodName
                 + " globalPerRequestId: "
                 + globalPerRequestId);
         throw new TestExecutionException(
-            "both return and exception data not present in methodDataMap, error running test."
+            "both return and exception data not present in methodDataMap, error running test. "
                 + "method: "
                 + genericMethodName
                 + " globalPerRequestId: "
@@ -221,13 +221,13 @@ public class TestMethodDataInterceptorHandler implements MethodDataInterceptorHa
         for (MethodData methodData : perMethodEntryValue.get(MethodDataType.ARGUMENT_BEFORE)) {
           if (methodData == null) {
             LOGGER.error(
-                "methodData before argument null, error running test."
+                "methodData before argument null, error running test. "
                     + "method: "
                     + genericMethodName
                     + " globalPerRequestId: "
                     + globalPerRequestId);
             throw new TestExecutionException(
-                "methodData before argument null, error running test."
+                "methodData before argument null, error running test. "
                     + "method: "
                     + genericMethodName
                     + " globalPerRequestId: "
@@ -242,13 +242,13 @@ public class TestMethodDataInterceptorHandler implements MethodDataInterceptorHa
           if (methodData.getData() == null
               || invocation.getArguments()[methodData.getPosition()] == null) {
             LOGGER.error(
-                "error comparing during test: comparison failed"
+                "error comparing during test: comparison failed "
                     + "method: "
                     + genericMethodName
                     + " globalPerRequestId: "
                     + globalPerRequestId);
             throw new TestCompareException(
-                "error comparing during test: comparison failed"
+                "error comparing during test: comparison failed "
                     + "method: "
                     + genericMethodName
                     + " globalPerRequestId: "
@@ -283,7 +283,7 @@ public class TestMethodDataInterceptorHandler implements MethodDataInterceptorHa
       } catch (TestCompareException e) {
         LOGGER.warn(
             "recorded method argument list does not match with current method arguments. "
-                + "trying with another set of recorded argument against the method."
+                + "trying with another set of recorded argument against the method. "
                 + "method: "
                 + genericMethodName
                 + " globalPerRequestId: "
@@ -297,8 +297,8 @@ public class TestMethodDataInterceptorHandler implements MethodDataInterceptorHa
           "unable to find any matching argument(s) from "
               + "the queue of arguments against method signature: "
               + genericMethodName
-              + ". this could mean not ignored diffs in the comparison"
-              + "that is done for arguments before method execution."
+              + ". this could mean not ignored diffs in the comparison "
+              + "that is done for arguments before method execution. "
               + "method: "
               + genericMethodName
               + " globalPerRequestId: "
@@ -307,8 +307,8 @@ public class TestMethodDataInterceptorHandler implements MethodDataInterceptorHa
           "unable to find any matching argument(s) from "
               + "the queue of arguments against method signature: "
               + genericMethodName
-              + ". this could mean not ignored diffs in the comparison"
-              + "that is done for arguments before method execution."
+              + ". this could mean not ignored diffs in the comparison "
+              + "that is done for arguments before method execution. "
               + "method: "
               + genericMethodName
               + " globalPerRequestId: "

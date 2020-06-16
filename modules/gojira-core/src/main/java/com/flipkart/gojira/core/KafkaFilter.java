@@ -16,7 +16,7 @@
 
 package com.flipkart.gojira.core;
 
-import static com.flipkart.gojira.core.GojiraConstants.MODE_HEADER;
+import static com.flipkart.gojira.core.GlobalConstants.MODE_HEADER;
 
 import com.flipkart.gojira.models.TestResponseData;
 import com.flipkart.gojira.models.kafka.KafkaTestResponseData;
@@ -38,7 +38,7 @@ public class KafkaFilter {
   /**
    * Initializes a map of {@link Mode} specific filter handlers.
    */
-  private static final Map<Mode, KafkaFilterHandler> filterHashMap =
+  private static final Map<Mode, KafkaFilterHandler> FILTER_HANDLER_MAP =
       Collections.unmodifiableMap(
           new HashMap<Mode, KafkaFilterHandler>() {
             {
@@ -86,7 +86,7 @@ public class KafkaFilter {
     Mode requestMode = ProfileRepository
             .ModeHelper
             .getRequestMode(id != null ? new String(id) : null);
-    filterHashMap
+    FILTER_HANDLER_MAP
         .getOrDefault(requestMode, new NoneKafkaFilterHandler())
         .handle(topicName, key, value, headersMap);
   }

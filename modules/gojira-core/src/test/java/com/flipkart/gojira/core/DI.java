@@ -19,13 +19,9 @@ package com.flipkart.gojira.core;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class DI {
-
-  private static final Logger LOGGER = LoggerFactory.getLogger(DI.class);
-  public static Injector INJECTOR = Guice.createInjector();
+  public static Injector INJECTOR = null;
 
   /**
    * Creates guice injector.
@@ -38,9 +34,7 @@ public class DI {
     }
   }
 
-  /**
-   * Returns latest guice injector instance.
-   */
+  /** Returns latest guice injector instance. */
   public static Injector di() {
     return INJECTOR;
   }
