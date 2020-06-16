@@ -42,7 +42,7 @@ public class ProfileRepository<
     T extends TestDataType> {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ProfileRepository.class);
-  private static final String defaultGlobalPerRequestID = "GLOBAL_PER_REQUEST_ID";
+  private static final String DEFAULT_GLOBAL_PER_REQUEST_ID = "GLOBAL_PER_REQUEST_ID";
   private static final InheritableThreadLocal<String> GLOBAL_PER_REQUEST_ID =
       new InheritableThreadLocal<String>() {
         /**
@@ -52,7 +52,7 @@ public class ProfileRepository<
          */
         @Override
         protected String initialValue() {
-          return defaultGlobalPerRequestID;
+          return DEFAULT_GLOBAL_PER_REQUEST_ID;
         }
       };
   private static ProfileSetting globalProfileSetting = new ProfileSetting();
