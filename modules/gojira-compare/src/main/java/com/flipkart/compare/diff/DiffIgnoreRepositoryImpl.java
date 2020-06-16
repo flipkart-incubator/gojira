@@ -32,7 +32,7 @@ public class DiffIgnoreRepositoryImpl extends DiffIgnoreRepository {
 
   @Override
   public Map<DiffType, List<Pattern>> getDiffIgnorePatterns() {
-    return diffIgnorePatterns;
+    return DIFF_IGNORE_PATTERNS;
   }
 
   @Override
@@ -42,7 +42,7 @@ public class DiffIgnoreRepositoryImpl extends DiffIgnoreRepository {
         DiffType diffType = Enum.valueOf(DiffType.class, entry.getKey());
         List<Pattern> ignorePatternList = entry.getValue().stream().map(ignorePattern ->
             Pattern.compile(ignorePattern, Pattern.CASE_INSENSITIVE)).collect(Collectors.toList());
-        diffIgnorePatterns.put(diffType, ignorePatternList);
+        DIFF_IGNORE_PATTERNS.put(diffType, ignorePatternList);
         LOGGER.info(diffType.toString() + " type added for paths: " + ignorePatternList.toString());
       }
     }

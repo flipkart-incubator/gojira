@@ -16,6 +16,10 @@
 
 package com.flipkart.gojira.execute.http;
 
+import static com.flipkart.gojira.core.GlobalConstants.EMPTY_STRING;
+import static com.flipkart.gojira.core.GlobalConstants.HEADER_CONTENT_LENGTH;
+import static com.flipkart.gojira.core.GlobalConstants.QUERY_PARAMS_DELIMITER;
+
 import com.flipkart.gojira.core.GlobalConstants;
 import com.flipkart.gojira.core.Mode;
 import com.flipkart.gojira.execute.TestExecutor;
@@ -40,8 +44,6 @@ public class DefaultHttpTestExecutor
 
   private static final Logger LOGGER = LoggerFactory.getLogger(DefaultHttpTestExecutor.class);
 
-  private static final String queryParamDelimiter = "?";
-  private static final String contentLengthHeader = "Content-Length";
   private final IHttpHelper httpHelper;
 
   @Inject
@@ -63,20 +65,20 @@ public class DefaultHttpTestExecutor
       throws HttpCallException {
     HttpTestRequestData requestData = testData.getRequestData();
     String testId = testData.getId();
-    LOGGER.debug(new StringBuffer().append("key :").append(testId).toString());
+    LOGGER.debug("key :" + testId);
     // url with query params
     String requestUri = requestData.getUri();
     String queryParamsWithDelimiter =
         requestData.getQueryParams() == null
-            ? new String()
-            : queryParamDelimiter + requestData.getQueryParams();
+            ? EMPTY_STRING
+            : QUERY_PARAMS_DELIMITER + requestData.getQueryParams();
     String urlWithQueryParams =
-        new StringBuffer().append(requestUri).append(queryParamsWithDelimiter).toString();
+        requestUri + queryParamsWithDelimiter;
 
     // headers
     Map<String, String> headers =
         requestData.getHeaders() != null ? requestData.getHeaders() : new HashMap<>();
-    headers.remove(contentLengthHeader);
+    headers.remove(HEADER_CONTENT_LENGTH);
     headers.put(GlobalConstants.TEST_HEADER, testId);
     headers.put(GlobalConstants.MODE_HEADER, Mode.TEST.name());
 

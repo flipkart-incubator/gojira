@@ -34,8 +34,8 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class TestCompareHandler {
 
-  private static final Logger logger = LoggerFactory.getLogger(TestCompareHandler.class);
-  private static final ObjectMapper mapper = new ObjectMapper();
+  private static final Logger LOGGER = LoggerFactory.getLogger(TestCompareHandler.class);
+  private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
   /**
    * diffIgnoreRepository is used for ignoring generated {@link DiffDetail}.
@@ -59,7 +59,7 @@ public abstract class TestCompareHandler {
       if (diffDetails != null && !diffDetails.isEmpty()) {
         for (DiffDetail diffDetail : diffDetails) {
           String diffPathForIgnoreRule = diffDetail.getDiffPath();
-          logger.error(
+          LOGGER.error(
               "not ignored DiffDetail | "
                   + diffDetail.getDiffType()
                   + ":"
@@ -71,11 +71,11 @@ public abstract class TestCompareHandler {
 
       String diffsString = null;
       try {
-        diffsString = mapper.writeValueAsString(diffDetails);
+        diffsString = OBJECT_MAPPER.writeValueAsString(diffDetails);
       } catch (JsonProcessingException e1) {
-        logger.error("error serializing diffs.");
+        LOGGER.error("error serializing diffs.");
       }
-      logger.error("non-ignorable diff present: " + diffsString, diffDetails);
+      LOGGER.error("non-ignorable diff present: " + diffsString, diffDetails);
       throw new TestCompareException("non-ignorable diff present: " + diffsString, diffDetails);
     }
   }

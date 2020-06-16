@@ -42,8 +42,8 @@ import org.slf4j.LoggerFactory;
  */
 public class JsonTestCompareHandler extends TestCompareHandler {
 
-  private static final Logger logger = LoggerFactory.getLogger(JsonTestCompareHandler.class);
-  private static final ObjectMapper mapper = new ObjectMapper();
+  private static final Logger LOGGER = LoggerFactory.getLogger(JsonTestCompareHandler.class);
+  private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
   /**
    * This method de-serializes byte[] to {@link com.fasterxml.jackson.databind.JsonNode} Depending
@@ -79,8 +79,8 @@ public class JsonTestCompareHandler extends TestCompareHandler {
       }
 
       // de-serialize to JsonNode.
-      JsonNode expectedNode = mapper.readTree(profiledData);
-      JsonNode actualNode = mapper.readTree(testData);
+      JsonNode expectedNode = OBJECT_MAPPER.readTree(profiledData);
+      JsonNode actualNode = OBJECT_MAPPER.readTree(testData);
 
       // call compute(ArrayNode) if expectedNode is ArrayNode
       if (expectedNode.isArray() && actualNode.isArray()) {
@@ -88,7 +88,7 @@ public class JsonTestCompareHandler extends TestCompareHandler {
         compute((ArrayNode) expectedNode, (ArrayNode) actualNode, diffs, "/");
 
         for (DiffDetail diffDetail : diffs) {
-          logger.info(
+          LOGGER.info(
               "diff type: "
                   + diffDetail.getDiffType()
                   + ", diff path: "
@@ -105,7 +105,7 @@ public class JsonTestCompareHandler extends TestCompareHandler {
         compute((ObjectNode) expectedNode, (ObjectNode) actualNode, diffs, "/");
 
         for (DiffDetail diffDetail : diffs) {
-          logger.info(
+          LOGGER.info(
               "diff type: "
                   + diffDetail.getDiffType()
                   + ", diff path: "

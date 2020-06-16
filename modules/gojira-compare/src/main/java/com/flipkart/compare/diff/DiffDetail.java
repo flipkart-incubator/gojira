@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 public class DiffDetail {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(DiffDetail.class);
-  private static final ObjectMapper objectMapper = new ObjectMapper();
+  private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
   /**
    * diffType to store type of diff.
    */
@@ -81,7 +81,7 @@ public class DiffDetail {
     // using object mapper for writing to string.
     // see if we can remove object mapper dependency in this class.
     try {
-      return objectMapper.writeValueAsString(this);
+      return OBJECT_MAPPER.writeValueAsString(this);
     } catch (JsonProcessingException e) {
       LOGGER.error("something  went  wrong with diff detail: ", e);
       return null;
