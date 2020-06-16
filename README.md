@@ -1,4 +1,8 @@
-# Gojira[![Travis build status](https://travis-ci.org/flipkart-incubator/gojira.svg?branch=master)](https://travis-ci.org/flipkart-incubator/gojira) 
+# Gojira
+
+[![Travis build status](https://travis-ci.org/flipkart-incubator/gojira.svg?branch=master)](https://travis-ci.org/flipkart-incubator/gojira) 
+[![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/flipkart-incubator/gojira.svg)](https://lgtm.com/projects/g/flipkart-incubator/gojira/context:java)
+
 Gojira is a record and replay based regression testing tool. 
 
 ## Features
