@@ -40,7 +40,12 @@ public abstract class InvocationJoinPointClosure extends JoinPointClosure implem
         ret = clazz.getMethod(codeSignature.getName(), codeSignature.getParameterTypes());
       }
     } catch (NoSuchMethodException e) {
-      throw new UnsupportedOperationException("Can't find member " + codeSignature.toLongString());
+      try {
+        ret = clazz.getDeclaredMethod(codeSignature.getName(), codeSignature.getParameterTypes());
+      } catch (NoSuchMethodException e1) {
+        throw new UnsupportedOperationException(
+            "Can't find member " + codeSignature.toLongString());
+      }
     }
     return ret;
   }

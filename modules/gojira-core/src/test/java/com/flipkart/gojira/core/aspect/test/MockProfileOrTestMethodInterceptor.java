@@ -24,6 +24,8 @@ import org.aopalliance.intercept.MethodInvocation;
 public class MockProfileOrTestMethodInterceptor implements MethodInterceptor {
   @Override
   public Object invoke(MethodInvocation methodInvocation) throws Throwable {
+    String methodName = methodInvocation.getMethod().toGenericString();
+    System.out.println(methodName);
     if (methodInvocation.getArguments().length > 0) {
       Object arg = methodInvocation.getArguments()[0];
       int i = 0;
