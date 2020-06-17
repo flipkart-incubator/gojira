@@ -22,7 +22,7 @@ Gojira is a record and replay based regression testing tool.
 [Changelog](https://github.com/flipkart-incubator/gojira/blob/master/CHANGELOG.md)
 
 ## Getting Started
-TODO: Add a simple javax.servlet example. 
+[Sample Application] (https://github.com/flipkart-incubator/gojira/tree/master/modules/gojira-core/src/test/java/com/flipkart/gojira/sample)
 
 ## Users
 [Flipkart](http://www.flipkart.com)
