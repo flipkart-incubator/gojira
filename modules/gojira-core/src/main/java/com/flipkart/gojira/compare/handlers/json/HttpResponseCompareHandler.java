@@ -72,7 +72,9 @@ public class HttpResponseCompareHandler extends JsonTestCompareHandler {
         super.doCompare(profiledResponseBodyBytes, testResponseBodyBytes);
       } catch (Exception e) {
         // hack to check for proto bytes in string instead of bytes
-        if (!new String(profiled.getBody()).equals(new String(test.getBody()))) throw e;
+        if (!new String(profiled.getBody()).equals(new String(test.getBody()))) {
+          throw e;
+        }
       }
     } catch (TestCompareException e) {
       throw e;
