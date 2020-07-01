@@ -12,6 +12,9 @@ import java.io.InputStreamReader;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
+/**
+ * Extension of {@link JsonTestCompareHandler} for comparing {@link HttpTestResponseData}.
+ */
 public class HttpResponseCompareHandler extends JsonTestCompareHandler {
   JsonDefaultTestSerdeHandler jsonDefaultTestSerdeHandler = new JsonDefaultTestSerdeHandler();
 

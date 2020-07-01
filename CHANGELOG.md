@@ -1,3 +1,6 @@
+## 1.9.8
+- Added HttpResponseCompareHandler to compare HttpTestResponseData
+
 ## 1.9.7
 - Private method interception via AspectJ fixed
 
