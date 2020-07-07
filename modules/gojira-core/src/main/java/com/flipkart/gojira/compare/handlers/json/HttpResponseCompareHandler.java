@@ -62,25 +62,13 @@ public class HttpResponseCompareHandler extends JsonTestCompareHandler {
           profiledResponseBodyBytes = profiled.getBody();
         }
 
-        if (profiledResponseBodyBytes != null
-            && testResponseBodyBytes != null
-            && profiledResponseBodyBytes.length > 0
-            && testResponseBodyBytes.length > 0
-            && new String(profiledResponseBodyBytes)
-                .contains("There was an error processing your request. It has been logged (ID")
-            && new String(testResponseBodyBytes)
-                .contains("There was an error processing your request. It has been logged (ID")) {
-          return;
-        }
         super.doCompare(profiledResponseBodyBytes, testResponseBodyBytes);
-      } catch (Exception e) {
-        // hack to check for proto bytes in string instead of bytes
+      } catch (TestCompareException e) {
+        // comparing it as a string directly (example use-case: proto bytes)
         if (!new String(profiled.getBody()).equals(new String(test.getBody()))) {
           throw e;
         }
       }
-    } catch (TestCompareException e) {
-      throw e;
     } catch (Exception e) {
       throw new RuntimeException("unable to deserialize HTTP Response data.", e);
     }
