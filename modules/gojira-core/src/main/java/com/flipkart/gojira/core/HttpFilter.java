@@ -65,6 +65,7 @@ public class HttpFilter implements Filter {
               put(Mode.PROFILE, new ProfileHttpFilterHandler());
               put(Mode.TEST, new TestHttpFilterHandler());
               put(Mode.SERIALIZE, new SerializeHttpFilterHandler());
+              put(Mode.TRANSFORM, new TransformHttpFilterHandler());
             }
           });
 

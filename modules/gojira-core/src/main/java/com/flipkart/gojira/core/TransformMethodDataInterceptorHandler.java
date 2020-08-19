@@ -95,8 +95,8 @@ public class TransformMethodDataInterceptorHandler implements MethodDataIntercep
    *
    * @param invocation intercepted method invocation
    * @return object passed along by the called method to the calling method
-   * @throws Throwable for any exception by the called method or {@link TestExecutionException} or
-   *
+   * @throws Throwable for any exception by the called method or
+   * {@link TranssformExecutionException}
    */
   @Override
   public Object handle(MethodInvocation invocation) throws Throwable {
@@ -208,6 +208,59 @@ public class TransformMethodDataInterceptorHandler implements MethodDataIntercep
                 + " globalPerRequestId: "
                 + globalPerRequestId);
       }
+      try {
+        for (MethodData methodData : perMethodEntryValue.get(MethodDataType.ARGUMENT_BEFORE)) {
+          if (methodData == null) {
+            LOGGER.error(
+                "methodData before argument null, error running transform. "
+                    + "method: "
+                    + genericMethodName
+                    + " globalPerRequestId: "
+                    + globalPerRequestId);
+            throw new TestExecutionException(
+                "methodData before argument null, error running transform. "
+                    + "method: "
+                    + genericMethodName
+                    + " globalPerRequestId: "
+                    + globalPerRequestId);
+          }
+
+          if (methodData.getData() == null
+              && invocation.getArguments()[methodData.getPosition()] == null) {
+            continue;
+          }
+
+          if (methodData.getData() == null
+              || invocation.getArguments()[methodData.getPosition()] == null) {
+            LOGGER.error(
+                "error comparing during transform: "
+                    + "method: "
+                    + genericMethodName
+                    + " globalPerRequestId: "
+                    + globalPerRequestId);
+            throw new TestCompareException(
+                "error comparing during transform: "
+                    + "method: "
+                    + genericMethodName
+                    + " globalPerRequestId: "
+                    + globalPerRequestId);
+          }
+        }
+        methodDataMap = perMethodEntryValue;
+        Object concurrentCheckValue = perMethodAllEntries.remove(perMethodEntryKey);
+        if (concurrentCheckValue == null) {
+          continue;
+        }
+        break;
+      } catch (TestCompareException e) {
+        LOGGER.warn(
+            "recorded method argument list does not match with current method arguments. "
+                + "trying with another set of recorded argument against the method. "
+                + "method: "
+                + genericMethodName
+                + " globalPerRequestId: "
+                + globalPerRequestId);
+      }
     }
 
     if (methodDataMap == null) {
@@ -249,7 +302,7 @@ public class TransformMethodDataInterceptorHandler implements MethodDataIntercep
                   + genericMethodName
                   + " globalPerRequestId: "
                   + globalPerRequestId);
-          throw new TestExecutionException(
+          throw new TranssformExecutionException(
               "argument "
                   + index
                   + " methodData or methodData.getData not null and methodData.className null, "
@@ -372,13 +425,13 @@ public class TransformMethodDataInterceptorHandler implements MethodDataIntercep
         }
         int index = -1;
         try {
-          List<MethodData> argumentBeforeList = new ArrayList<>();
+          List<MethodData> argumenAfterList = new ArrayList<>();
           for (Object arg : invocation.getArguments()) {
             index++;
             TestHashHandler hashHandler = HashHandlerUtil.getHashHandler(invocation, index);
             MethodData methodData =
                 new MethodData(
-                    MethodDataType.ARGUMENT_BEFORE,
+                    MethodDataType.ARGUMENT_AFTER,
                     arg == null ? null : arg.getClass().getName(),
                     arg == null
                         ? null
@@ -393,9 +446,9 @@ public class TransformMethodDataInterceptorHandler implements MethodDataIntercep
                                         invocation, index)
                                     .serialize(arg)),
                     index);
-            argumentBeforeList.add(methodData);
+            argumenAfterList.add(methodData);
           }
-          methodDataMap.put(MethodDataType.ARGUMENT_BEFORE, argumentBeforeList);
+          methodDataMap.put(MethodDataType.ARGUMENT_AFTER, argumenAfterList);
         } catch (Exception e) {
           // on failure, mark failed and proceed with method invocation
           LOGGER.warn(

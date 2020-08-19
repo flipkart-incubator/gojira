@@ -80,7 +80,7 @@ public class DefaultHttpTestExecutor
         requestData.getHeaders() != null ? requestData.getHeaders() : new HashMap<>();
     headers.remove(HEADER_CONTENT_LENGTH);
     headers.put(GlobalConstants.TEST_HEADER, testId);
-    headers.put(GlobalConstants.MODE_HEADER, Mode.TRANSFORM.name());
+    headers.put(GlobalConstants.MODE_HEADER, Mode.TEST.name());
 
     // body & method
     String httpMethod = requestData.getMethod().toUpperCase();
