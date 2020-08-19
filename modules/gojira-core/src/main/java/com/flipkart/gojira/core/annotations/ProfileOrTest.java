@@ -30,4 +30,15 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface ProfileOrTest {
 
+  /**
+   * Specifies a method to process transform logic. A transform method should be defined in the same
+   * class where is Method to be profiled. Also a transform method should have specefic signature
+   * complied to method which was invoked with @ProfileOrTest annotation.
+   * for example:
+   * <code>
+   *
+   * </code>
+   * @return method name
+   */
+  String transformMethod() default "";
 }

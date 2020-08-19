@@ -63,6 +63,8 @@ public class TestData<
    */
   private OutputDataT responseData;
 
+  private String tag;
+
 
   public String getId() {
     return id;
@@ -100,5 +102,13 @@ public class TestData<
 
   public void setResponseData(OutputDataT responseData) {
     this.responseData = responseData;
+  }
+
+  public String getTag() {
+    return tag;
+  }
+
+  public void setTag(String tag) {
+    this.tag = tag;
   }
 }

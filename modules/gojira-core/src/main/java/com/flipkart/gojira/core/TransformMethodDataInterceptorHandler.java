@@ -1,19 +1,3 @@
-/*
- * Copyright 2020 Flipkart Internet, pvt ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.flipkart.gojira.core;
 
 import com.flipkart.compare.TestCompareException;
@@ -22,14 +6,18 @@ import com.flipkart.gojira.compare.GojiraCompareHandlerRepository;
 import com.flipkart.gojira.core.annotations.ProfileOrTest;
 import com.flipkart.gojira.core.injectors.GuiceInjector;
 import com.flipkart.gojira.execute.TestExecutionException;
+import com.flipkart.gojira.execute.TranssformExecutionException;
 import com.flipkart.gojira.hash.HashHandlerUtil;
 import com.flipkart.gojira.hash.TestHashHandler;
 import com.flipkart.gojira.models.ExecutionData;
 import com.flipkart.gojira.models.MethodData;
 import com.flipkart.gojira.models.MethodDataType;
+import com.flipkart.gojira.models.TestData;
 import com.flipkart.gojira.serde.SerdeHandlerRepository;
 import com.flipkart.gojira.serde.handlers.TestSerdeHandler;
+import com.google.common.base.Strings;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -38,20 +26,17 @@ import org.aopalliance.intercept.MethodInvocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Implementation of {@link MethodDataInterceptorHandler} in {@link Mode#TEST}.
- */
-public class TestMethodDataInterceptorHandler implements MethodDataInterceptorHandler {
-
+public class TransformMethodDataInterceptorHandler implements MethodDataInterceptorHandler {
   private static final Logger LOGGER =
-      LoggerFactory.getLogger(TestMethodDataInterceptorHandler.class);
+      LoggerFactory.getLogger(TransformMethodDataInterceptorHandler.class);
 
   private GojiraCompareHandlerRepository gojiraCompareHandlerRepository =
       GuiceInjector.getInjector().getInstance(GojiraCompareHandlerRepository.class);
+
   private SerdeHandlerRepository serdeHandlerRepository =
       GuiceInjector.getInjector().getInstance(SerdeHandlerRepository.class);
 
-  public TestMethodDataInterceptorHandler() {}
+  public TransformMethodDataInterceptorHandler() {}
 
   /**
    * Gets {@link ExecutionData#profileState}, throws exception if not {@link ProfileState#INITIATED}
@@ -59,6 +44,11 @@ public class TestMethodDataInterceptorHandler implements MethodDataInterceptorHa
    * <p>Gets the {@link ProfileRepository#getGlobalPerRequestID()}, {@link Method#toGenericString()}
    * of {@link MethodInvocation#getMethod()} to get data corresponding to this specific method. On
    * error when getting the data or if data is null, {@link TestExecutionException} is thrown.
+   *
+   * <p>Gets the {@link Map#get(Object)} }} of {@link TestData#getMethodDataMap()}, of {@link
+   * ProfileRepository#getTestData()} ()}
+   * to get data corresponding to this specific method.
+   * if data is null, {@link TestExecutionException} is thrown.
    *
    * <p>During {@link Mode#PROFILE} mode, it is possible that multiple invocations of the same
    * method are called. It is also possible that they are called by different threads. So, to get
@@ -98,20 +88,20 @@ public class TestMethodDataInterceptorHandler implements MethodDataInterceptorHa
    * SerdeHandlerRepository#getExceptionDataSerdeHandler(String, String)} instance and throw the
    * exception object. If deserialization fails, we throw {@link TestExecutionException}.
    *
-   * <p>If there is no exception data, we deserialize return data if it is present by calling {@link
-   * TestSerdeHandler#deserialize(byte[], Class)} using {@link
-   * SerdeHandlerRepository#getOrUpdateAndGetOrDefaultReturnDataSerdeHandler} instance. If
-   * deserialization fails we throw {@link TestExecutionException} and return it.
+   * <p>If there is no exception data, and {@link MethodInvocation has transformed method specefied
+   * same is invoked with {@link MethodDataType#RETURN}, {@link TestData#getTag()},
+   * {@link Object as varArgs}  to get transformed data. Same is used to reprofile Method Return
+   * and exceptions and returned.
    *
    * @param invocation intercepted method invocation
    * @return object passed along by the called method to the calling method
-   * @throws Throwable for any exception by the called method or {@link TestExecutionException}
-   *     or {@link TestCompareException}
+   * @throws Throwable for any exception by the called method or {@link TestExecutionException} or
+   *
    */
   @Override
   public Object handle(MethodInvocation invocation) throws Throwable {
     if (!ProfileRepository.getProfileState().equals(ProfileState.INITIATED)) {
-      throw new TestExecutionException("Test was not initiated.");
+      throw new TestExecutionException("Transform was not initiated.");
     }
 
     String genericMethodName = null;
@@ -176,24 +166,25 @@ public class TestMethodDataInterceptorHandler implements MethodDataInterceptorHa
         perMethodAllEntries =
             ((ConcurrentSkipListMap<Long, ConcurrentHashMap<MethodDataType, List<MethodData>>>)
                 ProfileRepository.getTestData().getMethodDataMap().get(genericMethodName));
+    String tag = ProfileRepository.getTestData().getTag();
 
-    // first compare argument before
-    Map<MethodDataType, List<MethodData>> methodDataMap = null;
+    ConcurrentHashMap<MethodDataType, List<MethodData>> methodDataMap = null;
 
     for (Map.Entry<Long, ConcurrentHashMap<MethodDataType, List<MethodData>>> perMethodEntry :
         perMethodAllEntries.entrySet()) {
       // validation for every entry in the queue
       Long perMethodEntryKey = perMethodEntry.getKey();
-      Map<MethodDataType, List<MethodData>> perMethodEntryValue = perMethodEntry.getValue();
+      ConcurrentHashMap<MethodDataType, List<MethodData>> perMethodEntryValue =
+          perMethodEntry.getValue();
       if (perMethodEntryValue == null || perMethodEntryValue.isEmpty()) {
         LOGGER.error(
-            "methodDataMap null or empty, error running test. "
+            "methodDataMap null or empty, error running transform. "
                 + "method: "
                 + genericMethodName
                 + " globalPerRequestId: "
                 + globalPerRequestId);
         throw new TestExecutionException(
-            "methodDataMap null or empty, error running test. "
+            "methodDataMap null or empty, error running transform. "
                 + "method: "
                 + genericMethodName
                 + " globalPerRequestId: "
@@ -205,92 +196,18 @@ public class TestMethodDataInterceptorHandler implements MethodDataInterceptorHa
           && !(perMethodEntryValue.containsKey(MethodDataType.RETURN)
               && !perMethodEntryValue.get(MethodDataType.RETURN).isEmpty())) {
         LOGGER.error(
-            "both return and exception data not present in methodDataMap, error running test. "
+            "both return and exception data not present in methodDataMap, error running transform. "
                 + "method: "
                 + genericMethodName
                 + " globalPerRequestId: "
                 + globalPerRequestId);
         throw new TestExecutionException(
-            "both return and exception data not present in methodDataMap, error running test. "
+            "both return and exception data not present in methodDataMap, error running transform. "
                 + "method: "
                 + genericMethodName
                 + " globalPerRequestId: "
                 + globalPerRequestId);
       }
-
-      try {
-        for (MethodData methodData : perMethodEntryValue.get(MethodDataType.ARGUMENT_BEFORE)) {
-          if (methodData == null) {
-            LOGGER.error(
-                "methodData before argument null, error running test. "
-                    + "method: "
-                    + genericMethodName
-                    + " globalPerRequestId: "
-                    + globalPerRequestId);
-            throw new TestExecutionException(
-                "methodData before argument null, error running test. "
-                    + "method: "
-                    + genericMethodName
-                    + " globalPerRequestId: "
-                    + globalPerRequestId);
-          }
-
-          if (methodData.getData() == null
-              && invocation.getArguments()[methodData.getPosition()] == null) {
-            continue;
-          }
-
-          if (methodData.getData() == null
-              || invocation.getArguments()[methodData.getPosition()] == null) {
-            LOGGER.error(
-                "error comparing during test: comparison failed "
-                    + "method: "
-                    + genericMethodName
-                    + " globalPerRequestId: "
-                    + globalPerRequestId);
-            throw new TestCompareException(
-                "error comparing during test: comparison failed "
-                    + "method: "
-                    + genericMethodName
-                    + " globalPerRequestId: "
-                    + globalPerRequestId);
-          }
-
-          TestHashHandler hashHandler =
-              HashHandlerUtil.getHashHandler(invocation, methodData.getPosition());
-
-          gojiraCompareHandlerRepository
-              .getOrUpdateAndGetOrDefaultMethodArgumentDataCompareHandler(
-                  invocation, methodData.getPosition())
-              .compare(
-                  methodData.getData(),
-                  hashHandler == null
-                      ? serdeHandlerRepository
-                          .getOrUpdateAndGetOrDefaultMethodArgumentDataSerdeHandler(
-                              invocation, methodData.getPosition())
-                          .serialize(invocation.getArguments()[methodData.getPosition()])
-                      : hashHandler.hash(
-                          serdeHandlerRepository
-                              .getOrUpdateAndGetOrDefaultMethodArgumentDataSerdeHandler(
-                                  invocation, methodData.getPosition())
-                              .serialize(invocation.getArguments()[methodData.getPosition()])));
-        }
-        methodDataMap = perMethodEntryValue;
-        Object concurrentCheckValue = perMethodAllEntries.remove(perMethodEntryKey);
-        if (concurrentCheckValue == null) {
-          continue;
-        }
-        break;
-      } catch (TestCompareException e) {
-        LOGGER.warn(
-            "recorded method argument list does not match with current method arguments. "
-                + "trying with another set of recorded argument against the method. "
-                + "method: "
-                + genericMethodName
-                + " globalPerRequestId: "
-                + globalPerRequestId);
-      }
-      // TODO: catch deserialization exception here and throw TestExecutionException.
     }
 
     if (methodDataMap == null) {
@@ -355,7 +272,7 @@ public class TestMethodDataInterceptorHandler implements MethodDataInterceptorHa
       }
     }
 
-    // throw exception or return
+    // throw exception or return transformed data
     if (methodDataMap.containsKey(MethodDataType.EXCEPTION)
         && !methodDataMap.get(MethodDataType.EXCEPTION).isEmpty()) {
       if (methodDataMap.get(MethodDataType.EXCEPTION).get(0) == null
@@ -407,14 +324,132 @@ public class TestMethodDataInterceptorHandler implements MethodDataInterceptorHa
                 + " globalPerRequestId: "
                 + globalPerRequestId);
       }
-      LOGGER.info("returning successfully from TestMethodDataInterceptorHandler.");
-      return methodDataMap.get(MethodDataType.RETURN).get(0).getData() == null
-          ? null
-          : serdeHandlerRepository
-              .getOrUpdateAndGetOrDefaultReturnDataSerdeHandler(invocation)
-              .deserialize(
-                  methodDataMap.get(MethodDataType.RETURN).get(0).getData(),
-                  Class.forName(methodDataMap.get(MethodDataType.RETURN).get(0).getClassName()));
+      final Object originalObject =
+          methodDataMap.get(MethodDataType.RETURN).get(0).getData() == null
+              ? null
+              : serdeHandlerRepository
+                  .getOrUpdateAndGetOrDefaultReturnDataSerdeHandler(invocation)
+                  .deserialize(
+                      methodDataMap.get(MethodDataType.RETURN).get(0).getData(),
+                      Class.forName(
+                          methodDataMap.get(MethodDataType.RETURN).get(0).getClassName()));
+      List<MethodData> returnDataList = new ArrayList<>();
+      Object transformedObject = null;
+      Exception invocationException = null;
+
+      final ProfileOrTest annotation = invocation.getMethod().getAnnotation(ProfileOrTest.class);
+      Method transformedMethod = null;
+      if (!Strings.isNullOrEmpty(annotation.transformMethod())) {
+        try {
+          transformedMethod =
+              invocation
+                  .getMethod()
+                  .getDeclaringClass()
+                  .getDeclaredMethod(
+                      annotation.transformMethod(),
+                      invocation.getMethod().getReturnType(),
+                      String.class,
+                      invocation.getArguments().getClass());
+        } catch (Exception e) {
+          throw new TranssformExecutionException(
+              "not able to find transformed method,"
+                  + "error running transform."
+                  + "method: "
+                  + genericMethodName
+                  + " globalPerRequestId: "
+                  + globalPerRequestId);
+        }
+        try {
+          transformedObject =
+              transformedMethod.invoke(
+                  invocation.getMethod().getDeclaringClass().newInstance(),
+                  originalObject,
+                  tag,
+                  invocation.getArguments());
+
+        } catch (Exception e) {
+          invocationException = e;
+        }
+        int index = -1;
+        try {
+          List<MethodData> argumentBeforeList = new ArrayList<>();
+          for (Object arg : invocation.getArguments()) {
+            index++;
+            TestHashHandler hashHandler = HashHandlerUtil.getHashHandler(invocation, index);
+            MethodData methodData =
+                new MethodData(
+                    MethodDataType.ARGUMENT_BEFORE,
+                    arg == null ? null : arg.getClass().getName(),
+                    arg == null
+                        ? null
+                        : hashHandler == null
+                            ? serdeHandlerRepository
+                                .getOrUpdateAndGetOrDefaultMethodArgumentDataSerdeHandler(
+                                    invocation, index)
+                                .serialize(arg)
+                            : hashHandler.hash(
+                                serdeHandlerRepository
+                                    .getOrUpdateAndGetOrDefaultMethodArgumentDataSerdeHandler(
+                                        invocation, index)
+                                    .serialize(arg)),
+                    index);
+            argumentBeforeList.add(methodData);
+          }
+          methodDataMap.put(MethodDataType.ARGUMENT_BEFORE, argumentBeforeList);
+        } catch (Exception e) {
+          // on failure, mark failed and proceed with method invocation
+          LOGGER.warn(
+              "error transforming argument data before method execution, method: "
+                  + genericMethodName
+                  + " argument index: "
+                  + index
+                  + " globalPerRequestId: "
+                  + globalPerRequestId,
+              e);
+          ProfileRepository.setProfileState(ProfileState.FAILED);
+        }
+        if (invocationException == null) {
+          returnDataList.add(
+              new MethodData(
+                  MethodDataType.RETURN,
+                  transformedObject == null ? null : transformedObject.getClass().getName(),
+                  transformedObject == null
+                      ? null
+                      : serdeHandlerRepository
+                          .getOrUpdateAndGetOrDefaultReturnDataSerdeHandler(invocation)
+                          .serialize(transformedObject),
+                  0));
+          methodDataMap.put(MethodDataType.RETURN, returnDataList);
+
+        } else {
+          returnDataList.add(
+              new MethodData(
+                  MethodDataType.EXCEPTION,
+                  invocationException.getClass().getName(),
+                  serdeHandlerRepository
+                      .getExceptionDataSerdeHandler(
+                          genericMethodName, invocationException.getClass().getName())
+                      .serialize(invocationException),
+                  0));
+          methodDataMap.put(MethodDataType.EXCEPTION, returnDataList);
+          methodDataMap.remove(MethodDataType.RETURN);
+        }
+        try {
+          ProfileRepository.addInterceptedData(genericMethodName, methodDataMap);
+        } catch (Exception e) {
+          LOGGER.error(
+              "error adding intercepted data against method : "
+                  + genericMethodName
+                  + " globalPerRequestId: "
+                  + globalPerRequestId);
+          ProfileRepository.setProfileState(ProfileState.FAILED);
+        }
+        if (invocationException != null) {
+          throw invocationException;
+        }
+        return transformedObject;
+      }
+      return originalObject;
     }
     LOGGER.info(
         "returning null from TestMethodDataInterceptorHandler. "

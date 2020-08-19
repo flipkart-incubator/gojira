@@ -46,5 +46,9 @@ public enum Mode {
    * have added this as a mode, so integrating applications can use this {@link  Mode} to identify
    * all failures, before running in {@link Mode#TEST}.
    */
-  SERIALIZE
+  SERIALIZE,
+  /**
+   * Use this method when transforming profiled data for contract change.
+   */
+  TRANSFORM
 }
