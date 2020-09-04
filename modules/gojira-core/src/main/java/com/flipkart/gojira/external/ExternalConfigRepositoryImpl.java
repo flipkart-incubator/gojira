@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ExternalConfigRepositoryImpl extends ExternalConfigRepository {
 
-  private Logger logger = LoggerFactory.getLogger(ExternalConfigRepositoryImpl.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(ExternalConfigRepositoryImpl.class);
 
   @Override
   public void setExternalConfig(
@@ -68,7 +68,7 @@ public class ExternalConfigRepositoryImpl extends ExternalConfigRepository {
     if (testTypeExternalConfigMap != null) {
       return testTypeExternalConfigMap.get(testDataType);
     }
-    logger.error("External Config not found client :{} and sourceType :{}", clientId, testDataType);
+    LOGGER.error("External Config not found client :{} and sourceType :{}", clientId, testDataType);
     return null;
   }
 

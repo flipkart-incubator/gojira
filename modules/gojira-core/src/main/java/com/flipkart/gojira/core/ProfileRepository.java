@@ -261,7 +261,7 @@ public class ProfileRepository<
           }
           // if it fails even after 3 times, fail the request.
           if (prevData != null) {
-            LOGGER.error(
+            LOGGER.warn(
                 "Trying to add method intercepted data against global request id: "
                     + GLOBAL_PER_REQUEST_ID.get()
                     + " failed.");
@@ -282,7 +282,7 @@ public class ProfileRepository<
         }
         // if it fails even after 3 times, fail the request.
         if (prevData != null) {
-          LOGGER.error(
+          LOGGER.warn(
               "Trying to add method intercepted data against global request id: "
                   + GLOBAL_PER_REQUEST_ID.get()
                   + " failed.");
@@ -292,7 +292,7 @@ public class ProfileRepository<
         recordedMethodDataMap.put(uniqueMethodIdentifier, data);
       }
     } else {
-      LOGGER.error(
+      LOGGER.warn(
           "Trying to add method intercepted data against global request id: "
               + GLOBAL_PER_REQUEST_ID.get()
               + " which is not found.");

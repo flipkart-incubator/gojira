@@ -100,7 +100,7 @@ public class ProfileHttpFilterHandler extends HttpFilterHandler {
       try {
         body = IOUtils.toByteArray(request.getInputStream());
       } catch (IOException ex) {
-        LOGGER.error("Unable to read the stream", ex);
+        LOGGER.warn("Unable to read the stream", ex);
         return true;
       }
       try {
@@ -113,12 +113,12 @@ public class ProfileHttpFilterHandler extends HttpFilterHandler {
                 .setUri(request.getRequestURI())
                 .build();
         id = String.valueOf(System.nanoTime()) + Thread.currentThread().getId();
-        LOGGER.info(
+        LOGGER.trace(
             String.format(
                 "Gojira generated testId %s for the API call: %s", id, request.getRequestURI()));
         DefaultProfileOrTestHandler.start(id, requestData, Mode.PROFILE);
       } catch (Exception e) {
-        LOGGER.error("Error trying to construct servelet request");
+        LOGGER.warn("Error trying to construct servlet request " + e.getMessage());
       }
     }
     return true;

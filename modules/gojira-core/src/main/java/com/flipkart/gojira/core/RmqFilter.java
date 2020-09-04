@@ -99,7 +99,7 @@ public class RmqFilter {
    * @param basicProperties rmq basic properties which contains headers
    * @return gojira request mode
    */
-  private final String getModeHeader(AMQP.BasicProperties basicProperties) {
+  private String getModeHeader(AMQP.BasicProperties basicProperties) {
 
     if (basicProperties == null
             || basicProperties.getHeaders() == null

@@ -45,7 +45,7 @@ public class ProfileRmqFilterHandler extends RmqFilterHandler {
               + Mode.PROFILE);
     }
     if (!isExchangeWhitelisted(exchangeName)) {
-      LOGGER.error("Exchange is not whitelisted. Exchange name :{}", exchangeName);
+      LOGGER.trace("Exchange is not whitelisted. Exchange name :{}", exchangeName);
       return;
     }
     id = String.valueOf(System.nanoTime()) + Thread.currentThread().getId();
@@ -60,7 +60,7 @@ public class ProfileRmqFilterHandler extends RmqFilterHandler {
     try {
       DefaultProfileOrTestHandler.start(id, rmqTestRequestData, Mode.PROFILE);
     } catch (Exception e) {
-      LOGGER.error("Exception trying to construct RmqTestRequest. ", e);
+      LOGGER.error("Exception trying to construct RmqTestRequest. " + e.getMessage());
     }
   }
 }

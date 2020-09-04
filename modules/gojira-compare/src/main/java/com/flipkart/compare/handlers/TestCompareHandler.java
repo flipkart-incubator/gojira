@@ -59,12 +59,10 @@ public abstract class TestCompareHandler {
       if (diffDetails != null && !diffDetails.isEmpty()) {
         for (DiffDetail diffDetail : diffDetails) {
           String diffPathForIgnoreRule = diffDetail.getDiffPath();
-          LOGGER.error(
-              "not ignored DiffDetail | "
+          LOGGER.debug(
+              "not ignored DiffDetail | DiffType: "
                   + diffDetail.getDiffType()
-                  + ":"
-                  + diffPathForIgnoreRule
-                  + "suggested ignore pattern | "
+                  + " | suggested ignore pattern | "
                   + diffPathForIgnoreRule.replaceAll(", \"[a-zA-Z0-9_-]*\",", ", (.*),"));
         }
       }

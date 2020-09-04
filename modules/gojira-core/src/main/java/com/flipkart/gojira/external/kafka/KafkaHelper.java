@@ -17,6 +17,7 @@
 package com.flipkart.gojira.external.kafka;
 
 import com.flipkart.gojira.core.injectors.TestExecutionInjector;
+import java.util.Arrays;
 import java.util.concurrent.Future;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -50,10 +51,10 @@ public class KafkaHelper implements IKafkaHelper {
         TestExecutionInjector.getInjector().getInstance(IKafkaManager.class).getProducer(client);
     try {
       Future<RecordMetadata> recordMetadataFuture = producer.send(producerRecord);
-      LOGGER.info("Producing record. ");
+      LOGGER.trace("Producing record. " + Arrays.toString(producerRecord.key()));
       return recordMetadataFuture.get();
     } catch (Exception e) {
-      LOGGER.info("Record not produced.");
+      LOGGER.error("Record not produced: " +  e.getMessage());
       throw new KafkaProducerException("Record not produced.", e);
     }
   }

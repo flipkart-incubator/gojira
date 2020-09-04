@@ -48,13 +48,13 @@ public class ProfileMethodDataInterceptorHandler implements MethodDataIntercepto
   public ProfileMethodDataInterceptorHandler() {}
 
   /**
-   * Checks {@link ExecutionData#profileState}, if not {@link ProfileState#INITIATED} calls {@link
-   * MethodInvocation#proceed()} and returns the object returned by the invocation
+   * Checks {@link ExecutionData#getProfileState()}, if not {@link ProfileState#INITIATED} calls
+   * {@link MethodInvocation#proceed()} and returns the object returned by the invocation
    *
-   * <p>On error checking for {@link ExecutionData#profileState} or when performing any of the below
-   * operations, marks {@link ExecutionData#profileState} as {@link ProfileState#FAILED} and calls
-   * {@link MethodInvocation#proceed()} if not already done and returns the object returned by the
-   * invocation.
+   * <p>On error checking for {@link ExecutionData#getProfileState()} or when performing any of the
+   * below operations, marks {@link ExecutionData#getProfileState()} as {@link ProfileState#FAILED}
+   * and calls {@link MethodInvocation#proceed()} if not already done and returns the object
+   * returned by the invocation.
    *
    * <p>Gets {@link ProfileRepository#getGlobalPerRequestID()}.
    *
@@ -96,7 +96,7 @@ public class ProfileMethodDataInterceptorHandler implements MethodDataIntercepto
         return invocation.proceed();
       }
     } catch (Exception e) {
-      LOGGER.error("Error getting profile state in ProfileMethodDataInterceptorHandler. ", e);
+      LOGGER.warn("Error getting profile state in ProfileMethodDataInterceptorHandler. ", e);
       ProfileRepository.setProfileState(ProfileState.FAILED);
       return invocation.proceed();
     }
@@ -106,7 +106,7 @@ public class ProfileMethodDataInterceptorHandler implements MethodDataIntercepto
     try {
       globalPerRequestId = ProfileRepository.getGlobalPerRequestID();
     } catch (Exception e) {
-      LOGGER.error("error getting globalPerRequestId.", e);
+      LOGGER.warn("error getting globalPerRequestId.", e);
       ProfileRepository.setProfileState(ProfileState.FAILED);
       return invocation.proceed();
     }
@@ -114,7 +114,7 @@ public class ProfileMethodDataInterceptorHandler implements MethodDataIntercepto
     try {
       methodGenericString = invocation.getMethod().toGenericString();
     } catch (Exception e) {
-      LOGGER.error(
+      LOGGER.warn(
           "error getting methodGenericString." + " globalPerRequestId: " + globalPerRequestId, e);
       ProfileRepository.setProfileState(ProfileState.FAILED);
       return invocation.proceed();
@@ -267,7 +267,7 @@ public class ProfileMethodDataInterceptorHandler implements MethodDataIntercepto
       try {
         ProfileRepository.addInterceptedData(methodGenericString, methodDataMap);
       } catch (Exception e) {
-        LOGGER.error(
+        LOGGER.warn(
             "error adding intercepted data against method : "
                 + methodGenericString
                 + " globalPerRequestId: "

@@ -76,7 +76,7 @@ public class ProfileKafkaFilterHandler extends KafkaFilterHandler {
     try {
       DefaultProfileOrTestHandler.start(id, kafkaTestRequestData, Mode.PROFILE);
     } catch (Exception e) {
-      LOGGER.error("Exception trying to construct KafkaTestRequest. ", e);
+      LOGGER.warn("Exception trying to construct KafkaTestRequest. " + e.getMessage());
     }
   }
 }

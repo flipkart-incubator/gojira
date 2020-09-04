@@ -47,8 +47,8 @@ public class SerializeMethodDataInterceptorHandler implements MethodDataIntercep
   public SerializeMethodDataInterceptorHandler() {}
 
   /**
-   * Throws a {@link TestExecutionException} if {@link ExecutionData#profileState} is not {@link
-   * ProfileState#INITIATED}
+   * Throws a {@link TestExecutionException} if {@link ExecutionData#getProfileState()} is not
+   * {@link ProfileState#INITIATED}
    *
    * <p>Loops throw every instance of {@link MethodData} and de-serializes them using appropriate
    * {@link TestSerdeHandler} instances from {@link SerdeHandlerRepository}

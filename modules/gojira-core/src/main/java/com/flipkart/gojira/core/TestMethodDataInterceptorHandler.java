@@ -53,7 +53,8 @@ public class TestMethodDataInterceptorHandler implements MethodDataInterceptorHa
   public TestMethodDataInterceptorHandler() {}
 
   /**
-   * Gets {@link ExecutionData#profileState}, throws exception if not {@link ProfileState#INITIATED}
+   * Gets {@link ExecutionData#getProfileState()}, throws exception if not {@link
+   * ProfileState#INITIATED}
    *
    * <p>Gets the {@link ProfileRepository#getGlobalPerRequestID()}, {@link Method#toGenericString()}
    * of {@link MethodInvocation#getMethod()} to get data corresponding to this specific method. On
@@ -104,8 +105,8 @@ public class TestMethodDataInterceptorHandler implements MethodDataInterceptorHa
    *
    * @param invocation intercepted method invocation
    * @return object passed along by the called method to the calling method
-   * @throws Throwable for any exception by the called method or {@link TestExecutionException}
-   *     or {@link TestCompareException}
+   * @throws Throwable for any exception by the called method or {@link TestExecutionException} or
+   *     {@link TestCompareException}
    */
   @Override
   public Object handle(MethodInvocation invocation) throws Throwable {
@@ -127,7 +128,11 @@ public class TestMethodDataInterceptorHandler implements MethodDataInterceptorHa
       genericMethodName = invocation.getMethod().toGenericString();
     } catch (Exception e) {
       LOGGER.error(
-          "error getting methodGenericString." + " globalPerRequestId: " + globalPerRequestId, e);
+          "error getting methodGenericString."
+              + " globalPerRequestId: "
+              + globalPerRequestId
+              + " "
+              + e.getMessage());
       throw new TestExecutionException(
           "error getting methodGenericString." + " globalPerRequestId: " + globalPerRequestId, e);
     }

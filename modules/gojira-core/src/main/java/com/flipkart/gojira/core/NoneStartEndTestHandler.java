@@ -29,7 +29,7 @@ import com.flipkart.gojira.models.TestResponseData;
 public class NoneStartEndTestHandler<T extends TestDataType> implements StartEndTestHandler<T> {
 
   /**
-   * Sets the value of {@link ExecutionData#profileState} to {@link ProfileState#NONE}.
+   * Sets the value of {@link ExecutionData#getProfileState()} to {@link ProfileState#NONE}.
    *
    * @param id this is the id, which will be used for synchronizing testing across multiple threads
    *     within a single request-response scope.
