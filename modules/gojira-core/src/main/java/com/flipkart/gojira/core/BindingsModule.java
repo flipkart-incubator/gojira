@@ -18,7 +18,9 @@ package com.flipkart.gojira.core;
 
 import com.flipkart.gojira.core.annotations.ProfileOrTest;
 import com.google.inject.AbstractModule;
+import com.google.inject.matcher.AbstractMatcher;
 import com.google.inject.matcher.Matchers;
+import java.lang.reflect.Method;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,8 +40,15 @@ public class BindingsModule extends AbstractModule {
           new ProfileOrTestMethodInterceptor();
       bindInterceptor(
           Matchers.any(),
-          Matchers.annotatedWith(ProfileOrTest.class),
+          new NoCompilerMethodMatcher().and(Matchers.annotatedWith(ProfileOrTest.class)),
           profileOrTestMethodInterceptor);
+    }
+  }
+
+  private static class NoCompilerMethodMatcher extends AbstractMatcher<Method> {
+    @Override
+    public boolean matches(Method method) {
+      return !method.isSynthetic() && !method.isBridge();
     }
   }
 }
