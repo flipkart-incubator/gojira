@@ -25,8 +25,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 /**
  * This class holds all config required for making external rpc calls. This needs to be provided by
- * the client application. // TODO: sub-calls it for different types of external calls like HTTP
- * etc.
+ * the client application.
  */
 @JsonTypeInfo(
     use = JsonTypeInfo.Id.NAME,
