@@ -51,7 +51,8 @@ public class BindingsModule extends AbstractModule {
 
     @Override
     public boolean matches(Method method) {
-      // Bridged methods are implicitly synthetic. Adding the additional check for developer clarity.
+      // Bridged methods are implicitly synthetic.
+      // Adding the additional check for developer clarity.
       return !method.isSynthetic() && !method.isBridge();
     }
   }
