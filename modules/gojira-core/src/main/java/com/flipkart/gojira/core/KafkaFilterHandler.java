@@ -63,7 +63,8 @@ public abstract class KafkaFilterHandler {
         return true;
       }
     }
-    LOGGER.info(String.format("topic: %s is not whitelisted for Gojira... Hence ignoring!", topic));
+    LOGGER.trace(
+        String.format("topic: %s is not whitelisted for Gojira... Hence ignoring!", topic));
     return false;
   }
 

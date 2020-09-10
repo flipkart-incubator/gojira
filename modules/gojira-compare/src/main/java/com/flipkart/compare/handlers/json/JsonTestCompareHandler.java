@@ -88,7 +88,7 @@ public class JsonTestCompareHandler extends TestCompareHandler {
         compute((ArrayNode) expectedNode, (ArrayNode) actualNode, diffs, "/");
 
         for (DiffDetail diffDetail : diffs) {
-          LOGGER.info(
+          LOGGER.trace(
               "diff type: "
                   + diffDetail.getDiffType()
                   + ", diff path: "
@@ -105,7 +105,7 @@ public class JsonTestCompareHandler extends TestCompareHandler {
         compute((ObjectNode) expectedNode, (ObjectNode) actualNode, diffs, "/");
 
         for (DiffDetail diffDetail : diffs) {
-          LOGGER.info(
+          LOGGER.trace(
               "diff type: "
                   + diffDetail.getDiffType()
                   + ", diff path: "

@@ -69,7 +69,7 @@ public abstract class RmqFilterHandler {
         return true;
       }
     }
-    LOGGER.info(
+    LOGGER.trace(
         String.format(
             "exchange: %s is not whitelisted for Gojira... Hence ignoring!", exchangeName));
     return false;

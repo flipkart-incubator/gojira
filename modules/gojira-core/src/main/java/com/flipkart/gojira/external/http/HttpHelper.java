@@ -153,24 +153,19 @@ public class HttpHelper implements IHttpHelper {
             .getExternalConfigFor(clientId, HttpTestDataType.class);
 
     HttpConfig httpConfig = (HttpConfig) clientConfig;
-    String externalCallUrl =
-        new StringBuffer("http://")
-            .append(httpConfig.getHostNamePort())
-            .append(urlWithQueryParams)
-            .toString();
+    String externalCallUrl = "http://" + httpConfig.getHostNamePort() + urlWithQueryParams;
     requestBuilder.setUrl(externalCallUrl);
-    LOGGER.info(
+    LOGGER.trace(
         String.format(
             "making an external call to uri: %s with clientId: %s.", externalCallUrl, clientId));
 
     ListenableFuture<Response> responseListenableFuture =
         defaultAsyncHttpClient.executeRequest(requestBuilder);
     try {
-      Response response = responseListenableFuture.get();
-      return response;
+      return responseListenableFuture.get();
     } catch (InterruptedException | ExecutionException e) {
-      LOGGER.error("error executing http request: " + e);
-      throw new HttpCallException("error executing http request.", e);
+      LOGGER.error("error executing http request: " + e.getMessage());
+      throw new HttpCallException("error executing http request. ", e);
     }
   }
 }

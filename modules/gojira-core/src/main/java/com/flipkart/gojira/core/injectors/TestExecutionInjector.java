@@ -56,7 +56,7 @@ public class TestExecutionInjector {
     if (injector == null) {
       synchronized (GuiceInjector.class) {
         if (injector == null) {
-          LOGGER.error("Injector instance is not assignemd. Please assign first.");
+          LOGGER.error("Injector instance is not assigned. Please assign first.");
           throw new IllegalStateException("Injector instance is not assigned. Please assign first");
         }
 

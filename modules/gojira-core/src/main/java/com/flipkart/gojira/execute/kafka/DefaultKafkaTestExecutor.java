@@ -70,13 +70,12 @@ public class DefaultKafkaTestExecutor
             requestData.getKey(),
             requestData.getValue(),
             recordHeaders);
-    LOGGER.info("gojira test ID " + testId);
     RecordMetadata recordMetadata = kafkaHelper.produce(clientId, producerRecord);
     logRecordProduction(recordMetadata, clientId, testId);
   }
 
   private void logRecordProduction(RecordMetadata recordMetadata, String clientId, String testId) {
-    LOGGER.info(
+    LOGGER.debug(
         String.format(
             "produced record to topic: %s with clientId: %s for testId: %s. ",
             recordMetadata.topic(), clientId, testId));

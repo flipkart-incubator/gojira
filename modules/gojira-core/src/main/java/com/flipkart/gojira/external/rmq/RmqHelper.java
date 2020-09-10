@@ -40,14 +40,14 @@ public class RmqHelper implements IRmqHelper {
             .getInstance(IRmqManager.class)
             .getChannelByClient(clientId);
     if (channel == null) {
-      LOGGER.error("Unable to publish as cannot instantiate channel");
+      LOGGER.trace("Unable to publish as cannot instantiate channel");
       throw new RmqPublishException("Unable to publish as cannot instantiate channel");
     }
     try {
       String routingParam = new String(routingKey);
       channel.basicPublish(exchangeName, routingParam, mandatory, properties, data);
     } catch (Exception e) {
-      LOGGER.error("Unable to publish to RMq channel", e);
+      LOGGER.error("Unable to publish to RMq channel: " + e.getMessage());
       throw new RmqPublishException("Unable to publish to RMq channel", e);
     }
   }

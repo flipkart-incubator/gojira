@@ -67,8 +67,8 @@ public class JsonDefaultTestSerdeHandler implements TestSerdeHandler {
     try {
       return mapper.writeValueAsBytes(obj);
     } catch (JsonProcessingException e) {
-      LOGGER.error("error serializing data.", e);
-      throw new TestSerdeException("error serializing data.", e);
+      LOGGER.trace("error serializing data. class: " + obj.getClass(), e);
+      throw new TestSerdeException("error serializing data. class: " + obj.getClass(), e);
     }
   }
 
@@ -77,8 +77,9 @@ public class JsonDefaultTestSerdeHandler implements TestSerdeHandler {
     try {
       return mapper.readValue(bytes, clazz);
     } catch (IOException e) {
-      LOGGER.error("error de-serializing data.", e);
-      throw new TestSerdeException("error de-serializing data.", e);
+      LOGGER.trace("error de-serializing data. class: " + clazz.toGenericString(), e);
+      throw new TestSerdeException(
+        "error de-serializing data. class: " + clazz.toGenericString(), e);
     }
   }
 
@@ -87,7 +88,8 @@ public class JsonDefaultTestSerdeHandler implements TestSerdeHandler {
     try {
       mapper.readerForUpdating(obj).readValue(bytes);
     } catch (IOException e) {
-      throw new TestSerdeException("error updating object.", e);
+      LOGGER.trace("error updating object. class: " + obj.getClass(), e);
+      throw new TestSerdeException("error updating object. class: " + obj.getClass(), e);
     }
   }
 }

@@ -40,9 +40,9 @@ public class ProfileStartEndTestHandler<T extends TestDataType> implements Start
    * Checks if the request falls in the sampling bucket. If yes, it calls {@link
    * ProfileRepository#begin(String)} to start profiling, adds the {@link TestRequestData} to
    * {@link TestData} by calling {@link ProfileRepository#setRequestData(TestRequestData)}
-   * and adds the {@link Mode} to {@link ExecutionData#executionMode} by
+   * and adds the {@link Mode} to {@link ExecutionData#getExecutionMode()} by
    * calling the {@link ProfileRepository#setRequestMode(Mode)}
-   * In case of any failure, marks the {@link ExecutionData#profileState} as
+   * In case of any failure, marks the {@link ExecutionData#getProfileState()} as
    * {@link ProfileState#FAILED} to avoid further recording of data.
    *
    * @param id this is the id, which will be used for synchronizing testing across multiple threads
@@ -57,9 +57,9 @@ public class ProfileStartEndTestHandler<T extends TestDataType> implements Start
         ProfileRepository.begin(id);
         ProfileRepository.setRequestData(requestData);
         ProfileRepository.setRequestMode(Mode.PROFILE);
-        LOGGER.info("Profiling initiated for id: " + ProfileRepository.getTestData().getId());
+        LOGGER.debug("Profiling initiated for id: " + ProfileRepository.getTestData().getId());
       } else {
-        LOGGER.info("doesn't fall into this sampling bucket, ignoring profiling for this request");
+        LOGGER.trace("doesn't fall into this sampling bucket, ignoring profiling for this request");
       }
     } catch (Exception e) {
       ProfileRepository.setProfileState(ProfileState.FAILED);
@@ -88,12 +88,12 @@ public class ProfileStartEndTestHandler<T extends TestDataType> implements Start
       if (ProfileState.INITIATED.equals(ProfileRepository.getProfileState())
           && testQueuedSender != null) {
         try {
-          LOGGER.info("Profiling complete for id : " + ProfileRepository.getTestData().getId());
+          LOGGER.debug("Profiling complete for id : " + ProfileRepository.getTestData().getId());
           ProfileRepository.setResponseData(responseData);
           TestData<TestRequestData<T>, TestResponseData<T>, T> testData =
               ProfileRepository.getTestData();
           if (testData != null) {
-            LOGGER.info(
+            LOGGER.trace(
                 "Profiling complete for id : "
                     + ProfileRepository.getTestData().getId()
                     + " sending to queuedSender.");

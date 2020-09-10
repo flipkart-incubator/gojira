@@ -77,6 +77,7 @@ public final class JsonTestCompareHandlerUtil {
     for (String dataElement : data) {
       if (find.equals(dataElement)) {
         keyFound = true;
+        break;
       }
     }
     return keyFound;

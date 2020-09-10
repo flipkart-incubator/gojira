@@ -65,7 +65,7 @@ public class DefaultHttpTestExecutor
       throws HttpCallException {
     HttpTestRequestData requestData = testData.getRequestData();
     String testId = testData.getId();
-    LOGGER.debug("key :" + testId);
+    LOGGER.trace("key :" + testId);
     // url with query params
     String requestUri = requestData.getUri();
     String queryParamsWithDelimiter =
@@ -107,7 +107,7 @@ public class DefaultHttpTestExecutor
 
   private void logExternalCall(
       Response response, String urlWithQueryParams, String clientId, String testId) {
-    LOGGER.info(
+    LOGGER.debug(
         String.format(
             "made an external call to uri: %s with clientId: %s for testId: %s. "
                 + "Response received: %d",
