@@ -46,8 +46,12 @@ public class BindingsModule extends AbstractModule {
   }
 
   private static class NoCompilerMethodMatcher extends AbstractMatcher<Method> {
+    NoCompilerMethodMatcher() {
+    }
+
     @Override
     public boolean matches(Method method) {
+      // Bridged methods are implicitly synthetic. Adding the additional check for developer clarity.
       return !method.isSynthetic() && !method.isBridge();
     }
   }
