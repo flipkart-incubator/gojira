@@ -90,7 +90,6 @@ public class ProfileStartEndTestHandler<T extends TestDataType> implements Start
         try {
           LOGGER.info("Profiling complete for id : " + ProfileRepository.getTestData().getId());
           ProfileRepository.setResponseData(responseData);
-          ProfileRepository.setTag("testTag");
           TestData<TestRequestData<T>, TestResponseData<T>, T> testData =
               ProfileRepository.getTestData();
           if (testData != null) {

@@ -19,7 +19,6 @@ package com.flipkart.gojira.core;
 import com.flipkart.compare.TestCompareException;
 import com.flipkart.compare.handlers.TestCompareHandler;
 import com.flipkart.gojira.compare.GojiraCompareHandlerRepository;
-import com.flipkart.gojira.core.annotations.ProfileOrTest;
 import com.flipkart.gojira.core.injectors.GuiceInjector;
 import com.flipkart.gojira.execute.TestExecutionException;
 import com.flipkart.gojira.hash.HashHandlerUtil;
