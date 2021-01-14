@@ -145,7 +145,7 @@ public abstract class HttpFilterHandler {
         return true;
       }
     }
-    LOGGER.info(
+    LOGGER.trace(
         String.format(
             "uri: %s and method: %s is not whitelisted for Gojira... Hence ignoring!",
             uri, method));

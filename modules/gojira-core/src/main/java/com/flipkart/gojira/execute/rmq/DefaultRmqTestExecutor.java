@@ -90,7 +90,7 @@ public class DefaultRmqTestExecutor
 
   private void logRecordPublish(
       String exchangeName, byte[] routingKey, byte[] data, String clientId, String testId) {
-    LOGGER.info(
+    LOGGER.debug(
         "published data to exchange: "
             + exchangeName
             + " with routingKey: "

@@ -40,8 +40,10 @@ public class DiffIgnoreRepositoryImpl extends DiffIgnoreRepository {
     if (jsonDiffIgnoreMap != null) {
       for (Map.Entry<String, List<String>> entry : jsonDiffIgnoreMap.entrySet()) {
         DiffType diffType = Enum.valueOf(DiffType.class, entry.getKey());
-        List<Pattern> ignorePatternList = entry.getValue().stream().map(ignorePattern ->
-            Pattern.compile(ignorePattern, Pattern.CASE_INSENSITIVE)).collect(Collectors.toList());
+        List<Pattern> ignorePatternList =
+            entry.getValue().stream()
+                .map(ignorePattern -> Pattern.compile(ignorePattern, Pattern.CASE_INSENSITIVE))
+                .collect(Collectors.toList());
         DIFF_IGNORE_PATTERNS.put(diffType, ignorePatternList);
         LOGGER.info(diffType.toString() + " type added for paths: " + ignorePatternList.toString());
       }

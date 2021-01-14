@@ -3,7 +3,7 @@
   <parent>
     <artifactId>gojira-parent</artifactId>
     <groupId>com.flipkart</groupId>
-    <version>transform-SNAPSHOT</version>
+    <version>1.10.0</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>shaded-gojira-core</artifactId>
@@ -84,6 +84,6 @@
     <java.version>1.8</java.version>
     <maven.version>3.2</maven.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <gojira.core.model.version>transform-SNAPSHOT</gojira.core.model.version>
+    <gojira.core.model.version>1.10.0</gojira.core.model.version>
   </properties>
 </project>

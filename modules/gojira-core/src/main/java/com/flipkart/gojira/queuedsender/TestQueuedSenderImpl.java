@@ -77,7 +77,7 @@ public class TestQueuedSenderImpl extends TestQueuedSender {
   public <T extends TestDataType> void send(
       TestData<TestRequestData<T>, TestResponseData<T>, T> testData) throws Exception {
     if (messageQueue.size() < testQueuedSenderConfig.getQueueSize()) {
-      LOGGER.info("TestData with id: " + testData.getId() + " enqueued.");
+      LOGGER.trace("TestData with id: " + testData.getId() + " enqueued.");
       messageQueue.enqueue(
           GuiceInjector.getInjector()
               .getInstance(SerdeHandlerRepository.class)
@@ -104,7 +104,7 @@ public class TestQueuedSenderImpl extends TestQueuedSender {
     public void run() {
       try {
         while (!messageQueue.isEmpty()) {
-          LOGGER.info("There are messages in the hyperion message queue. Sender invoked.");
+          LOGGER.debug("There are messages in the hyperion message queue. Sender invoked.");
           byte[] data = messageQueue.dequeue();
           if (null == data) {
             break;
@@ -115,11 +115,11 @@ public class TestQueuedSenderImpl extends TestQueuedSender {
                       .getInstance(SerdeHandlerRepository.class)
                       .getTestDataSerdeHandler()
                       .deserialize(data, TestData.class);
-          LOGGER.info("TestData with id: " + testData.getId() + " send for DataStore write.");
+          LOGGER.debug("TestData with id: " + testData.getId() + " send for DataStore write.");
           GuiceInjector.getInjector().getInstance(SinkHandler.class).write(testData.getId(), data);
         }
       } catch (Exception e) {
-        LOGGER.error("Could not send message: ", e);
+        LOGGER.error("Could not send message: " + e.getMessage());
       }
     }
   }
@@ -137,7 +137,7 @@ public class TestQueuedSenderImpl extends TestQueuedSender {
       try {
         long startTime = System.currentTimeMillis();
         this.messageQueue.gc();
-        LOGGER.info(
+        LOGGER.trace(
             String.format(
                 "Ran GC on queue. Took: %d milliseconds",
                 (System.currentTimeMillis() - startTime)));
