@@ -229,20 +229,6 @@ public class ProfileRepository<
     }
   }
 
-  static void setTag(String tag) {
-    if (globalProfiledDataMap.containsKey(GLOBAL_PER_REQUEST_ID.get())) {
-      globalProfiledDataMap
-              .get(GLOBAL_PER_REQUEST_ID.get())
-              .getTestData()
-              .setTag(tag);
-    } else {
-      LOGGER.error(
-              "Trying to set response data against global request id: "
-                      + GLOBAL_PER_REQUEST_ID.get()
-                      + " which is not found.");
-    }
-  }
-
   static void addInterceptedData(
       String uniqueMethodIdentifier,
       ConcurrentHashMap<MethodDataType, List<MethodData>> methodDataMap) {

@@ -166,7 +166,6 @@ public class TransformMethodDataInterceptorHandler implements MethodDataIntercep
         perMethodAllEntries =
             ((ConcurrentSkipListMap<Long, ConcurrentHashMap<MethodDataType, List<MethodData>>>)
                 ProfileRepository.getTestData().getMethodDataMap().get(genericMethodName));
-    String tag = ProfileRepository.getTestData().getTag();
 
     ConcurrentHashMap<MethodDataType, List<MethodData>> methodDataMap = null;
 
@@ -417,7 +416,6 @@ public class TransformMethodDataInterceptorHandler implements MethodDataIntercep
               transformedMethod.invoke(
                   invocation.getMethod().getDeclaringClass().newInstance(),
                   originalObject,
-                  tag,
                   invocation.getArguments());
 
         } catch (Exception e) {
