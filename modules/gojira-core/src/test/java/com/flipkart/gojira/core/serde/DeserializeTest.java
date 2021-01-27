@@ -16,6 +16,7 @@
 
 package com.flipkart.gojira.core.serde;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.flipkart.gojira.models.TestData;
 import com.flipkart.gojira.models.http.HttpTestDataType;
 import com.flipkart.gojira.models.http.HttpTestRequestData;
@@ -37,6 +38,23 @@ public class DeserializeTest {
   private final JsonDefaultTestSerdeHandler jsonDefaultSerdeHandler =
       new JsonDefaultTestSerdeHandler();
   private final JsonMapListSerdeHandler jsonMapListSerdeHandler = new JsonMapListSerdeHandler();
+
+  @Test
+  public void test_GenericSerDeser() throws TestSerdeException {
+    Map<String, String> testClassInternalMap = new HashMap<>();
+    testClassInternalMap.put("hi", "hello");
+    testClassInternalMap.put("alpha", "beta");
+    testClassInternalMap.put("jingle", "bells");
+    TestClass testClass = new TestClass();
+    testClass.map = testClassInternalMap;
+    Map<String, TestClass> stringTestClassMap = new HashMap<>();
+    stringTestClassMap.put("gamma", testClass);
+    TypeReference typeReference = new TypeReference<Map<String, TestClass>>() {};
+    byte[] serializedBytes = jsonDefaultSerdeHandler.serialize(stringTestClassMap);
+    Map<String, TestClass> stringTestClassMapDeSer =
+        jsonDefaultSerdeHandler.deserialize(serializedBytes, typeReference.getType());
+    Assert.assertNotNull(stringTestClassMapDeSer);
+  }
 
   @Test
   public void test_TestDataSerDeser() throws TestSerdeException {

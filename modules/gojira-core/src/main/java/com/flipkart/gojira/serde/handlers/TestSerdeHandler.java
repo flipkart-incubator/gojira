@@ -17,11 +17,10 @@
 package com.flipkart.gojira.serde.handlers;
 
 import com.flipkart.gojira.serde.TestSerdeException;
+import java.lang.reflect.Type;
 
 /**
  * Interface for defining serialization and deserialization handlers.
- *
- * <p>//TODO: Add a method to do generics type safe deserialization.
  */
 public interface TestSerdeHandler {
 
@@ -43,6 +42,16 @@ public interface TestSerdeHandler {
    * @throws TestSerdeException if de-serialization fails
    */
   <T> T deserialize(byte[] bytes, Class<T> clazz) throws TestSerdeException;
+
+  /**
+   * This method will be used to deserialize byte[] to Java Object of given Type.
+   *
+   * @param bytes serialized byte[] to be de-serialized.
+   * @param type parameterized type to use for deserialization
+   * @return de-serialized object
+   * @throws TestSerdeException exception thrown if de-serialization fails
+   */
+  <T> T deserialize(byte[] bytes, Type type) throws TestSerdeException;
 
   /**
    * This method will be used to update a Java Object from byte[].

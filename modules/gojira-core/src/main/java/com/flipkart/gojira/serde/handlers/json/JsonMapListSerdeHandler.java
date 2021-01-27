@@ -24,6 +24,7 @@ import com.flipkart.gojira.serde.handlers.json.custom.Deserializers.TestMapDeser
 import com.flipkart.gojira.serde.handlers.json.custom.Serializers.TestListSerializer;
 import com.flipkart.gojira.serde.handlers.json.custom.Serializers.TestMapSerializer;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
@@ -72,6 +73,16 @@ public class JsonMapListSerdeHandler extends JsonDefaultTestSerdeHandler {
       LOGGER.trace("error de-serializing data. class: " + clazz.toGenericString(), e);
       throw new TestSerdeException(
           "error de-serializing data. class: " + clazz.toGenericString(), e);
+    }
+  }
+
+  @Override
+  public <T> T deserialize(byte[] bytes, Type type) throws TestSerdeException {
+    try {
+      return mapper.readValue(bytes, mapper.constructType(type));
+    } catch (IOException e) {
+      LOGGER.error("error de-serializing data. type: " + type.getTypeName(), e);
+      throw new TestSerdeException("error de-serializing data. type: " + type.getTypeName(), e);
     }
   }
 

@@ -19,8 +19,8 @@ package com.flipkart.gojira.execute;
 import com.flipkart.gojira.core.Mode;
 
 /**
- * Exception thrown during execution in modes other than {@link Mode#PROFILE}. //TODO : Decouple
- * test initiation exception from TestExecutionException.
+ * Exception thrown during execution in modes other than {@link Mode#PROFILE}.
+ * TODO : Decouple test initiation exception from TestExecutionException.
  */
 public class TestExecutionException extends Exception {
 

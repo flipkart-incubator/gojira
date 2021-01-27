@@ -6,7 +6,7 @@
 
     <groupId>com.flipkart</groupId>
     <artifactId>gojira-parent</artifactId>
-    <version>1.9.9</version>
+    <version>1.9.10</version>
     <packaging>pom</packaging>
 
     <name>Gojira for Regression Testing</name>
