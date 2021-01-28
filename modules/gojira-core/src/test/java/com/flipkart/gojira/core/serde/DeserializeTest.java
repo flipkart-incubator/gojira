@@ -53,7 +53,12 @@ public class DeserializeTest {
     byte[] serializedBytes = jsonDefaultSerdeHandler.serialize(stringTestClassMap);
     Map<String, TestClass> stringTestClassMapDeSer =
         jsonDefaultSerdeHandler.deserialize(serializedBytes, typeReference.getType());
+
+    byte[] serializedBytesMapListSerde = jsonMapListSerdeHandler.serialize(stringTestClassMap);
+    Map<String, TestClass> stringTestClassMapDeSerMapListSerde =
+        jsonMapListSerdeHandler.deserialize(serializedBytesMapListSerde, typeReference.getType());
     Assert.assertNotNull(stringTestClassMapDeSer);
+    Assert.assertNotNull(stringTestClassMapDeSerMapListSerde);
   }
 
   @Test
