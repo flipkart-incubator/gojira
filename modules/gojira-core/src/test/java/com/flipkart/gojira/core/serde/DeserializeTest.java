@@ -16,12 +16,12 @@
 
 package com.flipkart.gojira.core.serde;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.flipkart.gojira.models.TestData;
 import com.flipkart.gojira.models.http.HttpTestDataType;
 import com.flipkart.gojira.models.http.HttpTestRequestData;
 import com.flipkart.gojira.models.http.HttpTestResponseData;
 import com.flipkart.gojira.serde.TestSerdeException;
+import com.flipkart.gojira.serde.handlers.TypeParameter;
 import com.flipkart.gojira.serde.handlers.json.JsonDefaultTestSerdeHandler;
 import com.flipkart.gojira.serde.handlers.json.JsonMapListSerdeHandler;
 import java.util.ArrayList;
@@ -49,14 +49,15 @@ public class DeserializeTest {
     testClass.map = testClassInternalMap;
     Map<String, TestClass> stringTestClassMap = new HashMap<>();
     stringTestClassMap.put("gamma", testClass);
-    TypeReference typeReference = new TypeReference<Map<String, TestClass>>() {};
+    TypeParameter<Map<String, TestClass>> typeParameter =
+        new TypeParameter<Map<String, TestClass>>() {};
     byte[] serializedBytes = jsonDefaultSerdeHandler.serialize(stringTestClassMap);
     Map<String, TestClass> stringTestClassMapDeSer =
-        jsonDefaultSerdeHandler.deserialize(serializedBytes, typeReference.getType());
+        jsonDefaultSerdeHandler.deserialize(serializedBytes, typeParameter);
 
     byte[] serializedBytesMapListSerde = jsonMapListSerdeHandler.serialize(stringTestClassMap);
     Map<String, TestClass> stringTestClassMapDeSerMapListSerde =
-        jsonMapListSerdeHandler.deserialize(serializedBytesMapListSerde, typeReference.getType());
+        jsonMapListSerdeHandler.deserialize(serializedBytesMapListSerde, typeParameter);
     Assert.assertNotNull(stringTestClassMapDeSer);
     Assert.assertNotNull(stringTestClassMapDeSerMapListSerde);
   }

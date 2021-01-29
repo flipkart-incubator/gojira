@@ -19,12 +19,12 @@ package com.flipkart.gojira.serde.handlers.json;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.flipkart.gojira.serde.TestSerdeException;
 import com.flipkart.gojira.serde.handlers.TestSerdeHandler;
+import com.flipkart.gojira.serde.handlers.TypeParameter;
 import com.flipkart.gojira.serde.handlers.json.custom.Deserializers.TestListDeserializer;
 import com.flipkart.gojira.serde.handlers.json.custom.Deserializers.TestMapDeserializer;
 import com.flipkart.gojira.serde.handlers.json.custom.Serializers.TestListSerializer;
 import com.flipkart.gojira.serde.handlers.json.custom.Serializers.TestMapSerializer;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
@@ -77,12 +77,12 @@ public class JsonMapListSerdeHandler extends JsonDefaultTestSerdeHandler {
   }
 
   @Override
-  public <T> T deserialize(byte[] bytes, Type type) throws TestSerdeException {
+  public <T> T deserialize(byte[] bytes, TypeParameter<T> typeParameter) throws TestSerdeException {
     try {
-      return mapper.readValue(bytes, mapper.constructType(type));
+      return mapper.readValue(bytes, mapper.constructType(typeParameter.getType()));
     } catch (IOException e) {
-      LOGGER.error("error de-serializing data. type: " + type.getTypeName(), e);
-      throw new TestSerdeException("error de-serializing data. type: " + type.getTypeName(), e);
+      LOGGER.error("error de-serializing data. type: " + typeParameter, e);
+      throw new TestSerdeException("error de-serializing data. type: " + typeParameter, e);
     }
   }
 
