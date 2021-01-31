@@ -24,7 +24,7 @@ import java.lang.reflect.Type;
  * runtime by sub-classing and is a work-around for type erasure in Java. Reference taken from
  * FasterXML TypeReference and Google Inject TypeLiteral.
  *
- * <p>To create a type literal for {@code List<String>}, you can create an empty anonymous inner
+ * <p>To create a type parameter for {@code List<String>}, you can create an empty anonymous inner
  * class:
  *
  * <p>{@code TypeParameter<List<String>> list = new TypeParameter<List<String>>() {};}
