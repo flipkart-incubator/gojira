@@ -88,8 +88,8 @@ public class TransformMethodDataInterceptorHandler implements MethodDataIntercep
    * SerdeHandlerRepository#getExceptionDataSerdeHandler(String, String)} instance and throw the
    * exception object. If deserialization fails, we throw {@link TestExecutionException}.
    *
-   * <p>If there is no exception data, and {@link MethodInvocation has transformed method specefied
-   * same is invoked with {@link MethodDataType#RETURN}, {@link TestData#getTag()},
+   * <p>If there is no exception data, and {@link MethodInvocation} has transformed method specefied
+   * same is invoked with {@link MethodDataType#RETURN},
    * {@link Object as varArgs}  to get transformed data. Same is used to reprofile Method Return
    * and exceptions and returned.
    *

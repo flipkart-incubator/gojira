@@ -9,7 +9,6 @@ import com.flipkart.gojira.models.TestResponseData;
 import com.flipkart.gojira.queuedsender.TestQueuedSender;
 import com.flipkart.gojira.requestsampling.RequestSamplingRepository;
 import com.flipkart.gojira.serde.SerdeHandlerRepository;
-import com.flipkart.gojira.sinkstore.SinkException;
 import com.flipkart.gojira.sinkstore.handlers.SinkHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -97,7 +96,6 @@ public class TransformStartEndTestHandler<T extends TestDataType>
         try {
           LOGGER.info("Transform complete for id : " + ProfileRepository.getTestData().getId());
           ProfileRepository.setResponseData(responseData);
-          ProfileRepository.setTag("testTag");
           TestData<TestRequestData<T>, TestResponseData<T>, T> testData =
               ProfileRepository.getTestData();
           if (testData != null) {
