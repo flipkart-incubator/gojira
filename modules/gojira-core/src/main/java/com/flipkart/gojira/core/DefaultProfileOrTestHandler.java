@@ -45,6 +45,7 @@ public class DefaultProfileOrTestHandler {
               put(Mode.TEST, new TestStartEndTestHandler());
               put(Mode.NONE, new NoneStartEndTestHandler());
               put(Mode.SERIALIZE, new SerializeStartEndTestHandler());
+              put(Mode.TRANSFORM, new TransformStartEndTestHandler());
             }
           });
 

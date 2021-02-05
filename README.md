@@ -17,6 +17,7 @@ Gojira is a record and replay based regression testing tool.
 6. Interfaces to plug-in data-store for storing recorded data.
 8. Test executors for running tests in replay mode.
 9. Very low overhead during NONE and PROFILE mode. TODO: Add metrics.
+10. Adding new mode called TRANSFORM which will provide hooks to client to modify existing profiled data to adhere to contract changes
 
 ## Changelog
 [Changelog](https://github.com/flipkart-incubator/gojira/blob/master/CHANGELOG.md)
