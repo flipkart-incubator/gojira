@@ -42,6 +42,7 @@ public class ProfileOrTestMethodInterceptor implements MethodInterceptor {
               put(Mode.PROFILE, new ProfileMethodDataInterceptorHandler());
               put(Mode.TEST, new TestMethodDataInterceptorHandler());
               put(Mode.SERIALIZE, new SerializeMethodDataInterceptorHandler());
+              put(Mode.TRANSFORM, new TransformMethodDataInterceptorHandler());
             }
           });
 
