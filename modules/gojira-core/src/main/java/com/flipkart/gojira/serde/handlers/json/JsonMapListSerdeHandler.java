@@ -19,6 +19,7 @@ package com.flipkart.gojira.serde.handlers.json;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.flipkart.gojira.serde.TestSerdeException;
 import com.flipkart.gojira.serde.handlers.TestSerdeHandler;
+import com.flipkart.gojira.serde.handlers.TypeParameter;
 import com.flipkart.gojira.serde.handlers.json.custom.Deserializers.TestListDeserializer;
 import com.flipkart.gojira.serde.handlers.json.custom.Deserializers.TestMapDeserializer;
 import com.flipkart.gojira.serde.handlers.json.custom.Serializers.TestListSerializer;
@@ -72,6 +73,16 @@ public class JsonMapListSerdeHandler extends JsonDefaultTestSerdeHandler {
       LOGGER.trace("error de-serializing data. class: " + clazz.toGenericString(), e);
       throw new TestSerdeException(
           "error de-serializing data. class: " + clazz.toGenericString(), e);
+    }
+  }
+
+  @Override
+  public <T> T deserialize(byte[] bytes, TypeParameter<T> typeParameter) throws TestSerdeException {
+    try {
+      return mapper.readValue(bytes, mapper.constructType(typeParameter.getType()));
+    } catch (IOException e) {
+      LOGGER.error("error de-serializing data. type: " + typeParameter, e);
+      throw new TestSerdeException("error de-serializing data. type: " + typeParameter, e);
     }
   }
 

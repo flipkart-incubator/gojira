@@ -34,6 +34,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.flipkart.gojira.serde.TestSerdeException;
 import com.flipkart.gojira.serde.handlers.TestSerdeHandler;
+import com.flipkart.gojira.serde.handlers.TypeParameter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -125,6 +126,16 @@ public class JsonTestSerdeHandler implements TestSerdeHandler {
       LOGGER.error("error de-serializing data. class: " + clazz.toGenericString(), e);
       throw new TestSerdeException(
           "error de-serializing data. class: " + clazz.toGenericString(), e);
+    }
+  }
+
+  @Override
+  public <T> T deserialize(byte[] bytes, TypeParameter<T> typeParameter) throws TestSerdeException {
+    try {
+      return OBJECT_MAPPER.readValue(bytes, OBJECT_MAPPER.constructType(typeParameter.getType()));
+    } catch (IOException e) {
+      LOGGER.error("error de-serializing data. type: " + typeParameter, e);
+      throw new TestSerdeException("error de-serializing data. type: " + typeParameter, e);
     }
   }
 
