@@ -22,6 +22,7 @@ import static com.flipkart.compare.handlers.json.JsonTestCompareHandlerUtil.getO
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.NullNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.flipkart.compare.TestCompareException;
 import com.flipkart.compare.diff.DiffDetail;
@@ -59,7 +60,9 @@ public class JsonTestCompareHandler extends TestCompareHandler {
     try {
       // return if both profiledData and testData are null or empty.
       if ((profiledData == null && testData == null)
-          || (profiledData != null && testData != null && profiledData.length == 0
+          || (profiledData != null
+              && testData != null
+              && profiledData.length == 0
               && testData.length == 0)) {
         return;
       }
@@ -98,8 +101,7 @@ public class JsonTestCompareHandler extends TestCompareHandler {
           throw new TestCompareException(diffs);
         }
 
-      } else if (expectedNode.isObject()
-          && actualNode.isObject()) {
+      } else if (expectedNode.isObject() && actualNode.isObject()) {
         // calling compute(ObjectNode) if expectedNode & arrayNode are ObjectNode instances
         List<DiffDetail> diffs = new ArrayList<>();
         compute((ObjectNode) expectedNode, (ObjectNode) actualNode, diffs, "/");
@@ -177,7 +179,11 @@ public class JsonTestCompareHandler extends TestCompareHandler {
         // create a diff of type move if i does not match j
         if (i != j) {
           DiffDetail diff =
-              getDiffDetail(diffKey + ", (.*), /", expectedObject, actualObject, DiffType.MOVE);
+              getDiffDetail(
+                  diffKey + ", (.*), /",
+                  getNullable(expectedObject),
+                  getNullable(actualObject),
+                  DiffType.MOVE);
           if (diff != null) {
             diffs.add(diff);
           }
@@ -280,7 +286,8 @@ public class JsonTestCompareHandler extends TestCompareHandler {
       }
 
       DiffDetail diffDetail =
-          getDiffDetail(diffKey + ", (.*), /", null, actualArray.get(j), DiffType.MODIFY);
+          getDiffDetail(
+              diffKey + ", (.*), /", null, getNullable(actualArray.get(j)), DiffType.MODIFY);
       if (diffDetail != null) {
         diffs.add(diffDetail);
       }
@@ -293,7 +300,8 @@ public class JsonTestCompareHandler extends TestCompareHandler {
       }
 
       DiffDetail diffDetail =
-          getDiffDetail(diffKey + ", (.*), /", expectedArray.get(i), null, DiffType.MODIFY);
+          getDiffDetail(
+              diffKey + ", (.*), /", getNullable(expectedArray.get(i)), null, DiffType.MODIFY);
       if (diffDetail != null) {
         diffs.add(diffDetail);
       }
@@ -352,7 +360,9 @@ public class JsonTestCompareHandler extends TestCompareHandler {
     }
 
     if (expected == null || actual == null) {
-      DiffDetail diffDetail = getDiffDetail(diffKey + ", /", expected, actual, DiffType.MODIFY);
+      DiffDetail diffDetail =
+          getDiffDetail(
+              diffKey + ", /", getNullable(expected), getNullable(actual), DiffType.MODIFY);
       if (diffDetail != null) {
         diffs.add(diffDetail);
       }
@@ -369,11 +379,20 @@ public class JsonTestCompareHandler extends TestCompareHandler {
       // compare them as object by calling equals. This should be most likely called only on
       // primitive types.
       // TODO: Add warning log by mapping JsonNodeType to primitive and flag non-primitive types
-      DiffDetail diffDetail = getDiffDetail(diffKey + ", /", expected, actual, DiffType.MODIFY);
+      DiffDetail diffDetail =
+          getDiffDetail(
+              diffKey + ", /", getNullable(expected), getNullable(actual), DiffType.MODIFY);
       if (diffDetail != null) {
         diffs.add(diffDetail);
       }
     }
     // TODO: What if expected and actual are of different types?
+  }
+
+  private Object getNullable(Object obj) {
+    if (obj == null || obj instanceof NullNode) {
+      return null;
+    }
+    return obj;
   }
 }
