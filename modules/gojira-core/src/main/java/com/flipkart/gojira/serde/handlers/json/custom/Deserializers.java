@@ -23,6 +23,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.flipkart.gojira.core.GlobalConstants;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -73,12 +74,16 @@ public class Deserializers {
             listItemType = arrayNode.get(i).asText();
             itemType = false;
           } else {
-            list.add(
-                List.class.isAssignableFrom(Class.forName(listItemType))
-                    ? oc.treeToValue(arrayNode.get(i), List.class)
-                    : Map.class.isAssignableFrom(Class.forName(listItemType))
-                        ? oc.treeToValue(arrayNode.get(i), Map.class)
-                        : oc.treeToValue(arrayNode.get(i), Class.forName(listItemType)));
+            if (GlobalConstants.NULL_ENTRY_STRING.equals(listItemType)) {
+              list.add(null);
+            } else {
+              list.add(
+                  List.class.isAssignableFrom(Class.forName(listItemType))
+                      ? oc.treeToValue(arrayNode.get(i), List.class)
+                      : Map.class.isAssignableFrom(Class.forName(listItemType))
+                          ? oc.treeToValue(arrayNode.get(i), Map.class)
+                          : oc.treeToValue(arrayNode.get(i), Class.forName(listItemType)));
+            }
             itemType = true;
           }
         }
@@ -148,13 +153,17 @@ public class Deserializers {
               } else {
                 type = mapValueType;
               }
-              Object keyOrValue =
-                  Map.class.isAssignableFrom(Class.forName(type))
-                      ? oc.treeToValue(element.get(key), Map.class)
-                      : List.class.isAssignableFrom(Class.forName(type))
-                          ? oc.treeToValue(element.get(key), List.class)
-                          : oc.treeToValue(element.get(key), Class.forName(type));
-              keyValuePair.add(keyOrValue);
+              if (GlobalConstants.NULL_ENTRY_STRING.equals(type)) {
+                keyValuePair.add(null);
+              } else {
+                Object keyOrValue =
+                    Map.class.isAssignableFrom(Class.forName(type))
+                        ? oc.treeToValue(element.get(key), Map.class)
+                        : List.class.isAssignableFrom(Class.forName(type))
+                            ? oc.treeToValue(element.get(key), List.class)
+                            : oc.treeToValue(element.get(key), Class.forName(type));
+                keyValuePair.add(keyOrValue);
+              }
             }
             map.put(keyValuePair.get(0), keyValuePair.get(1));
             keyValuePair.clear();

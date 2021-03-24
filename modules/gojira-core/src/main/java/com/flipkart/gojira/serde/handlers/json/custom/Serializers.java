@@ -19,6 +19,7 @@ package com.flipkart.gojira.serde.handlers.json.custom;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import com.flipkart.gojira.core.GlobalConstants;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -41,10 +42,12 @@ public class Serializers {
       gen.writeString(listType);
       if (!value.isEmpty()) {
         for (Object element : value) {
-          if (element != null) {
+          if (element == null) {
+            gen.writeObject(GlobalConstants.NULL_ENTRY_STRING);
+          } else {
             gen.writeObject(element.getClass().getName());
-            gen.writeObject(element);
           }
+          gen.writeObject(element);
         }
       }
       gen.writeEndArray();
@@ -65,23 +68,30 @@ public class Serializers {
       if (!value.isEmpty()) {
         int size = value.size();
         for (int i = 0; i < size; i++) {
-          if (value.keySet().toArray()[i] != null
-              && value.get(value.keySet().toArray()[i]) != null) {
-            gen.writeStartObject();
+          gen.writeStartObject();
+          if (value.keySet().toArray()[i] == null) {
+            gen.writeStringField(
+                "TestMapSerializer|mapElementKeyType", GlobalConstants.NULL_ENTRY_STRING);
+          } else {
             gen.writeStringField(
                 "TestMapSerializer|mapElementKeyType",
                 value.keySet().toArray()[i].getClass().getName());
-            gen.writeEndObject();
-            gen.writeStartObject();
+          }
+          gen.writeEndObject();
+          gen.writeStartObject();
+          if (value.get(value.keySet().toArray()[i]) == null) {
+            gen.writeStringField(
+                "TestMapSerializer|mapElementValueType", GlobalConstants.NULL_ENTRY_STRING);
+          } else {
             gen.writeStringField(
                 "TestMapSerializer|mapElementValueType",
                 value.get(value.keySet().toArray()[i]).getClass().getName());
-            gen.writeEndObject();
-            gen.writeStartObject();
-            gen.writeObjectField("mapElementKey", value.keySet().toArray()[i]);
-            gen.writeObjectField("mapElementValue", value.get(value.keySet().toArray()[i]));
-            gen.writeEndObject();
           }
+          gen.writeEndObject();
+          gen.writeStartObject();
+          gen.writeObjectField("mapElementKey", value.keySet().toArray()[i]);
+          gen.writeObjectField("mapElementValue", value.get(value.keySet().toArray()[i]));
+          gen.writeEndObject();
         }
       }
       gen.writeEndArray();
