@@ -19,6 +19,7 @@ package com.flipkart.gojira.core.compare;
 import com.flipkart.compare.ComparisonModule;
 import com.flipkart.compare.TestCompareException;
 import com.flipkart.compare.config.ComparisonConfig;
+import com.flipkart.compare.diff.DiffType;
 import com.flipkart.compare.handlers.TestCompareHandler;
 import com.flipkart.compare.handlers.json.JsonTestCompareHandler;
 import com.flipkart.gojira.compare.config.GojiraComparisonConfig;
@@ -26,19 +27,18 @@ import com.flipkart.gojira.core.DI;
 import com.flipkart.gojira.core.serde.DeserializeTest;
 import com.flipkart.gojira.serde.TestSerdeException;
 import com.flipkart.gojira.serde.handlers.TestSerdeHandler;
-import com.flipkart.gojira.serde.handlers.json.JsonMapListSerdeHandler;
+import com.flipkart.gojira.serde.handlers.json.JsonDefaultTestSerdeHandler;
 import java.util.HashMap;
 import java.util.Map;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-/**
- * Class to test comparison of Map.
- */
+/** Class to test comparison of Map. */
 public class ComparisonTest {
 
-  private TestSerdeHandler testSerdeHandler = new JsonMapListSerdeHandler();
-  private TestCompareHandler testCompareHandler = new JsonTestCompareHandler();
+  private final TestSerdeHandler testSerdeHandler = new JsonDefaultTestSerdeHandler();
+  private final TestCompareHandler testCompareHandler = new JsonTestCompareHandler();
 
   /**
    * Setup for the class.
@@ -78,5 +78,33 @@ public class ComparisonTest {
     testClass2.setMap(map2);
 
     testCompareHandler.compare(testSerdeHandler.serialize(map1), testSerdeHandler.serialize(map2));
+  }
+
+  /**
+   * Creates 2 instances of Map with different data for comparison purposes and checks that
+   * exception is thrown.
+   *
+   * @throws TestSerdeException serialization exception
+   * @throws TestCompareException comparison exception
+   */
+  @Test
+  public void checkCompareAdd() throws TestSerdeException, TestCompareException {
+    DeserializeTest.TestClass testClass1 = new DeserializeTest.TestClass();
+    testClass1.setMap(null);
+
+    Map<String, String> map2 = new HashMap<>();
+    map2.put("hi", "hello");
+    map2.put("jingle", "bells");
+    DeserializeTest.TestClass testClass2 = new DeserializeTest.TestClass();
+    testClass2.setMap(map2);
+    TestCompareException exception =
+        Assert.assertThrows(
+            TestCompareException.class,
+            () ->
+                testCompareHandler.compare(
+                    testSerdeHandler.serialize(testClass1),
+                    testSerdeHandler.serialize(testClass2)));
+    Assert.assertEquals(1, exception.getDiffs().size());
+    Assert.assertEquals(DiffType.ADD, exception.getDiffs().iterator().next().getDiffType());
   }
 }

@@ -40,6 +40,32 @@ public class DeserializeTest {
   private final JsonMapListSerdeHandler jsonMapListSerdeHandler = new JsonMapListSerdeHandler();
 
   @Test
+  public void test_NullSerDeser() throws TestSerdeException {
+    Map<String, String> map = new HashMap<>();
+    map.put("hi", null);
+    map.put(null, "hello");
+    map.put("alpha", "beta");
+    map.put("jingle", "bells");
+    byte[] serializedBytesMapListSerde1 = jsonMapListSerdeHandler.serialize(map);
+    Map<String, String> nullValueMapDeSerMapListSerde1 =
+        jsonMapListSerdeHandler.deserialize(
+            serializedBytesMapListSerde1, new TypeParameter<Map<String, String>>() {});
+    Assert.assertEquals(map, nullValueMapDeSerMapListSerde1);
+
+    List<String> list = new ArrayList<>();
+    list.add("hello");
+    list.add(null);
+    list.add("hi");
+    list.add(null);
+    list.add(null);
+    byte[] serializedBytesMapListSerde2 = jsonMapListSerdeHandler.serialize(list);
+    List<String> nullValueMapDeSerMapListSerde2 =
+        jsonMapListSerdeHandler.deserialize(
+            serializedBytesMapListSerde2, new TypeParameter<List<String>>() {});
+    Assert.assertEquals(list, nullValueMapDeSerMapListSerde2);
+  }
+
+  @Test
   public void test_GenericSerDeser() throws TestSerdeException {
     Map<String, String> testClassInternalMap = new HashMap<>();
     testClassInternalMap.put("hi", "hello");

@@ -27,6 +27,7 @@ import java.util.Map;
 public class GlobalConstants {
   // empty sting
   public static final String EMPTY_STRING = "";
+  public static final String NULL_ENTRY_STRING = "NULL_ENTRY";
 
   // test header constants
   public static final String TEST_HEADER = "X-GOJIRA-ID";
