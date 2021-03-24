@@ -1,3 +1,7 @@
+## 1.11.1
+- Fix null serde in JsonMapListSerdeHandler.
+- Fix the null compare in JsonTestCompareHandler to report ADD/REMOVE diffType instead of MODIFY.
+
 ## 1.11.0
 - Add support for generics type safe deserialization.
 
