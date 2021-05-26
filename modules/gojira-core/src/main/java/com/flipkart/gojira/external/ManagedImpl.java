@@ -17,6 +17,7 @@
 package com.flipkart.gojira.external;
 
 import com.flipkart.gojira.core.injectors.GuiceInjector;
+import com.flipkart.gojira.external.config.ExternalConfig;
 import com.flipkart.gojira.external.http.HttpManager;
 import com.flipkart.gojira.external.kafka.KafkaManager;
 import com.flipkart.gojira.external.rmq.RmqManager;
@@ -37,6 +38,23 @@ public class ManagedImpl implements Managed {
     HttpManager.HTTP_MANAGER.setup();
     KafkaManager.KAFKA_MANAGER.setup();
     RmqManager.RMQ_MANAGER.setup();
+  }
+
+  @Override
+  public void update(String clientId, ExternalConfig externalConfig) throws UpdateException {
+    switch (externalConfig.getType()) {
+      case "HTTP" :
+        HttpManager.HTTP_MANAGER.update(clientId, externalConfig);
+        break;
+      case "KAFKA" :
+        KafkaManager.KAFKA_MANAGER.update(clientId, externalConfig);
+        break;
+      case "RMQ" :
+        RmqManager.RMQ_MANAGER.update(clientId, externalConfig);
+        break;
+      default:
+        break;
+    }
   }
 
   /**

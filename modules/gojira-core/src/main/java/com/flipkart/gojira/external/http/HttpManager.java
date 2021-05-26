@@ -21,6 +21,7 @@ import com.flipkart.gojira.external.ExternalConfigRepository;
 import com.flipkart.gojira.external.Managed;
 import com.flipkart.gojira.external.SetupException;
 import com.flipkart.gojira.external.ShutdownException;
+import com.flipkart.gojira.external.UpdateException;
 import com.flipkart.gojira.external.config.ExternalConfig;
 import com.flipkart.gojira.external.config.HttpConfig;
 import com.flipkart.gojira.models.http.HttpTestDataType;
@@ -63,6 +64,27 @@ public enum HttpManager implements IHttpManager, Managed {
     } catch (Exception e) {
       LOGGER.error("error setting up http connections.", e);
       throw new SetupException("error setting up http connections.", e);
+    }
+  }
+
+  @Override
+  public void update(String clientId, ExternalConfig externalConfig) throws UpdateException {
+    try {
+      HttpConfig httpConfig = (HttpConfig) externalConfig;
+      clientMap.get(clientId).close();
+      clientMap.put(
+          clientId,
+          new DefaultAsyncHttpClient(
+              new DefaultAsyncHttpClientConfig.Builder()
+                  .setConnectTimeout(httpConfig.getConnectionTimeout())
+                  .setMaxConnections(httpConfig.getMaxConnections())
+                  .setMaxConnectionsPerHost(httpConfig.getMaxConnections())
+                  .setKeepAlive(true)
+                  .setRequestTimeout(httpConfig.getOperationTimeout())
+                  .build()));
+    } catch (Exception e) {
+      LOGGER.error("error updating http connections.", e);
+      throw new UpdateException("error updating http connections.", e);
     }
   }
 
