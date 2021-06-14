@@ -71,7 +71,7 @@ public enum HttpManager implements IHttpManager, Managed {
   public void update(String clientId, ExternalConfig externalConfig) throws UpdateException {
     try {
       HttpConfig httpConfig = (HttpConfig) externalConfig;
-      if(clientMap.get(clientId) != null) {
+      if (clientMap.get(clientId) != null) {
         clientMap.get(clientId).close();
       }
       clientMap.put(
