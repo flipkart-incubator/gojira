@@ -72,7 +72,9 @@ public enum KafkaManager implements IKafkaManager, Managed {
   @Override
   public void update(String clientId, ExternalConfig externalConfig) throws UpdateException {
     try {
-      clientMap.get(clientId).close();
+      if (clientMap.get(clientId) != null) {
+        clientMap.get(clientId).close();
+      }
       KafkaConfig kafkaConfig = (KafkaConfig) externalConfig;
       Properties props = new Properties();
       props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaConfig.getHostNamePort());

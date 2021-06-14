@@ -34,9 +34,11 @@ public interface Managed {
   /**
    * Method to update external connections to enable rpc calls.
    *
-   * @throws SetupException exception thrown if we are not able to setup connection.
+   * @throws UpdateException exception thrown if we are not able to setup connection.
    */
-  void update(String clientId, ExternalConfig externalConfig) throws UpdateException;
+  default void update(String clientId, ExternalConfig externalConfig) throws UpdateException {
+    throw new UnsupportedOperationException("Operation not allowed");
+  }
 
   /**
    * Method to shutdown external connections.

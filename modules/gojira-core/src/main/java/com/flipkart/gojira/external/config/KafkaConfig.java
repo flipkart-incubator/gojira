@@ -18,6 +18,8 @@ package com.flipkart.gojira.external.config;
 
 import static com.flipkart.gojira.core.GlobalConstants.KAFKA_TEST_DATA_TYPE;
 
+import java.util.Objects;
+
 public class KafkaConfig extends ExternalConfig {
 
   private String hostNamePort;
@@ -32,5 +34,22 @@ public class KafkaConfig extends ExternalConfig {
 
   public void setHostNamePort(String hostNamePort) {
     this.hostNamePort = hostNamePort;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    KafkaConfig that = (KafkaConfig) o;
+    return Objects.equals(hostNamePort, that.hostNamePort);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(hostNamePort);
   }
 }
