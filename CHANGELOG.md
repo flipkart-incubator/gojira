@@ -1,3 +1,6 @@
+## 1.12.0
+- Added capability for updating external client config in runtime through an api
+
 ## 1.11.1
 - Fix null serde in JsonMapListSerdeHandler.
 - Fix the null compare in JsonTestCompareHandler to report ADD/REMOVE diffType instead of MODIFY.
