@@ -69,10 +69,9 @@ public enum RmqManager implements IRmqManager, Managed {
   @Override
   public void update(String clientId, ExternalConfig externalConfig) throws UpdateException {
     try {
-      if (clientVsChannelMap.get(clientId) != null) {
+      if (clientVsChannelMap.containsKey(clientId)) {
         clientVsChannelMap.get(clientId).close();
       }
-      clientVsChannelMap.get(clientId).close();
       RmqConfig rmqConfig = (RmqConfig) externalConfig;
       clientVsChannelMap.put(clientId, createChannel(rmqConfig));
     } catch (Exception e) {

@@ -1,3 +1,5 @@
+## 1.12.1
+- Fixing bug for calling close connection twice
 ## 1.12.0
 - Added capability for updating external client config in runtime through an api
 

@@ -72,7 +72,7 @@ public enum KafkaManager implements IKafkaManager, Managed {
   @Override
   public void update(String clientId, ExternalConfig externalConfig) throws UpdateException {
     try {
-      if (clientMap.get(clientId) != null) {
+      if (clientMap.containsKey(clientId)) {
         clientMap.get(clientId).close();
       }
       KafkaConfig kafkaConfig = (KafkaConfig) externalConfig;
