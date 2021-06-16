@@ -21,6 +21,7 @@ import com.flipkart.gojira.external.ExternalConfigRepository;
 import com.flipkart.gojira.external.Managed;
 import com.flipkart.gojira.external.SetupException;
 import com.flipkart.gojira.external.ShutdownException;
+import com.flipkart.gojira.external.UpdateException;
 import com.flipkart.gojira.external.config.ExternalConfig;
 import com.flipkart.gojira.external.config.KafkaConfig;
 import com.flipkart.gojira.models.kafka.KafkaTestDataType;
@@ -65,6 +66,24 @@ public enum KafkaManager implements IKafkaManager, Managed {
     } catch (Exception e) {
       LOGGER.error("error setting up kafka producers.", e);
       throw new SetupException("error setting up kafka producers.", e);
+    }
+  }
+
+  @Override
+  public void update(String clientId, ExternalConfig externalConfig) throws UpdateException {
+    try {
+      if (clientMap.containsKey(clientId)) {
+        clientMap.get(clientId).close();
+      }
+      KafkaConfig kafkaConfig = (KafkaConfig) externalConfig;
+      Properties props = new Properties();
+      props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaConfig.getHostNamePort());
+      props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, ByteArraySerializer.class);
+      props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, ByteArraySerializer.class);
+      clientMap.put(clientId, new KafkaProducer<>(props));
+    } catch (Exception e) {
+      LOGGER.error("error updating kafka connections.", e);
+      throw new UpdateException("error updating kafka connections.", e);
     }
   }
 

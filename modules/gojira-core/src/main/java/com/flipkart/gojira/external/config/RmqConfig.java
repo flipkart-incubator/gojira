@@ -19,6 +19,7 @@ package com.flipkart.gojira.external.config;
 import static com.flipkart.gojira.core.GlobalConstants.RMQ_TEST_DATA_TYPE;
 
 import java.util.List;
+import java.util.Objects;
 
 public class RmqConfig extends ExternalConfig {
   /** port at which RMQ is hosted. */
@@ -90,5 +91,27 @@ public class RmqConfig extends ExternalConfig {
 
   public void setAutomaticRecoveryEnabled(boolean automaticRecoveryEnabled) {
     this.automaticRecoveryEnabled = automaticRecoveryEnabled;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    RmqConfig rmqConfig = (RmqConfig) o;
+    return port == rmqConfig.port
+        && automaticRecoveryEnabled == rmqConfig.automaticRecoveryEnabled
+        && Objects.equals(username, rmqConfig.username)
+        && Objects.equals(password, rmqConfig.password)
+        && Objects.equals(virtualHost, rmqConfig.virtualHost)
+        && Objects.equals(endpoints, rmqConfig.endpoints);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(port, username, password, virtualHost, automaticRecoveryEnabled, endpoints);
   }
 }

@@ -22,6 +22,7 @@ import com.flipkart.gojira.external.ExternalConfigRepository;
 import com.flipkart.gojira.external.Managed;
 import com.flipkart.gojira.external.SetupException;
 import com.flipkart.gojira.external.ShutdownException;
+import com.flipkart.gojira.external.UpdateException;
 import com.flipkart.gojira.external.config.ExternalConfig;
 import com.flipkart.gojira.external.config.RmqConfig;
 import com.flipkart.gojira.models.rmq.RmqTestDataType;
@@ -62,6 +63,20 @@ public enum RmqManager implements IRmqManager, Managed {
     } catch (Exception e) {
       LOGGER.error("error setting up rmq connections.", e);
       throw new SetupException("error setting up rmq connections.", e);
+    }
+  }
+
+  @Override
+  public void update(String clientId, ExternalConfig externalConfig) throws UpdateException {
+    try {
+      if (clientVsChannelMap.containsKey(clientId)) {
+        clientVsChannelMap.get(clientId).close();
+      }
+      RmqConfig rmqConfig = (RmqConfig) externalConfig;
+      clientVsChannelMap.put(clientId, createChannel(rmqConfig));
+    } catch (Exception e) {
+      LOGGER.error("error updating rmq connections.", e);
+      throw new UpdateException("error updating rmq connections.", e);
     }
   }
 
