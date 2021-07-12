@@ -18,6 +18,8 @@ package com.flipkart.gojira.external.config;
 
 import static com.flipkart.gojira.core.GlobalConstants.HTTP_TEST_DATA_TYPE;
 
+import java.util.Objects;
+
 public class HttpConfig extends ExternalConfig {
 
   private String hostNamePort;
@@ -59,5 +61,25 @@ public class HttpConfig extends ExternalConfig {
 
   public void setOperationTimeout(int operationTimeout) {
     this.operationTimeout = operationTimeout;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    HttpConfig that = (HttpConfig) o;
+    return maxConnections == that.maxConnections
+        && connectionTimeout == that.connectionTimeout
+        && operationTimeout == that.operationTimeout
+        && Objects.equals(hostNamePort, that.hostNamePort);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(hostNamePort, maxConnections, connectionTimeout, operationTimeout);
   }
 }

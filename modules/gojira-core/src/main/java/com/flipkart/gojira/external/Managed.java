@@ -16,6 +16,8 @@
 
 package com.flipkart.gojira.external;
 
+import com.flipkart.gojira.external.config.ExternalConfig;
+
 /**
  * Interface whose methods are expected to be invoked as part of lifecycle during setup and shutdown
  * by client applications who need to make external connections.
@@ -28,6 +30,15 @@ public interface Managed {
    * @throws SetupException exception thrown if we are not able to setup connection.
    */
   void setup() throws SetupException;
+
+  /**
+   * Method to update external connections to enable rpc calls.
+   *
+   * @throws UpdateException exception thrown if we are not able to setup connection.
+   */
+  default void update(String clientId, ExternalConfig externalConfig) throws UpdateException {
+    throw new UnsupportedOperationException("Operation not allowed");
+  }
 
   /**
    * Method to shutdown external connections.
