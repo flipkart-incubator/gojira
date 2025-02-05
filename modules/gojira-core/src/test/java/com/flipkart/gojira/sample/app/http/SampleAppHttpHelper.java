@@ -17,14 +17,14 @@
 package com.flipkart.gojira.sample.app.http;
 
 import com.flipkart.gojira.core.annotations.ProfileOrTest;
-import com.squareup.okhttp.Headers;
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.Response;
-import java.io.IOException;
+import com.flipkart.gojira.sample.app.grpc.GreeterGrpc;
+import com.flipkart.gojira.sample.app.grpc.HelloRequest;
+import com.squareup.okhttp.*;
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
+
 import javax.inject.Inject;
+import java.io.IOException;
 
 /**
  * Helper class for making external HTTP calls.
@@ -34,9 +34,26 @@ public class SampleAppHttpHelper implements ISampleAppHttpHelper {
 
   private final OkHttpClient client;
 
+  private static final String GRPC_URL = "localhost:50051";
+
+  private static GreeterGrpc.GreeterBlockingStub stub = null;
+
   @Inject
   public SampleAppHttpHelper(final OkHttpClient client) {
     this.client = client;
+    ManagedChannel channel = ManagedChannelBuilder
+            .forTarget(GRPC_URL)
+            .usePlaintext() // Disable TLS for testing; remove this for production
+            .build();
+    stub = GreeterGrpc.newBlockingStub(channel);
+  }
+
+  @Override
+  @ProfileOrTest
+  public String doRequest(String url, Headers headers) throws SampleAppHttpException {
+    String response = stub.sayHello(HelloRequest.newBuilder().setName("AJAY").build()).getMessage();
+    System.out.println(response);
+    return response;
   }
 
   /**

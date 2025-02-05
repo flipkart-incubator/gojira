@@ -35,6 +35,7 @@ import com.flipkart.gojira.models.http.HttpTestDataType;
 import com.flipkart.gojira.models.http.HttpTestRequestData;
 import com.flipkart.gojira.models.http.HttpTestResponseData;
 import com.flipkart.gojira.sample.app.SampleApp;
+import com.flipkart.gojira.sample.app.http.SampleAppHttpException;
 import com.flipkart.gojira.sample.app.http.SampleAppHttpHelper;
 import com.flipkart.gojira.sample.app.module.SampleAppDI;
 import com.flipkart.gojira.serde.SerdeHandlerRepository;
@@ -121,6 +122,15 @@ public class SampleAppTest {
         .sorted(Comparator.reverseOrder())
         .map(Path::toFile)
         .forEach(File::delete);
+  }
+
+  @Test
+  public void doRequest() {
+    try {
+      new SampleAppHttpHelper(new OkHttpClient()).doRequest(null, null);
+    } catch (SampleAppHttpException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   /**
