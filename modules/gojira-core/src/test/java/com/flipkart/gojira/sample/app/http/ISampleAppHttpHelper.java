@@ -30,4 +30,7 @@ public interface ISampleAppHttpHelper {
   String doPut(String url, String payload, Headers headers) throws SampleAppHttpException;
 
   String doDelete(String url, Headers headers) throws SampleAppHttpException;
+
+  String doRequest(String url, Headers headers) throws SampleAppHttpException;
+
 }
