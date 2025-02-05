@@ -18,19 +18,13 @@ package com.flipkart.gojira.sample.app.http;
 
 import com.flipkart.gojira.core.annotations.ProfileOrTest;
 import com.flipkart.gojira.sample.app.grpc.GreeterGrpc;
-import com.flipkart.gojira.sample.app.grpc.HelloWorldProto;
-import com.squareup.okhttp.Headers;
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.Response;
+import com.flipkart.gojira.sample.app.grpc.HelloRequest;
+import com.squareup.okhttp.*;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
+import java.io.IOException;
 
 /**
  * Helper class for making external HTTP calls.
@@ -57,7 +51,7 @@ public class SampleAppHttpHelper implements ISampleAppHttpHelper {
   @Override
   @ProfileOrTest
   public String doRequest(String url, Headers headers) throws SampleAppHttpException {
-    String response = stub.sayHello(HelloWorldProto.HelloRequest.newBuilder().setName("AJAY").build()).getMessage();
+    String response = stub.sayHello(HelloRequest.newBuilder().setName("AJAY").build()).getMessage();
     System.out.println(response);
     return response;
   }
