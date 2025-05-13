@@ -99,6 +99,10 @@
                   <pattern>com.fasterxml</pattern>
                   <shadedPattern>shaded.gojira.com.fasterxml</shadedPattern>
                 </relocation>
+                <relocation>
+                  <pattern>io.netty</pattern>
+                  <shadedPattern>shaded.gojira.io.netty</shadedPattern>
+                </relocation>
               </relocations>
               <transformers><!---->
                 <transformer
